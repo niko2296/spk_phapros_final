@@ -1,7 +1,7 @@
 <?php
 	class database{
 		function __construct(){
-			$this->connection = new mysqli('localhost', 'root', '','phapros');
+			$this->connection = new mysqli('localhost', 'root', '','phapros_final');
 		}
 		
 		//Fungsi Untuk Tampil
