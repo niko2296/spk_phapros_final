@@ -193,21 +193,6 @@
                                     header('location:data_polarisasi.php');
                                 }
                             }
-                            else if(isset($_POST['tombolEdit'])){
-                                $eksekusi = $db->edit_polarisasi($_POST['id_polarisasi_edit'], $_POST['nama_polarisasi_edit'], $_POST['periode_edit']);
-                                if($eksekusi == 2 || $eksekusi == 3)
-                                {
-                                    echo '<div class="alert alert-danger">Data Gagal Disimpan</div>';
-                                }
-                            }
-                            else if(isset($_POST['tombolHapus']))
-                            {
-                                $eksekusi = $db->hapus_polarisasi($_POST['id_polarisasi_hapus']);
-                                if($eksekusi == 2 || $eksekusi == 3)
-                                {
-                                    echo '<div class="alert alert-danger">Data Gagal Disimpan</div>';
-                                }
-                            }
                         ?>
 
 						<div class="col-md-12">
@@ -215,117 +200,22 @@
 								<table class="table table-striped custom-table m-b-0 display" id="tabel">
 									<thead>
 										<tr>
-											<th>Nama Polarisasi</th>
 											<th>Periode</th>
-                                            <th>Aturan Polarisasi</th>
-											<th class="text-right">Actions</th>
+                                            <th>Jumlah Polarisasi</th>
 										</tr>
 									</thead>
 									<tbody>
                                     <?php
                                         $no = 0;
                                         error_reporting(0);
-                                        foreach($db->tampil_polarisasi() as $data)
+                                        foreach($db->tampil_periode() as $data)
                                         {
                                             $no = $no+1;
                                     ?>
                                             <tr>
-                                                <td><?php echo $data['nama_polarisasi']; ?></td>
-                                                <td>
-                                                    <?php
-                                                        foreach($db->tampil_periode($data['id_periode']) as $tampil)
-                                                            echo $tampil['tahun']
-                                                    ?>
-                                                </td>
-                                                <?php
-                                                    $jmlP = 0;
-                                                    foreach($db->tampil_aturan_polarisasi() as $data1)
-                                                    {
-                                                        if($data['id_polarisasi'] == $data1['id_polarisasi'])
-                                                            $jmlP = $jmlP+1;   
-                                                    }
-                                                ?>
-                                                <td><a href="aturan_polarisasi.php?id_polarisasi=<?php echo $data['id_polarisasi']; ?>">tambah</a> (jml : <?php echo $jmlP; ?> aturan)</td>
-                                                <td class="text-right">
-                                                    <div class="dropdown">
-                                                        <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
-                                                        <ul class="dropdown-menu pull-right">
-                                                            <li><a href="#" title="Edit" data-toggle="modal" data-target="#edit_ticket<?php echo $data['id_polarisasi']; ?>"><i class="fa fa-pencil m-r-5"></i> Edit</a></li>
-                                                            <li><a href="#" title="Delete" data-toggle="modal" data-target="#delete_ticket<?php echo $data['id_polarisasi']; ?>"><i class="fa fa-trash-o m-r-5"></i> Delete</a></li>
-                                                        </ul>
-                                                    </div>
-                                                </td>
+                                                <td><?php echo $data['tahun']; ?></td>
+                                                <td>(Jumlah Polarisasi : <?php echo ($db->hitung_polarisasi($data['id_periode'])); ?>) <a href="detail_polarisasi.php?id_periode=<?php echo $data['id_periode']; ?>">Detail</a></td>
                                             </tr>
-
-                                            <!-- Modal Edit -->
-                                            <div id="edit_ticket<?php echo $data['id_polarisasi']; ?>" class="modal custom-modal fade" role="dialog">
-                                                <div class="modal-dialog">
-                                                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                                    <div class="modal-content modal-lg">
-                                                        <div class="modal-header">
-                                                            <h4 class="modal-title">Edit Data Polarisasi</h4>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <form method="POST" action="#">
-                                                                <div class="row">
-                                                                    <div class="col-md-6">
-                                                                        <div class="form-group">
-                                                                            <label>Nama Polarisasi</label>
-                                                                            <input class="form-control" type="hidden" name="id_polarisasi_edit" value="<?php echo $data['id_polarisasi']; ?>">
-                                                                            <input class="form-control" type="text" name="nama_polarisasi_edit" value="<?php echo $data['nama_polarisasi']; ?>">
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-md-6">
-                                                                        <div class="form-group">
-                                                                            <label>Periode</label>
-                                                                            <select name="periode_edit" class="form-control">
-                                                                                <option value="">Silahkan Pilih Periode</option>
-                                                                                <?php
-                                                                                    foreach($db->tampil_periode($data['id_periode']) as $tampilP)
-                                                                                    {
-                                                                                        $s = '';
-                                                                                        if($tampilP['status'] == 1)
-                                                                                        {
-                                                                                            if($tampilP['id_periode'] == $data['id_periode'])
-                                                                                                $s = 'selected="selected"';
-                                                                                            echo '<option value="'.$tampilP['id_periode'].'" '.$s.'>'.$tampilP['tahun'].'</option>';
-                                                                                        }
-                                                                                    }        
-                                                                                ?>           
-                                                                            </select>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="m-t-20 text-center">
-                                                                    <button class="btn btn-primary" type="submit" name="tombolEdit">Edit Data Polarisasi</button>
-                                                                </div>
-                                                            </form>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <!-- Akhiran Modal Edit -->
-
-                                            <!-- Modal Hapus -->
-                                            <div id="delete_ticket<?php echo $data['id_polarisasi']; ?>" class="modal custom-modal fade" role="dialog">
-                                                <div class="modal-dialog">
-                                                    <div class="modal-content modal-md">
-                                                        <div class="modal-header">
-                                                            <h4 class="modal-title">Hapus Polarisasi</h4>
-                                                        </div>
-                                                        <form method="POST" action="#">
-                                                            <div class="modal-body card-box">
-                                                                <p>Yakin Untuk Menghapus Polarisasi <?php echo $data['nama_polarisasi']; ?> ?</p>
-                                                                <input type="hidden" name="id_polarisasi_hapus" value="<?php echo $data['id_polarisasi']; ?>">
-                                                                <div class="m-t-20"> <a href="#" class="btn btn-default" data-dismiss="modal">Close</a>
-                                                                    <button type="submit" name="tombolHapus" class="btn btn-danger">Delete</button>
-                                                                </div>
-                                                            </div>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <!-- Akhiran Modal Hapus -->
                                     <?php
                                         }
                                     ?>
