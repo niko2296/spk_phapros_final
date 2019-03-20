@@ -1,0 +1,36 @@
+<?php
+    include "conn/database.php";
+    $db = new database();
+
+    if($_GET['jenis'] == 'verifikasi')
+    {
+        $field = $_GET['field'];
+        $id = $_GET['id'];
+        $value = $_GET['value'];
+        $eksekusi = $db->edit_user($id, $field, $value);
+
+        if($eksekusi == 1)
+            echo 1;
+        else 
+            echo 2;
+    }
+    else if($_GET['jenis'] == 'reset')
+    {
+        $id = $_GET['id'];
+        $username = $_GET['username'];
+        $eksekusi = $db->reset_password($id, $username);
+        if($eksekusi == 1)
+            echo 1;
+        else 
+            echo 2;
+    }
+    else if($_GET['jenis'] == 'verif_all')
+    {
+        $eksekusi = $db->verif_all();
+        if($eksekusi == 1)
+            echo 1;
+        else 
+            echo $eksekusi;
+    }
+
+?>
