@@ -110,9 +110,10 @@
                                             <li><a href="data_jabatan.php">Jabatan</a></li>
                                             <li><a href="data_unit.php">Departemen/Unit</a></li>
                                             <li><a href="data_anggota.php">Pegawai</a></li>
-                                            <li><a href="data_satuan.php">Satuan</a></li>
                                             <li><a href="data_user.php">User</a></li>
+                                            <li><a href="data_periode.php">Periode</a></li>
                                             <li><a href="data_polarisasi.php">Polarisasi</a></li>
+                                            <li><a href="data_satuan.php">Satuan</a></li>
                                         </ul>
                                     </li>
                             <?php

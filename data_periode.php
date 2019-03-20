@@ -9,10 +9,6 @@
         header("location:login.php");
     $nama = $_SESSION['nama'];
     $jabatan = $_SESSION['id_jabatan'];
-
-    $id_anggotaD = $_GET['id_anggota'];
-    $id_jabatanD = $_GET['id_jabatan'];
-    $id_unitD = $_GET['id_unit'];
 ?>
 <!DOCTYPE html>
 <html>
@@ -60,11 +56,11 @@
 						<ul class="dropdown-menu">
 							<!-- <li><a href="profile.html">My Profile</a></li>
 							<li><a href="edit-profile.html">Edit Profile</a></li> -->
-                            <?php
+                            <?php 
                                 if($jabatan != 0)
-							        echo '<li><a href="settings.php">Settings</a></li>';
-                            ?>
-                            <li><a href="logout.php">Logout</a></li>
+                                    echo '<li><a href="settings.php">Settings</a></li>';
+                             ?>
+							<li><a href="logout.php">Logout</a></li>
 						</ul>
 					</li>
 				</ul>
@@ -101,7 +97,7 @@
                                 if($m1 == 1 || $_SESSION['aksus'] == TRUE)
                                 {
                             ?>
-                                    <li class="submenu">
+                                    <li class="active submenu">
                                         <a href="#"><i class="la la-briefcase"></i> <span> Master Data</span> <span class="menu-arrow"></span></a>
                                         <ul style="display: none;">
                                             <li><a href="data_golongan.php">Golongan</a></li>
@@ -145,7 +141,7 @@
                             <?php
                                 }
                             ?>
-                            <li class="active submenu">
+                            <li class="submenu">
 								<a href="#"><i class="la la-clipboard"></i> <span> KPI</span> <span class="menu-arrow"></span></a>
 								<ul style="display: none;">
                                     <?php
@@ -176,126 +172,164 @@
             <div class="page-wrapper">
                 <div class="content container-fluid">
 					<div class="row">
-						<div class="col-xs-12">
-							<h4 class="page-title">Data KPI Individu Detail</h4>
-                            <?php
-                                $b1 = 0;
-                                $k1 = '';
-                                error_reporting(0);
-                                foreach($db->tampil_waktu_verifikasi() as $tampil)
-                                {
-                                    $sekarang = date('Y-m-d');
-                                    if($sekarang >= $tampil['tanggal_awal_verifikasi'] AND $sekarang <= $tampil['tanggal_akhir_verifikasi'])
-                                        $b1 = 1;
-                                }
-
-                                if($b1 == 0)
-                                {
-                                    $k1 = 'disabled="disabled"';
-                                    echo '<center><div style="background-color:orange; width:30%; color:white; padding:5px;">Waktu Verifikasi Sudah Ditutup</div></center>';
-                                }
-                            ?>
-                            <center><div style="background-color:#7CFC00; width:20%; color:white; padding:5px; display:none; margin-bottom:2%;" id="notifikasi1">Data Diverifikasi</div></center>
-                            <center><div style="background-color:red; width:20%; color:white; padding:5px; display:none; margin-bottom:2%;" id="notifikasi2">Data Batal Diverifikasi</div></center>
+						<div class="col-xs-8">
+							<h4 class="page-title">Master Periode</h4>
+						</div>
+						<div class="col-xs-4 text-right m-b-30">
+							<a href="#" class="btn btn-primary rounded pull-right" data-toggle="modal" data-target="#add_ticket"><i class="fa fa-plus"></i> Tambah Periode</a>
 						</div>
 					</div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <center><div style="background-color:#7CFC00; width:20%; color:white; padding:5px; display:none;" id="notifikasi1">Periode Aktif</div></center>
+                            <center><div style="background-color:red; width:20%; color:white; padding:5px; display:none;" id="notifikasi2">Periode Tidak Aktif</div></center>
+                        </div>
+                    </div>
 					<div class="row">
+
+                        <?php
+                            if(isset($_POST['tombolSimpan'])){
+                                $eksekusi = $db->input_periode($_POST['tahun']);
+                                if($eksekusi == 2)
+                                {
+                                    echo '<div class="alert alert-danger">Data Gagal Disimpan</div>';
+                                }
+                            }
+                            else if(isset($_POST['tombolEdit'])){
+                                $eksekusi = $db->edit_periode($_POST['id_periode_edit'], $_POST['tahun_periode_edit']);
+                                if($eksekusi == 2 || $eksekusi == 3)
+                                {
+                                    echo '<div class="alert alert-danger">Data Gagal Disimpan</div>';
+                                }
+                            }
+                            else if(isset($_POST['tombolHapus']))
+                            {
+                                $eksekusi = $db->hapus_periode($_POST['id_periode_hapus']);
+                                if($eksekusi == 2 || $eksekusi == 3)
+                                {
+                                    echo '<div class="alert alert-danger">Data Gagal Disimpan</div>';
+                                }
+                            }
+                        ?>
+
 						<div class="col-md-12">
 							<div class="table-responsive">
-								<table class="table table-striped custom-table m-b-0 display" id="">
+								<table class="table table-striped custom-table m-b-0 display" id="tabel">
 									<thead>
 										<tr>
-                                            <th>Nama Pegawai</th>
-                                            <th>Jabatan</th>
-                                            <th>Unit</th>
-											<th>KPI</th>
-                                            <th>Deskripsi</th>
-                                            <th>Bobot (%)</th>
-                                            <th>Sasaran/Target</th>
-                                            <th>Satuan</th>
-                                            <th>Polarisasi</th>
-                                            <th>Tahun</th>
+											<th>Tahun Periode</th>
+											<th>Status</th>
 											<th class="text-right">Actions</th>
 										</tr>
 									</thead>
-                                    <form action="" method="POST">
 									<tbody>
                                     <?php
                                         $no = 0;
                                         error_reporting(0);
-                                        foreach($db->tampil_kpi_detail($id_anggotaD, $id_jabatanD, $id_unitD) as $data)
+                                        foreach($db->tampil_periode(null) as $data)
                                         {
                                             $no = $no+1;
-                                            $id1 = 'bobot'.$data['id_kpi'];
-                                            $id2 = 'sasaran'.$data['id_kpi'];
-                                            $r1 = '';
-                                            $r2 = '';
-
-                                            if($data['status'])
-                                            {
-                                                $r1 = 'readonly="readonly"';
-                                                $r2 = 'readonly="readonly"';
-                                            }
                                     ?>
                                             <tr>
-                                                <td><?php echo $data['nama']; ?></td>
-                                                <td><?php echo $data['nama_jabatan']; ?></td>
-                                                <td><?php echo $data['nama_unit']; ?></td>
-                                                <td><?php echo $data['kpi']; ?></td>
-                                                <td><?php echo $data['deskripsi']; ?></td>
-                                                <td>
-                                                    <input type="hidden" class="form-control" name="id_kpi[]" value="<?php echo $data['id_kpi']; ?>">
-                                                    <input type="text" class="form-control" id="<?php echo $id1; ?>" name="bobot[]" value="<?php echo $data['bobot']; ?>" <?php echo $r1; ?>>
-                                                </td>
-                                                <td><input type="text" class="form-control" id="<?php echo $id2; ?>" name="sasaran[]" value="<?php echo $data['sasaran']; ?>" <?php echo $r2; ?>></td>
-                                                <td>
-                                                    <?php
-                                                        $nama_satuan = '';
-                                                        foreach($db->tampil_satuan() as $tampilS)
-                                                        {
-                                                            if($tampilS['id_satuan'] == $data['satuan'])
-                                                                $nama_satuan = $tampilS['nama_satuan'];
-                                                        }
-                                                        echo $nama_satuan;
-                                                    ?>
-                                                </td>
-                                                <td>
-                                                    <?php
-                                                        $value = $data['sifat_kpi'];
-                                                        foreach($db->tampil_polarisasi() as $tampil)
-                                                        {
-                                                            if($tampil['id_polarisasi'] == $value)
-                                                                $ket = $tampil['nama_polarisasi'];
-                                                        }
-
-                                                        echo $ket;
-                                                    ?>
-                                                </td>
                                                 <td><?php echo $data['tahun']; ?></td>
-                                                <td class="text-center">
+                                                <td><input data-id="<?php echo $data['id_periode']; ?>" type="checkbox" <?php echo ($data['status'] == '1')?'checked':''; ?> data-field='status1' id='verifikasi1'></td>
+                                                <td class="text-right">
                                                     <div class="dropdown">
-                                                        <input data-id="<?php echo $data['id_kpi']; ?>" type="checkbox" <?php echo ($data['status'] == '1')?'checked':''; ?> data-field='status1' id='verifikasi1' <?php echo $k1; ?>>
+                                                        <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
+                                                        <ul class="dropdown-menu pull-right">
+                                                            <li><a href="#" title="Edit" data-toggle="modal" data-target="#edit_ticket<?php echo $data['id_periode']; ?>"><i class="fa fa-pencil m-r-5"></i> Edit</a></li>
+                                                            <li><a href="#" title="Delete" data-toggle="modal" data-target="#delete_ticket<?php echo $data['id_periode']; ?>"><i class="fa fa-trash-o m-r-5"></i> Delete</a></li>
+                                                        </ul>
                                                     </div>
                                                 </td>
                                             </tr>
+
+                                            <!-- Modal Edit -->
+                                            <div id="edit_ticket<?php echo $data['id_periode']; ?>" class="modal custom-modal fade" role="dialog">
+                                                <div class="modal-dialog">
+                                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                    <div class="modal-content modal-lg">
+                                                        <div class="modal-header">
+                                                            <h4 class="modal-title">Edit Data Periode</h4>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <form method="POST" action="#">
+                                                                <div class="row">
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group">
+                                                                            <label>Tahun Periode</label>
+                                                                            <input class="form-control" type="hidden" name="id_periode_edit" value="<?php echo $data['id_periode']; ?>">
+                                                                            <input class="form-control" type="number" name="tahun_periode_edit" value="<?php echo $data['tahun']; ?>">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="m-t-20 text-center">
+                                                                    <button class="btn btn-primary" type="submit" name="tombolEdit">Edit Data Periode</button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- Akhiran Modal Edit -->
+
+                                            <!-- Modal Hapus -->
+                                            <div id="delete_ticket<?php echo $data['id_periode']; ?>" class="modal custom-modal fade" role="dialog">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content modal-md">
+                                                        <div class="modal-header">
+                                                            <h4 class="modal-title">Hapus Periode</h4>
+                                                        </div>
+                                                        <form method="POST" action="#">
+                                                            <div class="modal-body card-box">
+                                                                <p class="label label-danger">Menghapus Periode Ini Maka Menghilangkan History Seluruh Data KPI Data Dari Tahun yang Telah Dihapus</p>
+                                                                <br><br>
+                                                                <p>Yakin Untuk Menghapus Periode <?php echo $data['tahun']; ?> ?</p>
+                                                                <input type="hidden" name="id_periode_hapus" value="<?php echo $data['id_periode']; ?>">
+                                                                <div class="m-t-20"> <a href="#" class="btn btn-default" data-dismiss="modal">Close</a>
+                                                                    <button type="submit" name="tombolHapus" class="btn btn-danger">Delete</button>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- Akhiran Modal Hapus -->
                                     <?php
                                         }
                                     ?>
 									</tbody>
-                                    <tbody>
-                                        <tr style="background:none;">
-                                            <td colspan="11" class="text-right">
-                                                <button type="submit" name="tombolHapus" class="btn btn-success">Simpan</button>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                    </form>
 								</table>
 							</div>
 						</div>
 					</div>
                 </div>
             </div>
+			<div id="add_ticket" class="modal custom-modal fade" role="dialog">
+				<div class="modal-dialog">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<div class="modal-content modal-lg">
+						<div class="modal-header">
+							<h4 class="modal-title">Tambah Data Periode</h4>
+						</div>
+						<div class="modal-body">
+							<form method="POST" action="#">
+								<div class="row">
+									<div class="col-md-6">
+										<div class="form-group">
+											<label>Tahun Periode</label>
+											<input class="form-control" type="number" name="tahun" value="<?php echo date('Y'); ?>">
+										</div>
+									</div>
+								</div>
+								<div class="m-t-20 text-center">
+									<button class="btn btn-primary" type="submit" name="tombolSimpan">Simpan Data Periode</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
         </div>
 		<div class="sidebar-overlay" data-reff="#sidebar"></div>
         <script type="text/javascript" src="assets/js/jquery-3.2.1.min.js"></script>
@@ -317,32 +351,26 @@
                     ordering : false
                 });
 
-                $('.table').on('change','#verifikasi1',function(e){
+                $('#tabel').on('change','#verifikasi1',function(e){
                     var v = ($(this).is(':checked'))?'1':'0';
-                    var paramId = $(this).data('id');
-                    var id1 = 'bobot';
-                    var id2 = 'sasaran';
                     $.ajax({
-                        url : 'verifikasi.php',
+                        url : 'verifikasi_final.php',
                         type : 'get',
                         data:{
-                            'id' : paramId,
-                            'value' : v
+                            'id' : $(this).data('id'),
+                            'value' : v,
+                            'jenis' : 'periode'
                         },
                         success:function(html){
                             if(html == 1)
                             {
                                 $(document).ready(function(){setTimeout(function(){$("#notifikasi1").fadeIn('slow');}, 300);});
                                 setTimeout(function(){$("#notifikasi1").fadeOut('#notifikasi1');}, 1500);
-                                document.getElementById(id1+paramId).readOnly = true;
-                                document.getElementById(id2+paramId).readOnly = true;
                             }
                             else if(html == 2)
                             {
                                 $(document).ready(function(){setTimeout(function(){$("#notifikasi2").fadeIn('slow');}, 300);});
                                 setTimeout(function(){$("#notifikasi2").fadeOut('#notifikasi2');}, 1500);
-                                document.getElementById(id1+paramId).readOnly = false;
-                                document.getElementById(id2+paramId).readOnly = false;
                             }
                         }
                     });

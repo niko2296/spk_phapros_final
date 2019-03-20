@@ -56,11 +56,11 @@
 						<ul class="dropdown-menu">
 							<!-- <li><a href="profile.html">My Profile</a></li>
 							<li><a href="edit-profile.html">Edit Profile</a></li> -->
-                            <?php 
+                            <?php
                                 if($jabatan != 0)
-                                    echo '<li><a href="settings.php">Settings</a></li>';
-                             ?>
-							<li><a href="logout.php">Logout</a></li>
+							        echo '<li><a href="settings.php">Settings</a></li>';
+                            ?>
+                            <li><a href="logout.php">Logout</a></li>
 						</ul>
 					</li>
 				</ul>
@@ -172,25 +172,22 @@
             <div class="page-wrapper">
                 <div class="content container-fluid">
 					<div class="row">
-						<div class="col-xs-8">
-							<h4 class="page-title">Master Golongan</h4>
-						</div>
-						<div class="col-xs-4 text-right m-b-30">
-							<a href="#" class="btn btn-primary rounded pull-right" data-toggle="modal" data-target="#add_ticket"><i class="fa fa-plus"></i> Tambah Golongan</a>
+						<div class="col-xs-12">
+							<h4 class="page-title">Detail Satuan (<b>Periode 
+                                <?php
+                                    foreach($db->tampil_periode($data['id_periode']) as $dataP)
+                                        $tP = $dataP['tahun'];
+                                    echo $tP;
+                                ?>
+                            </b>)
+                            </h4>
 						</div>
 					</div>
 					<div class="row">
 
                         <?php
-                            if(isset($_POST['tombolSimpan'])){
-                                $eksekusi = $db->input_golongan($_POST['nama_golongan']);
-                                if($eksekusi == 2)
-                                {
-                                    echo '<div class="alert alert-danger">Data Gagal Disimpan</div>';
-                                }
-                            }
-                            else if(isset($_POST['tombolEdit'])){
-                                $eksekusi = $db->edit_golongan($_POST['id_golongan_edit'], $_POST['nama_golongan_edit']);
+                            if(isset($_POST['tombolEdit'])){
+                                $eksekusi = $db->edit_satuan($_POST['id_satuan_edit'], $_POST['nama_satuan_edit'], $_POST['jenis_polarisasi_edit'], $_POST['periode_edit'], $_GET['id_periode']);
                                 if($eksekusi == 2 || $eksekusi == 3)
                                 {
                                     echo '<div class="alert alert-danger">Data Gagal Disimpan</div>';
@@ -198,7 +195,15 @@
                             }
                             else if(isset($_POST['tombolHapus']))
                             {
-                                $eksekusi = $db->hapus_golongan($_POST['id_golongan_hapus']);
+                                $eksekusi = $db->hapus_satuan($_POST['id_satuan_hapus'], $_GET['id_periode']);
+                                if($eksekusi == 2 || $eksekusi == 3)
+                                {
+                                    echo '<div class="alert alert-danger">Data Gagal Disimpan</div>';
+                                }
+                            }
+                            else if(isset($_POST['tombolCopySatuan']))
+                            {
+                                $eksekusi = $db->copy_satuan(1, $_POST['id_copy'], $_POST['periode']);
                                 if($eksekusi == 2 || $eksekusi == 3)
                                 {
                                     echo '<div class="alert alert-danger">Data Gagal Disimpan</div>';
@@ -208,10 +213,11 @@
 
 						<div class="col-md-12">
 							<div class="table-responsive">
-								<table class="table table-striped custom-table m-b-0 display" id="tabel">
+                                <table class="table table-striped custom-table m-b-0 display" id="">
 									<thead>
 										<tr>
-											<th>Nama Golongan</th>
+											<th>Nama Satuan</th>
+											<th>Jenis Polarisasi</th>
 											<th class="text-right">Actions</th>
 										</tr>
 									</thead>
@@ -219,44 +225,109 @@
                                     <?php
                                         $no = 0;
                                         error_reporting(0);
-                                        foreach($db->tampil_golongan() as $data)
+                                        foreach($db->tampil_satuan($_GET['id_periode']) as $data)
                                         {
                                             $no = $no+1;
                                     ?>
                                             <tr>
-                                                <td><?php echo $data['nama_golongan']; ?></td>
+                                                <td><?php echo $data['nama_satuan']; ?></td>
+                                                <td>
+                                                    <?php
+                                                        foreach(unserialize($data['jenis_polarisasi']) as $key => $value){
+                                                            $cekData[$data['id_satuan']][] = $value;
+                                                            foreach($db->tampil_polarisasi() as $tampil)
+                                                            {
+                                                                if($value == $tampil['id_polarisasi'])
+                                                                    $ket[$data['id_satuan']][] = $tampil['nama_polarisasi'];
+                                                            }
+                                                        }
+
+                                                        echo implode(', ', $ket[$data['id_satuan']]);
+                                                    ?>
+                                                </td>
                                                 <td class="text-right">
                                                     <div class="dropdown">
                                                         <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
                                                         <ul class="dropdown-menu pull-right">
-                                                            <li><a href="#" title="Edit" data-toggle="modal" data-target="#edit_ticket<?php echo $data['id_golongan']; ?>"><i class="fa fa-pencil m-r-5"></i> Edit</a></li>
-                                                            <li><a href="#" title="Delete" data-toggle="modal" data-target="#delete_ticket<?php echo $data['id_golongan']; ?>"><i class="fa fa-trash-o m-r-5"></i> Delete</a></li>
+                                                            <li><a href="#" title="Edit" data-toggle="modal" data-target="#copy<?php echo $data['id_satuan']; ?>"><i class="fa fa-copy m-r-5"></i> Copy</a></li>
+                                                            <li><a href="#" title="Edit" data-toggle="modal" data-target="#edit_ticket<?php echo $data['id_satuan']; ?>"><i class="fa fa-pencil m-r-5"></i> Edit</a></li>
+                                                            <li><a href="#" title="Delete" data-toggle="modal" data-target="#delete_ticket<?php echo $data['id_satuan']; ?>"><i class="fa fa-trash-o m-r-5"></i> Delete</a></li>
                                                         </ul>
                                                     </div>
                                                 </td>
                                             </tr>
 
                                             <!-- Modal Edit -->
-                                            <div id="edit_ticket<?php echo $data['id_golongan']; ?>" class="modal custom-modal fade" role="dialog">
+                                            <div id="edit_ticket<?php echo $data['id_satuan']; ?>" class="modal custom-modal fade" role="dialog">
                                                 <div class="modal-dialog">
                                                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                                                     <div class="modal-content modal-lg">
                                                         <div class="modal-header">
-                                                            <h4 class="modal-title">Edit Data Golongan</h4>
+                                                            <h4 class="modal-title">Edit Data Satuan</h4>
                                                         </div>
                                                         <div class="modal-body">
                                                             <form method="POST" action="#">
                                                                 <div class="row">
                                                                     <div class="col-md-6">
+                                                                        <div class="row">
+                                                                            <div class="col-md-12">
+                                                                                <div class="form-group">
+                                                                                    <label>Nama Satuan</label>
+                                                                                    <input class="form-control" type="hidden" name="id_satuan_edit" value="<?php echo $data['id_satuan']; ?>">
+                                                                                    <input class="form-control" type="text" name="nama_satuan_edit" value="<?php echo $data['nama_satuan']; ?>">
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row">
+                                                                            <div class="col-md-12">
+                                                                                <div class="form-group">
+                                                                                    <label>Periode</label>
+                                                                                    <select name="periode_edit" class="form-control">
+                                                                                        <?php
+                                                                                            foreach($db->tampil_periode(null) as $tampilP)
+                                                                                            {
+                                                                                                $s = '';
+                                                                                                if($tampilP['status'] == 1)
+                                                                                                {
+                                                                                                    if($tampilP['id_periode'] == $data['id_periode'])
+                                                                                                        $s = 'selected="selected"';
+                                                                                                    echo '<option value="'.$tampilP['id_periode'].'" '.$s.'>'.$tampilP['tahun'].'</option>';
+                                                                                                }
+                                                                                            }        
+                                                                                        ?>           
+                                                                                    </select>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-6">
                                                                         <div class="form-group">
-                                                                            <label>Nama Golongan</label>
-                                                                            <input class="form-control" type="hidden" name="id_golongan_edit" value="<?php echo $data['id_golongan']; ?>">
-                                                                            <input class="form-control" type="text" name="nama_golongan_edit" value="<?php echo $data['nama_golongan']; ?>">
+                                                                            <div class="row">
+                                                                                <div class="col-md-12">
+                                                                                    <label>Aktif Pada Polarisasi</label>
+                                                                                </div>
+                                                                                <div class="col-md-12">
+                                                                                    <?php 
+                                                                                        $c = '';
+                                                                                        foreach($db->tampil_polarisasi() as $tampil)
+                                                                                        {
+                                                                                            if(in_array($tampil['id_polarisasi'], $cekData[$data['id_satuan']]))
+                                                                                                $c = 'checked';
+                                                                                    ?>
+                                                                                            <label class="btn btn-default">
+                                                                                                <input class="form-control" type="checkbox" name="jenis_polarisasi_edit[]" value="<?php echo $tampil['id_polarisasi']; ?>" <?php echo $c; ?>> <?php echo $tampil['nama_polarisasi']; ?>
+                                                                                            </label>
+                                                                                    <?php
+                                                                                            $c = '';
+                                                                                        }
+                                                                                    ?>
+                                                                                </div>	
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                                 <div class="m-t-20 text-center">
-                                                                    <button class="btn btn-primary" type="submit" name="tombolEdit">Edit Data Golongan</button>
+                                                                    <button class="btn btn-primary" type="submit" name="tombolEdit">Edit Data Satuan</button>
                                                                 </div>
                                                             </form>
                                                         </div>
@@ -266,18 +337,51 @@
                                             <!-- Akhiran Modal Edit -->
 
                                             <!-- Modal Hapus -->
-                                            <div id="delete_ticket<?php echo $data['id_golongan']; ?>" class="modal custom-modal fade" role="dialog">
+                                            <div id="delete_ticket<?php echo $data['id_satuan']; ?>" class="modal custom-modal fade" role="dialog">
                                                 <div class="modal-dialog">
                                                     <div class="modal-content modal-md">
                                                         <div class="modal-header">
-                                                            <h4 class="modal-title">Hapus Golongan</h4>
+                                                            <h4 class="modal-title">Hapus Satuan</h4>
                                                         </div>
                                                         <form method="POST" action="#">
                                                             <div class="modal-body card-box">
-                                                                <p>Yakin Untuk Menghapus Golongan <?php echo $data['nama_golongan']; ?> ?</p>
-                                                                <input type="hidden" name="id_golongan_hapus" value="<?php echo $data['id_golongan']; ?>">
+                                                                <p>Yakin Untuk Menghapus Satuan <?php echo $data['nama_satuan']; ?> ?</p>
+                                                                <input type="hidden" name="id_satuan_hapus" value="<?php echo $data['id_satuan']; ?>">
                                                                 <div class="m-t-20"> <a href="#" class="btn btn-default" data-dismiss="modal">Close</a>
                                                                     <button type="submit" name="tombolHapus" class="btn btn-danger">Delete</button>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- Akhiran Modal Hapus -->
+
+                                            <!-- Modal Copy -->
+                                            <div id="copy<?php echo $data['id_satuan']; ?>" class="modal custom-modal fade" role="dialog">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content modal-md">
+                                                        <div class="modal-header">
+                                                            <h4 class="modal-title">Copy Satuan</h4>
+                                                        </div>
+                                                        <form method="POST" action="#">
+                                                            <div class="modal-body card-box">
+                                                                <p>Yakin Untuk Mengcopy Satuan <?php echo $data['nama_satuan']." dari Periode ".$tP; ?> ?</p>
+                                                                <input type="hidden" name="id_copy" value="<?php echo $data['id_satuan']; ?>">
+                                                                <select name="periode" class="form-control">
+                                                                    <option value="">Silahkan Pilih Periode</option>
+                                                                    <?php
+                                                                        foreach($db->tampil_periode() as $tampil)
+                                                                        {
+                                                                            if($tampil['status'] == 1)
+                                                                            {
+                                                                                echo '<option value="'.$tampil['id_periode'].'">'.$tampil['tahun'].'</option>';
+                                                                            }
+                                                                        }
+                                                                    ?>
+                                                                </select>
+                                                                <div class="m-t-20"> <a href="#" class="btn btn-default" data-dismiss="modal">Close</a>
+                                                                    <button type="submit" name="tombolCopySatuan" class="btn btn-primary">Copy data</button>
                                                                 </div>
                                                             </div>
                                                         </form>
@@ -288,6 +392,11 @@
                                     <?php
                                         }
                                     ?>
+                                        <tr style="background:none;">
+                                            <td colspan="3" class="text-right">
+                                                wkwkwk
+                                            </td>
+                                        </tr>
 									</tbody>
 								</table>
 							</div>
@@ -295,38 +404,13 @@
 					</div>
                 </div>
             </div>
-			<div id="add_ticket" class="modal custom-modal fade" role="dialog">
-				<div class="modal-dialog">
-					<button type="button" class="close" data-dismiss="modal">&times;</button>
-					<div class="modal-content modal-lg">
-						<div class="modal-header">
-							<h4 class="modal-title">Tambah Data Golongan</h4>
-						</div>
-						<div class="modal-body">
-							<form method="POST" action="#">
-								<div class="row">
-									<div class="col-md-6">
-										<div class="form-group">
-											<label>Nama Golongan</label>
-											<input class="form-control" type="text" name="nama_golongan">
-										</div>
-									</div>
-								</div>
-								<div class="m-t-20 text-center">
-									<button class="btn btn-primary" type="submit" name="tombolSimpan">Simpan Data Golongan</button>
-								</div>
-							</form>
-						</div>
-					</div>
-				</div>
-			</div>
         </div>
 		<div class="sidebar-overlay" data-reff="#sidebar"></div>
         <script type="text/javascript" src="assets/js/jquery-3.2.1.min.js"></script>
         <script type="text/javascript" src="assets/js/bootstrap.min.js"></script>
-		<!-- <script type="text/javascript" src="assets/js/jquery.dataTables.min.js"></script>
-		<script type="text/javascript" src="assets/js/dataTables.bootstrap.min.js"></script> -->
+		<!-- <script type="text/javascript" src="assets/js/jquery.dataTables.min.js"></script> -->
         <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+		<!-- <script type="text/javascript" src="assets/js/dataTables.bootstrap.min.js"></script> -->
         <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.18/datatables.min.js"></script>
 		<script type="text/javascript" src="assets/js/jquery.slimscroll.js"></script>
 		<script type="text/javascript" src="assets/js/select2.min.js"></script>
@@ -335,11 +419,9 @@
 		<script type="text/javascript" src="assets/js/app.js"></script>
 
         <script type="text/javascript">
-            $(document).ready(function(){
-                $('#tabel').DataTable({
-                    searching : true,
-                    ordering : false
-                });
+            $('#tabel').DataTable({
+                searching : true,
+                ordering : false
             });
         </script>
     </body>

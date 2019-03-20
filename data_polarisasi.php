@@ -104,9 +104,10 @@
                                             <li><a href="data_jabatan.php">Jabatan</a></li>
                                             <li><a href="data_unit.php">Departemen/Unit</a></li>
                                             <li><a href="data_anggota.php">Pegawai</a></li>
-                                            <li><a href="data_satuan.php">Satuan</a></li>
                                             <li><a href="data_user.php">User</a></li>
+                                            <li><a href="data_periode.php">Periode</a></li>
                                             <li><a href="data_polarisasi.php">Polarisasi</a></li>
+                                            <li><a href="data_satuan.php">Satuan</a></li>
                                         </ul>
                                     </li>
                             <?php
@@ -182,7 +183,7 @@
 
                         <?php
                             if(isset($_POST['tombolSimpan'])){
-                                $eksekusi = $db->input_polarisasi($_POST['nama_polarisasi']);
+                                $eksekusi = $db->input_polarisasi($_POST['nama_polarisasi'], $_POST['periode']);
                                 if($eksekusi == 2)
                                 {
                                     echo '<div class="alert alert-danger">Data Gagal Disimpan</div>';
@@ -193,7 +194,7 @@
                                 }
                             }
                             else if(isset($_POST['tombolEdit'])){
-                                $eksekusi = $db->edit_polarisasi($_POST['id_polarisasi_edit'], $_POST['nama_polarisasi_edit']);
+                                $eksekusi = $db->edit_polarisasi($_POST['id_polarisasi_edit'], $_POST['nama_polarisasi_edit'], $_POST['periode_edit']);
                                 if($eksekusi == 2 || $eksekusi == 3)
                                 {
                                     echo '<div class="alert alert-danger">Data Gagal Disimpan</div>';
@@ -215,6 +216,7 @@
 									<thead>
 										<tr>
 											<th>Nama Polarisasi</th>
+											<th>Periode</th>
                                             <th>Aturan Polarisasi</th>
 											<th class="text-right">Actions</th>
 										</tr>
@@ -229,6 +231,12 @@
                                     ?>
                                             <tr>
                                                 <td><?php echo $data['nama_polarisasi']; ?></td>
+                                                <td>
+                                                    <?php
+                                                        foreach($db->tampil_periode($data['id_periode']) as $tampil)
+                                                            echo $tampil['tahun']
+                                                    ?>
+                                                </td>
                                                 <?php
                                                     $jmlP = 0;
                                                     foreach($db->tampil_aturan_polarisasi() as $data1)
@@ -265,6 +273,26 @@
                                                                             <label>Nama Polarisasi</label>
                                                                             <input class="form-control" type="hidden" name="id_polarisasi_edit" value="<?php echo $data['id_polarisasi']; ?>">
                                                                             <input class="form-control" type="text" name="nama_polarisasi_edit" value="<?php echo $data['nama_polarisasi']; ?>">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group">
+                                                                            <label>Periode</label>
+                                                                            <select name="periode_edit" class="form-control">
+                                                                                <option value="">Silahkan Pilih Periode</option>
+                                                                                <?php
+                                                                                    foreach($db->tampil_periode($data['id_periode']) as $tampilP)
+                                                                                    {
+                                                                                        $s = '';
+                                                                                        if($tampilP['status'] == 1)
+                                                                                        {
+                                                                                            if($tampilP['id_periode'] == $data['id_periode'])
+                                                                                                $s = 'selected="selected"';
+                                                                                            echo '<option value="'.$tampilP['id_periode'].'" '.$s.'>'.$tampilP['tahun'].'</option>';
+                                                                                        }
+                                                                                    }        
+                                                                                ?>           
+                                                                            </select>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -322,6 +350,23 @@
 										<div class="form-group">
 											<label>Nama Polarisasi</label>
 											<input class="form-control" type="text" name="nama_polarisasi">
+										</div>
+									</div>
+									<div class="col-md-6">
+										<div class="form-group">
+											<label>Periode</label>
+											<select name="periode" class="form-control">
+                                                <option value="">Silahkan Pilih Periode</option>
+                                                <?php
+                                                    foreach($db->tampil_periode(null) as $tampilP)
+                                                    {
+                                                        if($tampilP['status'] == 1)
+                                                        {
+                                                            echo '<option value="'.$tampilP['id_periode'].'">'.$tampilP['tahun'].'</option>';
+                                                        }
+                                                    }        
+                                                ?>           
+                                            </select>
 										</div>
 									</div>
 								</div>

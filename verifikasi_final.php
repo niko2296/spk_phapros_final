@@ -32,5 +32,16 @@
         else 
             echo $eksekusi;
     }
+    else if($_GET['jenis'] == 'periode')
+    {
+        $eksekusi = $db->verif_periode($_GET['id'], $_GET['value']);
+        if($eksekusi == 1)
+        {
+            if($_GET['value'] == 1)
+                echo 1;
+            else if($_GET['value'] == 0)
+                echo 2;
+        }
+    }
 
 ?>

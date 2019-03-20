@@ -32,8 +32,11 @@
 				$hasil[] = $tampil;
 			return $hasil;
 		}
-		function tampil_satuan(){
-			$query = $this->connection->query('SELECT * FROM mst_satuan');
+		function tampil_satuan($id_periode = null){
+			if($id_periode != null)
+				$query = $this->connection->query("SELECT * FROM mst_satuan WHERE id_periode='$id_periode'");
+			else 
+				$query = $this->connection->query('SELECT * FROM mst_satuan');
 			while($tampil = $query->fetch_array())
 				$hasil[] = $tampil;
 			return $hasil;
@@ -185,6 +188,16 @@
 				$hasil[] = $tampil;
 			return $hasil;
 		}
+
+		function tampil_periode($id_periode = null){
+			if($id_periode == null)
+				$query = $this->connection->query("SELECT * FROM mst_periode");
+			else 
+				$query = $this->connection->query("SELECT * FROM mst_periode WHERE id_periode = '$id_periode'");
+			while($tampil = $query->fetch_array())
+				$hasil[] = $tampil;
+			return $hasil;
+		}
 		//Akhiran Fungsi Tampil
 
 		//Fungsi Input
@@ -239,10 +252,10 @@
 			}
 		}
 		
-		function input_satuan($nama_satuan = null, $jenis_polarisasi = null){
+		function input_satuan($nama_satuan = null, $jenis_polarisasi = null, $periode = null){
 			$tanggal = date('Y-m-d');
 			$arrJenis = serialize($jenis_polarisasi);
-			$query = "INSERT INTO mst_satuan VALUES ('', '$nama_satuan', '$arrJenis', '$tanggal')";
+			$query = "INSERT INTO mst_satuan VALUES ('', '$nama_satuan', '$arrJenis', '$periode', '$tanggal')";
 			$input = $this->connection->prepare($query);
 			if($input->execute())
 				return 1;
@@ -315,9 +328,9 @@
 				return 2;
 		}
 
-		function input_polarisasi($nama_polarisasi = null){
+		function input_polarisasi($nama_polarisasi = null, $periode = null){
 			$tgl = date('Y-m-d');
-			$query = "INSERT INTO mst_polarisasi VALUES ('', '$nama_polarisasi', '$tgl')";
+			$query = "INSERT INTO mst_polarisasi VALUES ('', '$nama_polarisasi', '$periode', '$tgl')";
 			$input = $this->connection->prepare($query);
 			if($input->execute())
 				return 1;
@@ -344,18 +357,27 @@
 			}
 				
 		}
+
+		function input_periode($tahun_periode = null){
+			$query = "INSERT INTO mst_periode VALUES ('', '$tahun_periode', '0')";
+			$input = $this->connection->prepare($query);
+			if($input->execute())
+				header('location:data_periode.php');
+			else 
+				return 2;
+		}
 		//Akhiran Fungsi Input
 
 		//Fungsi Edit
-		function edit_satuan($id_satuan = null, $nama_satuan = null, $jenis_polarisasi = null){
+		function edit_satuan($id_satuan = null, $nama_satuan = null, $jenis_polarisasi = null, $periode = null, $id_periode = null){
 			if($id_satuan != null)
 			{
 				$tanggal = date('Y-m-d');
 				$arrJenis = serialize($jenis_polarisasi);
-				$query = "UPDATE mst_satuan SET nama_satuan = '$nama_satuan', jenis_polarisasi = '$arrJenis', tanggal_input = '$tanggal' WHERE id_satuan = '$id_satuan'";
+				$query = "UPDATE mst_satuan SET nama_satuan = '$nama_satuan', jenis_polarisasi = '$arrJenis', tanggal_input = '$tanggal', id_periode = '$periode' WHERE id_satuan = '$id_satuan'";
 				$edit = $this->connection->prepare($query);
 				if($edit->execute())
-					header("location:data_satuan.php");
+					header("location:detail_satuan.php?id_periode=$id_periode");
 				else 
 					return 2;
 			}
@@ -502,12 +524,12 @@
 			}
 		}
 
-		function edit_polarisasi($id_polarisasi = null, $nama_polarisasi = null)
+		function edit_polarisasi($id_polarisasi = null, $nama_polarisasi = null, $periode = null)
 		{
 			if($id_polarisasi != null)
 			{
 				$tanggal = date('Y-m-d');
-				$query = "UPDATE mst_polarisasi SET nama_polarisasi = '$nama_polarisasi', tanggal_input = '$tanggal' WHERE id_polarisasi = '$id_polarisasi'";
+				$query = "UPDATE mst_polarisasi SET nama_polarisasi = '$nama_polarisasi', tanggal_input = '$tanggal', id_periode = '$periode' WHERE id_polarisasi = '$id_polarisasi'";
 				$edit = $this->connection->prepare($query);
 				if($edit->execute())
 					header("location:data_polarisasi.php");
@@ -532,17 +554,27 @@
 					return 2;
 			}
 		}
+
+		function edit_periode($id_periode = null, $tahun_periode = null)
+		{
+			$query = "UPDATE mst_periode SET tahun = '$tahun_periode' WHERE id_periode = '$id_periode'";
+			$edit = $this->connection->prepare($query);
+			if($edit->execute())
+				header('location:data_periode.php');
+			else 
+				return 2;
+		}
 		//Akhiran Fungsi Edit
 
 		//Fungsi Hapus
-		function hapus_satuan($id_satuan = null)
+		function hapus_satuan($id_satuan = null, $id_periode = null)
 		{
 			if($id_satuan != null)
 			{
 				$query = "DELETE FROM mst_satuan WHERE id_satuan = '$id_satuan'";
 				$hapus = $this->connection->prepare($query);
 				if($hapus->execute())
-					header("location:data_satuan.php");
+					header("location:detail_satuan.php?id_periode=$id_periode");
 				else 
 					return 2;
 			}
@@ -704,6 +736,19 @@
 					header('location:aturan_polarisasi.php?id_polarisasi='.$id_polarisasi.'');
 			}
 		}
+
+		function hapus_periode($id_periode = null)
+		{
+			if($id_periode != null)
+			{
+				$query = "DELETE FROM mst_periode WHERE id_periode = '$id_periode'";
+				$hapus = $this->connection->prepare($query);
+				if($hapus->execute())
+					header('location:data_periode.php');
+				else 
+					return 2;
+			}
+		}
 		//Akhiran Fungsi Hapus
 
 		//Fungsi Cek Login
@@ -843,6 +888,19 @@
 			else 
 				return 1;
 		}
+
+		function verif_periode($id_verifikasi = null, $status = null)
+		{
+			if($id_verifikasi != null)
+			{
+				$query = "UPDATE mst_periode SET status = '$status' WHERE id_periode = '$id_verifikasi'";
+				$verif = $this->connection->prepare($query);
+				if($verif->execute())
+					return 1;
+				else 
+					return 2;
+			}
+		}
 		// Akhiran Fungsi Verifikasi
 
 		//User
@@ -906,6 +964,34 @@
 				$jml = $jml+1;
 			return $jml;
 		}
+
+		function hitung_satuan($periode = null)
+		{
+			$query = $this->connection->query("SELECT * FROM mst_satuan WHERE id_periode = '$periode'");
+			$jml = 0;
+			while($tampil = $query->fetch_array())
+				$jml = $jml+1;
+			return $jml;
+		}
 		// Akhiran Menghitung Data
+
+		// Fungsi Copy Data
+		function copy_satuan($jenis = null, $id_satuan = null, $id_periode = null)
+		{
+			$tanggal = date('Y-m-d');
+			if($jenis == 1 || $jenis == '1')
+			{
+				$query1 = $this->connection->query("SELECT * FROM mst_satuan WHERE id_satuan = '$id_satuan'");
+				while($tampil1 = $query1->fetch_array())
+				{
+					$nama_satuan = $tampil1['nama_satuan'];
+					$jenis_polarisasi = $tampil1['jenis_polarisasi'];
+				}
+				$query2 = "INSERT INTO mst_satuan VALUES ('', '$nama_satuan', '$jenis_polarisasi', '$id_periode', '$tanggal')";
+				$input1 = $this->connection->prepare($query2);
+				
+			}
+		}
+		// Akhiran Fungsi Copy Data
 	}
 ?>

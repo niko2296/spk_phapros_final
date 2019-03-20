@@ -104,9 +104,10 @@
                                             <li><a href="data_jabatan.php">Jabatan</a></li>
                                             <li><a href="data_unit.php">Departemen/Unit</a></li>
                                             <li><a href="data_anggota.php">Pegawai</a></li>
-                                            <li><a href="data_satuan.php">Satuan</a></li>
                                             <li><a href="data_user.php">User</a></li>
+                                            <li><a href="data_periode.php">Periode</a></li>
                                             <li><a href="data_polarisasi.php">Polarisasi</a></li>
+                                            <li><a href="data_satuan.php">Satuan</a></li>
                                         </ul>
                                     </li>
                             <?php
@@ -245,22 +246,11 @@
                                                 <td>
                                                     <?php
                                                         $value = $data['sifat_kpi'];
-                                                        if($value == 1)
-                                                            $ket = "Polarisasi Positif";
-                                                        else if($value == 2)
-                                                            $ket = "Polarisasi Negatif";
-                                                        else if($value == 3)
-                                                            $ket = "Polarisasi Absolute Positif/Project";
-                                                        else if($value == 4)
-                                                            $ket = "Polatisasi Absolute Negatif";
-                                                        else if($value == 5)
-                                                            $ket = "Polarisasi Waktu";
-                                                        else if($value == 6)
-                                                            $ket = "Polarisasi Akurasi";
-                                                        else if($value == 7)
-                                                            $ket = "Polarisasi Survey";
-                                                        else 
-                                                            $ket = "Polarisasi Khusus";
+                                                        foreach($db->tampil_polarisasi() as $tampil)
+                                                        {
+                                                            if($tampil['id_polarisasi'] == $value)
+                                                                $ket = $tampil['nama_polarisasi'];
+                                                        }
 
                                                         echo $ket;
                                                     ?>
