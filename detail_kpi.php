@@ -13,6 +13,14 @@
     $id_anggotaD = $_GET['id_anggota'];
     $id_jabatanD = $_GET['id_jabatan'];
     $id_unitD = $_GET['id_unit'];
+
+    foreach($db->tampil_periode() as $tPer)
+    {
+        if($tPer['status'] == 1)
+        {
+            $idA = $tPer['id_periode'];
+        }
+    }
 ?>
 <!DOCTYPE html>
 <html>
@@ -202,6 +210,18 @@
 					<div class="row">
 						<div class="col-md-12">
 							<div class="table-responsive">
+                                <?php
+                                    if(isset($_POST['tombolKembali']))
+                                    {
+                                        header('location:data_kpi_verifikasi.php');
+                                    }
+                                    else if(isset($_POST['tombolSimpan']))
+                                    {
+                                        $eksekusi = $db->revisi_nilai($_POST['id_kpi'], $_POST['bobot'], $_POST['sasaran']);
+                                        if($eksekusi == 2 || $eksekusi == 3)
+                                            echo '<center><div style="background-color:red; width:20%; color:white; padding:5px; margin-bottom:1%;">Data Gagal Disimpan</div></center>';
+                                    }
+                                ?>
 								<table class="table table-striped custom-table m-b-0 display" id="">
 									<thead>
 										<tr>
@@ -223,7 +243,7 @@
                                     <?php
                                         $no = 0;
                                         error_reporting(0);
-                                        foreach($db->tampil_kpi_detail($id_anggotaD, $id_jabatanD, $id_unitD) as $data)
+                                        foreach($db->tampil_kpi_detail($id_anggotaD, $id_jabatanD, $id_unitD, $idA) as $data)
                                         {
                                             $no = $no+1;
                                             $id1 = 'bobot'.$data['id_kpi'];
@@ -248,29 +268,8 @@
                                                     <input type="text" class="form-control" id="<?php echo $id1; ?>" name="bobot[]" value="<?php echo $data['bobot']; ?>" <?php echo $r1; ?>>
                                                 </td>
                                                 <td><input type="text" class="form-control" id="<?php echo $id2; ?>" name="sasaran[]" value="<?php echo $data['sasaran']; ?>" <?php echo $r2; ?>></td>
-                                                <td>
-                                                    <?php
-                                                        $nama_satuan = '';
-                                                        foreach($db->tampil_satuan() as $tampilS)
-                                                        {
-                                                            if($tampilS['id_satuan'] == $data['satuan'])
-                                                                $nama_satuan = $tampilS['nama_satuan'];
-                                                        }
-                                                        echo $nama_satuan;
-                                                    ?>
-                                                </td>
-                                                <td>
-                                                    <?php
-                                                        $value = $data['sifat_kpi'];
-                                                        foreach($db->tampil_polarisasi() as $tampil)
-                                                        {
-                                                            if($tampil['id_polarisasi'] == $value)
-                                                                $ket = $tampil['nama_polarisasi'];
-                                                        }
-
-                                                        echo $ket;
-                                                    ?>
-                                                </td>
+                                                <td><?php echo $data['nama_satuan']; ?></td>
+                                                <td><?php echo $data['nama_polarisasi']; ?></td>
                                                 <td><?php echo $data['tahun']; ?></td>
                                                 <td class="text-center">
                                                     <div class="dropdown">
@@ -285,7 +284,8 @@
                                     <tbody>
                                         <tr style="background:none;">
                                             <td colspan="11" class="text-right">
-                                                <button type="submit" name="tombolHapus" class="btn btn-success">Simpan</button>
+                                                <button type="" name="tombolKembali" class="btn btn-primary">Kembali</button>
+                                                <button type="submit" name="tombolSimpan" class="btn btn-success">Simpan</button>
                                             </td>
                                         </tr>
                                     </tbody>

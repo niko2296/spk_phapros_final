@@ -9,6 +9,14 @@
         header("location:login.php");
     $nama = $_SESSION['nama'];
     $jabatan = $_SESSION['id_jabatan'];
+
+    foreach($db->tampil_periode() as $tPer)
+    {
+        if($tPer['status'] == 1)
+        {
+            $idA = $tPer['id_periode'];
+        }
+    }
 ?>
 <!DOCTYPE html>
 <html>
@@ -231,7 +239,7 @@
                                             <?php
                                                 $no = 0;
                                                 error_reporting(0);
-                                                foreach($db->tampil_kpi_verifikasi() as $data)
+                                                foreach($db->tampil_kpi_verifikasi($idA) as $data)
                                                 {
                                                     $no = $no+1;
                                             ?>
@@ -242,29 +250,8 @@
                                                         <td><?php echo $data['deskripsi']; ?></td>
                                                         <td><?php echo $data['bobot']; ?></td>
                                                         <td><?php echo $data['sasaran']; ?></td>
-                                                        <td>
-                                                            <?php
-                                                                $nama_satuan = '';
-                                                                foreach($db->tampil_satuan() as $tampilS)
-                                                                {
-                                                                    if($tampilS['id_satuan'] == $data['satuan'])
-                                                                        $nama_satuan = $tampilS['nama_satuan'];
-                                                                }
-                                                                echo $nama_satuan;
-                                                            ?>
-                                                        </td>
-                                                        <td>
-                                                            <?php
-                                                                $value = $data['sifat_kpi'];
-                                                                foreach($db->tampil_polarisasi() as $tampil)
-                                                                {
-                                                                    if($tampil['id_polarisasi'] == $value)
-                                                                        $ket = $tampil['nama_polarisasi'];
-                                                                }
-
-                                                                echo $ket;
-                                                            ?>
-                                                        </td>
+                                                        <td><?php echo $data['nama_satuan']; ?></td>
+                                                        <td><?php echo $data['nama_polarisasi']; ?></td>
                                                         <td><?php echo $data['tahun']; ?></td>
                                                         <td class="text-center  ">
                                                             <div class="dropdown">
@@ -315,7 +302,7 @@
                                                         <td><?php echo $data['email']; ?></td>
                                                         <td><?php echo $data['nama_jabatan']; ?></td>
                                                         <td><?php echo $data['nama_unit']; ?></td>
-                                                        <td><?php echo $db->hitung_data_kpi($data['id_anggota'], $data['id_jabatan'], $data['id_unit']); ?> KPI</td>
+                                                        <td><?php echo $db->hitung_data_kpi($data['id_anggota'], $data['id_jabatan'], $data['id_unit'], $idA); ?> KPI</td>
                                                         <td class="text-center"><a href="detail_kpi.php?id_anggota=<?php echo $data['id_anggota']."&&id_jabatan=".$data['id_jabatan']."&&id_unit=".$data['id_unit']; ?>">Detail</a></td>
                                                     </tr>
                                             <?php
