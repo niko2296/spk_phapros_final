@@ -413,6 +413,9 @@
                                     ?>
                                         <tr style="background:none;" class="text-right">
                                             <td colspan="3">
+                                                <a href="data_satuan.php" title="Kembali">
+                                                    <button class="btn btn-primary" type="submit" name="modalCopyAll">Kembali</button>
+                                                </a>
                                                 <a href="#" title="CopyAll" data-toggle="modal" data-target="#copyAll">
                                                     <button class="btn btn-danger" type="submit" name="modalCopyAll">Copy Semua Data</button>
                                                 </a>

@@ -15,7 +15,10 @@
     foreach($db->tampil_polarisasi() as $tampil)
     {
         if($tampil['id_polarisasi'] == $id_polarisasi)
+        {
+            $tP = $tampil['id_periode'];
             $nama_polarisasi = $tampil['nama_polarisasi'];
+        }
     }
 ?>
 <!DOCTYPE html>
@@ -180,7 +183,7 @@
                 <div class="content container-fluid">
 					<div class="row">
 						<div class="col-xs-12">
-							<h4 class="page-title">Data Aturan Polarisasi "<b><?php echo $nama_polarisasi; ?></b>"</h4>
+							<h4 class="page-title">Data Aturan Polarisasi "<b><?php echo $nama_polarisasi; ?></b>" </h4>
 						</div>
 					</div>
                     
@@ -199,6 +202,14 @@
                             $db->edit_aturan_polarisasi($id_aturan_polarisasi, $bmi, $bma, $poin, $id_polarisasi);
                         }
                     ?>
+
+                    <div class="row" style="margin-bottom:1%;">
+                        <div class="col-md-12">
+                            <a href="detail_polarisasi.php?id_periode=<?php echo $tP; ?>" title="Kembali">
+                                <button class="btn btn-primary" type="submit" name="modalCopyAll">Kembali Melihat Data Polarisasi</button>
+                            </a>
+                        </div>
+                    </div>
 
                     <div class="row">
                         <div class="col-md-12">
