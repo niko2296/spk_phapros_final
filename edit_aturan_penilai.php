@@ -221,14 +221,11 @@
                                                     $a = '';
                                                     foreach($db->tampil_jabatan() as $tampil)
                                                     {
-                                                        if($tampil['akses_nilai'] == 1)
-                                                        {
-                                                            if($tampil['id_jabatan'] == $idjp)
-                                                                $a = 'selected="selected"';
+                                                        if($tampil['id_jabatan'] == $idjp)
+                                                            $a = 'selected="selected"';
                                                 ?>
                                                         <option value="<?php echo $tampil['id_jabatan']?>" <?php echo $a; ?>><?php echo $tampil['nama_jabatan']; ?></option>
                                                 <?php
-                                                        }
                                                         $a = '';
                                                     }
                                                 ?>

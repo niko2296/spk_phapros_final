@@ -13,7 +13,7 @@
 		}
 		
 		function tampil_anggota(){
-			$query = $this->connection->query("SELECT ang.*, gol.nama_golongan, jab.nama_jabatan, uni.nama_unit FROM mst_anggota as ang JOIN mst_golongan as gol ON ang.id_golongan = gol.id_golongan JOIN mst_jabatan as jab ON ang.id_jabatan = jab.id_jabatan JOIN mst_unit as uni ON ang.id_unit = uni.id_unit");
+			$query = $this->connection->query("SELECT ang.*, gol.nama_golongan, jab.nama_jabatan, uni.nama_unit FROM mst_anggota as ang LEFT JOIN mst_golongan as gol ON ang.id_golongan = gol.id_golongan LEFT JOIN mst_jabatan as jab ON ang.id_jabatan = jab.id_jabatan LEFT JOIN mst_unit as uni ON ang.id_unit = uni.id_unit");
 			while($tampil = $query->fetch_array())
 				$hasil[] = $tampil;
 			return $hasil;
@@ -214,9 +214,9 @@
 				return 2;
 		}
 		
-		function input_jabatan($nama_jabatan = null, $akses_nilai = null){
+		function input_jabatan($nama_jabatan = null){
 			$tanggal = date('Y-m-d');
-			$query = "INSERT INTO mst_jabatan VALUES ('', '$nama_jabatan', '$akses_nilai', '$tanggal')";
+			$query = "INSERT INTO mst_jabatan VALUES ('', '$nama_jabatan', '$tanggal')";
 			$input = $this->connection->prepare($query);
 			if($input->execute())
 				return 1;
@@ -406,12 +406,12 @@
 			}
 		}
 
-		function edit_jabatan($id_jabatan = null, $nama_jabatan = null, $akses_nilai = null)
+		function edit_jabatan($id_jabatan = null, $nama_jabatan = nulll)
 		{
 			if($id_jabatan != null)
 			{
 				$tanggal = date('Y-m-d');
-				$query = "UPDATE mst_jabatan SET nama_jabatan = '$nama_jabatan', akses_nilai = '$akses_nilai', tanggal_input = '$tanggal' WHERE id_jabatan = '$id_jabatan'";
+				$query = "UPDATE mst_jabatan SET nama_jabatan = '$nama_jabatan', tanggal_input = '$tanggal' WHERE id_jabatan = '$id_jabatan'";
 				$edit = $this->connection->prepare($query);
 				if($edit->execute())
 					header('location:data_jabatan.php');

@@ -209,12 +209,9 @@
                                                 <?php
                                                     foreach($db->tampil_jabatan() as $tampil)
                                                     {
-                                                        if($tampil['akses_nilai'] == 1)
-                                                        {
                                                 ?>
                                                         <option value="<?php echo $tampil['id_jabatan']?>"><?php echo $tampil['nama_jabatan']; ?></option>
                                                 <?php
-                                                        }
                                                     }
                                                 ?>
                                             </select>

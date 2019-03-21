@@ -183,14 +183,14 @@
 
                         <?php
                             if(isset($_POST['tombolSimpan'])){
-                                $eksekusi = $db->input_jabatan($_POST['nama_jabatan'], $_POST['akses_nilai']);
+                                $eksekusi = $db->input_jabatan($_POST['nama_jabatan']);
                                 if($eksekusi == 2)
                                 {
                                     echo '<div class="alert alert-danger">Data Gagal Disimpan</div>';
                                 }
                             }
                             else if(isset($_POST['tombolEdit'])){
-                                $eksekusi = $db->edit_jabatan($_POST['id_jabatan_edit'], $_POST['nama_jabatan_edit'], $_POST['akses_nilai']);
+                                $eksekusi = $db->edit_jabatan($_POST['id_jabatan_edit'], $_POST['nama_jabatan_edit']);
                                 if($eksekusi == 2 || $eksekusi == 3)
                                 {
                                     echo '<div class="alert alert-danger">Data Gagal Disimpan</div>';
@@ -212,7 +212,6 @@
 									<thead>
 										<tr>
 											<th>Nama Jabatan</th>
-                                            <th>Akses</th>
 											<th class="text-right">Actions</th>
 										</tr>
 									</thead>
@@ -226,7 +225,6 @@
                                     ?>
                                             <tr>
                                                 <td><?php echo $data['nama_jabatan']; ?></td>
-                                                <td><?php echo ($data['akses_nilai'] == 0)?'Tidak Dapat Memberi Nilai':'Dapat Memberi Nilai'; ?></td>
                                                 <td class="text-right">
                                                     <div class="dropdown">
                                                         <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
@@ -254,16 +252,6 @@
                                                                             <label>Nama Jabatan</label>
                                                                             <input class="form-control" type="hidden" name="id_jabatan_edit" value="<?php echo $data['id_jabatan']; ?>">
                                                                             <input class="form-control" type="text" name="nama_jabatan_edit" value="<?php echo $data['nama_jabatan']; ?>">
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-md-6">
-                                                                        <div class="form-group">
-                                                                            <label>Akses</label>
-                                                                            <select name="akses_nilai" class="form-control">
-                                                                                <option value="0" class="form-control">Pilih Akses Untuk Jabatan</option>
-                                                                                <option value="1" class="form-control" <?php echo ($data['akses_nilai'] == 1)?'selected="selected"':''; ?>>Dapat Memberi Nilai</option>
-                                                                                <option value="0" class="form-control" <?php echo ($data['akses_nilai'] == 0)?'selected="selected"':''; ?>>Tidak Dapat Memberi Nilai</option>
-                                                                            </select>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -323,16 +311,6 @@
 											<input class="form-control" type="text" name="nama_jabatan">
 										</div>
 									</div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label>Akses</label>
-                                            <select name="akses_nilai" class="form-control">
-                                                <option value="0" class="form-control">Pilih Akses Untuk Jabatan</option>
-                                                <option value="1" class="form-control">Dapat Memberi Nilai</option>
-                                                <option value="0" class="form-control">Tidak Dapat Memberi Nilai</option>
-                                            </select>
-                                        </div>
-                                    </div>
 								</div>
 								<div class="m-t-20 text-center">
 									<button class="btn btn-primary" type="submit" name="tombolSimpan">Simpan Data Jabatan</button>
