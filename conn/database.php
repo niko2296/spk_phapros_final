@@ -1046,6 +1046,44 @@
 					return 2;
 				}
 			}
+			else if($jenis == 2 || $jenis == '2')
+			{
+				$id_periode_asli = $id_polarisasi;
+				$query = $this->connection->query("SELECT * FROM mst_polarisasi WHERE id_periode = '$id_periode_asli'");
+				while($tampil = $query->fetch_array())
+				{
+					$nama_polarisasi = $tampil['nama_polarisasi'];
+					$id_polarisasi_asli = $tampil['id_polarisasi'];
+
+					$queryInput1 = "INSERT INTO mst_polarisasi VALUES ('', '$nama_polarisasi', '$id_periode', '$tanggal')";
+					$input1 = $this->connection->prepare($queryInput1);
+					if($input1->execute())
+					{
+						$query2 = $this->connection->query("SELECT * FROM mst_polarisasi WHERE nama_polarisasi = '$nama_polarisasi' AND id_periode = '$id_periode'");
+						while($tampil2 = $query2->fetch_array())
+							$id_polarisasi_baru = $tampil2['id_polarisasi'];
+						$query3 = $this->connection->query("SELECT * FROM aturan_polarisasi WHERE id_polarisasi = '$id_polarisasi_asli'");
+						while($tampil3 = $query3->fetch_array())
+						{
+							$bmi = $tampil3['bmi'];
+							$bma = $tampil3['bma'];
+							$poin = $tampil3['poin'];
+
+							$queryInput2 = "INSERT INTO aturan_polarisasi VALUES ('', '$id_polarisasi_baru', '$bmi', '$bma', '$poin', '$tanggal')";
+							$input2 = $this->connection->prepare($queryInput2);
+							if($input2->execute())
+								$k[] = 1;
+							else 
+								$k[] = 0;
+						}
+					}
+				}
+
+				if(in_array(0, $k))
+					return 2;
+				else 
+					header('location:data_polarisasi.php');
+			}
 		}
 		// Akhiran Fungsi Copy Data
 	}

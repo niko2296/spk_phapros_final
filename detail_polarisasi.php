@@ -177,7 +177,10 @@
                                 <?php
                                     $id_periode = $_GET['id_periode'];
                                     foreach($db->tampil_periode($id_periode) as $tampil)
+                                    {
                                         $tahun_asli = $tampil['tahun'];
+                                        $status_asli = $tampil['status'];
+                                    }
                                     echo $tahun_asli;
                                 ?>
                             </b>)
@@ -205,6 +208,14 @@
                             else if(isset($_POST['tombolCopy']))
                             {
                                 $eksekusi = $db->copy_polarisasi(1, $_POST['id_copy'], $_POST['periode']);
+                                if($eksekusi == 2 || $eksekusi == 3)
+                                {
+                                    echo '<div class="alert alert-danger">Data Gagal Disimpan</div>';
+                                }
+                            }
+                            else if(isset($_POST['tombolCopyAll']))
+                            {
+                                $eksekusi = $db->copy_polarisasi(2, $_POST['id_copy'], $_POST['periode']);
                                 if($eksekusi == 2 || $eksekusi == 3)
                                 {
                                     echo '<div class="alert alert-danger">Data Gagal Disimpan</div>';
@@ -245,9 +256,16 @@
                                                     <div class="dropdown">
                                                         <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
                                                         <ul class="dropdown-menu pull-right">
-                                                            <li><a href="#" title="Edit" data-toggle="modal" data-target="#copy<?php echo $data['id_polarisasi']; ?>"><i class="fa fa-copy m-r-5"></i> Copy Data</a></li>
-                                                            <li><a href="#" title="Edit" data-toggle="modal" data-target="#edit_ticket<?php echo $data['id_polarisasi']; ?>"><i class="fa fa-pencil m-r-5"></i> Edit</a></li>
-                                                            <li><a href="#" title="Delete" data-toggle="modal" data-target="#delete_ticket<?php echo $data['id_polarisasi']; ?>"><i class="fa fa-trash-o m-r-5"></i> Delete</a></li>
+                                                            <li><a href="#" title="Copy" data-toggle="modal" data-target="#copy<?php echo $data['id_polarisasi']; ?>"><i class="fa fa-copy m-r-5"></i> Copy Data</a></li>
+                                                            <?php
+                                                                if($status_asli == 1)
+                                                                {
+                                                            ?>
+                                                                    <li><a href="#" title="Edit" data-toggle="modal" data-target="#edit_ticket<?php echo $data['id_polarisasi']; ?>"><i class="fa fa-pencil m-r-5"></i> Edit</a></li>
+                                                                    <li><a href="#" title="Delete" data-toggle="modal" data-target="#delete_ticket<?php echo $data['id_polarisasi']; ?>"><i class="fa fa-trash-o m-r-5"></i> Delete</a></li>
+                                                            <?php
+                                                                }
+                                                            ?>
                                                         </ul>
                                                     </div>
                                                 </td>
@@ -311,7 +329,9 @@
                                                         </div>
                                                         <form method="POST" action="#">
                                                             <div class="modal-body card-box">
-                                                                <p>Yakin Untuk Menghapus Polarisasi <?php echo $data['nama_polarisasi']; ?> ?</p>
+                                                                <p class="label label-danger">Menghapus Polarisasi Ini Maka Menghilangkan History Seluruh Data KPI Dari Polarisasi yang Telah Dihapus</p>
+                                                                <br><br>
+                                                                <p>Yakin Untuk Menghapus Polarisasi <?php echo $data['nama_polarisasi']." Periode ".$tahun_asli; ?> ?</p>
                                                                 <input type="hidden" name="id_polarisasi_hapus" value="<?php echo $data['id_polarisasi']; ?>">
                                                                 <div class="m-t-20"> <a href="#" class="btn btn-default" data-dismiss="modal">Close</a>
                                                                     <button type="submit" name="tombolHapus" class="btn btn-danger">Delete</button>
@@ -358,8 +378,49 @@
                                     <?php
                                         }
                                     ?>
+                                    <tr style="background:none;" class="text-right">
+                                        <td colspan="3">
+                                            <a href="#" title="CopyAll" data-toggle="modal" data-target="#copyAll">
+                                                <button class="btn btn-danger" type="submit" name="modalCopyAll">Copy Semua Data</button>
+                                            </a>
+                                        </td>
+                                    </tr>
 									</tbody>
 								</table>
+
+                                <!-- Modal Copy All -->
+                                <div id="copyAll" class="modal custom-modal fade" role="dialog">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content modal-md">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">Copy Polarisasi</h4>
+                                            </div>
+                                            <form method="POST" action="#">
+                                                <div class="modal-body card-box">
+                                                    <p>Yakin Untuk Meng-<i>copy</i> Polarisasi <?php echo "Pada Periode ".$tahun_asli; ?> ?</p>
+                                                    <input type="hidden" name="id_copy" value="<?php echo $id_periode; ?>">
+                                                    <select name="periode" class="form-control">
+                                                        <option value="">Silahkan Pilih Periode</option>
+                                                        <?php
+                                                            foreach($db->tampil_periode() as $tampilP)
+                                                            {
+                                                                if($tampilP['status'] == 1)
+                                                                {
+                                                                    echo '<option value="'.$tampilP['id_periode'].'">'.$tampilP['tahun'].'</option>';
+                                                                }
+                                                            }
+                                                        ?>
+                                                    </select>
+                                                    <div class="m-t-20"> <a href="#" class="btn btn-default" data-dismiss="modal">Close</a>
+                                                        <button type="submit" name="tombolCopyAll" class="btn btn-primary">Copy Data</button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Akhiran Modal Copy All -->
+
 							</div>
 						</div>
 					</div>
