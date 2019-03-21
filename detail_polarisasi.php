@@ -352,6 +352,7 @@
                                                         </div>
                                                         <form method="POST" action="#">
                                                             <div class="modal-body card-box">
+                                                                <p class="label label-danger">Otomatis Meng-<i>copy</i> Beserta Aturan Polarisasinya</p>
                                                                 <p>Yakin Untuk Meng-<i>copy</i> Polarisasi <?php echo $data['nama_polarisasi']." Periode ".$tahun_asli; ?> ?</p>
                                                                 <input type="hidden" name="id_copy" value="<?php echo $data['id_polarisasi']; ?>">
                                                                 <select name="periode" class="form-control">
@@ -397,6 +398,7 @@
                                             </div>
                                             <form method="POST" action="#">
                                                 <div class="modal-body card-box">
+                                                    <p class="label label-danger">Otomatis Meng-<i>copy</i> Beserta Aturan Polarisasinya</p>
                                                     <p>Yakin Untuk Meng-<i>copy</i> Polarisasi <?php echo "Pada Periode ".$tahun_asli; ?> ?</p>
                                                     <input type="hidden" name="id_copy" value="<?php echo $id_periode; ?>">
                                                     <select name="periode" class="form-control">
