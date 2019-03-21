@@ -9,6 +9,15 @@
         header("location:login.php");
     $nama = $_SESSION['nama'];
     $jabatan = $_SESSION['id_jabatan'];
+
+    foreach($db->tampil_periode() as $tP)
+    {
+        if($tP['status'] == 1)
+        {
+            $tA = $tP['tahun'];
+            $idA = $tP['id_periode'];
+        }
+    }
 ?>
 <!DOCTYPE html>
 <html>
@@ -191,7 +200,7 @@
                                 $sasaran = $tampilK['sasaran'];
                                 $satuan = $tampilK['satuan'];
                                 $sifat_kpi = $tampilK['sifat_kpi'];
-                                $tahun = $tampilK['tahun'];
+                                $tahun = $tampilK['id_periode'];
                             }
                         }
 
@@ -204,9 +213,9 @@
                             $sasaran = $_POST['sasaran'];
                             $satuan = $_POST['satuan'];
                             $sifat_kpi = $_POST['sifat_kpi'];
-                            $tahun = $_POST['tahun'];
+                            $id_periode = $_POST['id_periode'];
 
-                            $eksekusi = $db->edit_kpi($id_kpi, $kpi, $deskripsi, $bobot, $sasaran, $satuan, $sifat_kpi, $tahun);
+                            $eksekusi = $db->edit_kpi($id_kpi, $kpi, $deskripsi, $bobot, $sasaran, $satuan, $sifat_kpi, $id_periode);
                             if($eksekusi == 1)
                             {
                                 header("location:data_kpi.php");
@@ -224,7 +233,17 @@
                                         <div class="form-group">
                                             <center>
                                                 <label>Tahun Data KPI</label>
-                                                <input type="text" name="tahun" value="<?php echo $tahun; ?>" class="form-control">
+                                                <select name="id_periode" class="form-control">
+                                                    <?php
+                                                        foreach($db->tampil_periode() as $tampilPer)
+                                                        {
+                                                            $s = '';
+                                                            if($tampilPer['id_periode'] == $tahun)
+                                                                $s = 'selected="selected"';
+                                                            echo '<option value="'.$tampilPer['id_periode'].'" '.$s.'>'.$tampilPer['tahun'].'</option>';
+                                                        }
+                                                    ?>
+                                                </select>
                                             </center>
                                         </div>
                                     </div>
@@ -268,7 +287,7 @@
                                                 <option value="">Silahkan Pilih Satuan</option>
                                                 <?php
                                                     $a = '';
-                                                    foreach($db->tampil_satuan() as $tampil)
+                                                    foreach($db->tampil_satuan($idA) as $tampil)
                                                     {
                                                         if($tampil['id_satuan'] == $satuan)
                                                             $a = 'selected="selected"';
@@ -284,7 +303,7 @@
                                             <label>Polarisasi</label>
                                             <select id="sifat_kpi1" name="sifat_kpi" class="select" style="width:100%;">
                                                 <?php 
-                                                    foreach($db->tampil_satuan() as $tampil)
+                                                    foreach($db->tampil_satuan($idA) as $tampil)
                                                     {
                                                         if($tampil['id_satuan'] == $satuan)
                                                         {

@@ -2,6 +2,29 @@
     include "conn/database.php";
     $db = new database();
 
+    foreach($db->tampil_periode() as $tPer)
+    {
+        if($tPer['status'] == 1)
+        {
+            $idA = $tPer['id_periode'];
+        }
+    }
+
+    foreach($db->tampil_satuan() as $tampilS)
+    {
+        if($tampilS['id_satuan'] == $_GET['id5'])
+        {
+            $nSAS = $tampilS['nama_satuan'];
+        }
+    }
+    foreach($db->tampil_polarisasi() as $tPol)
+    {
+        if($tPol['id_polarisasi'] == $_GET['id_sifat'])
+        {
+            $nPAS = $tPol['nama_polarisasi'];
+        }
+    }
+
     $html = '
         <tr id="hapusan'.$_GET['param'].'">
             <td><input type="text" value="'.$_GET['id1'].'" class="form-control" name="kpi[]"></td>
@@ -12,9 +35,9 @@
     $html .=   '<select id="satuan'.$_GET['param'].'" name="satuan[]" class="select" style="width:100%;" onchange="fungsi1('.$_GET['param'].')">
                     <option value="">Silahkan Pilih Satuan</option>';
                         $a = '';
-                        foreach($db->tampil_satuan() as $tampil)
+                        foreach($db->tampil_satuan($idA) as $tampil)
                         {
-                            if($tampil['id_satuan'] == $_GET['id5'])
+                            if($tampil['nama_satuan'] == $nSAS)
                                 $a = 'selected="selected"';
                             $html .= '<option value="'.$tampil['id_satuan'].'" '.$a.'>'.$tampil['nama_satuan'].'</option>';
                             $a = '';
@@ -23,9 +46,9 @@
             </td>
             <td>
                 <select id="sifat_kpi'.$_GET['param'].'" name="sifat_kpi[]" class="select" style="width:100%;">';
-                foreach($db->tampil_satuan() as $tampil)
+                foreach($db->tampil_satuan($idA) as $tampil)
                 {
-                    if($tampil['id_satuan'] == $_GET['id5'])
+                    if($tampil['nama_satuan'] == $nSAS)
                     {
                         $a = '';
                         foreach(unserialize($tampil['jenis_polarisasi']) as $key => $value)
@@ -36,7 +59,7 @@
                                     $ket = $tampilP['nama_polarisasi'];
                             }
                             
-                            if($value == $_GET['id_sifat'])
+                            if($nPAS == $ket)
                                 $a = 'selected="selected"';
                             $html .= '<option value="'.$value.'" '.$a.'>'.$ket.'</option>';
                             $a = '';

@@ -41,16 +41,16 @@
 				$hasil[] = $tampil;
 			return $hasil;
 		}
-		function tampil_kpi(){
+		function tampil_kpi($id_periode = null){
 			error_reporting(0);
 			session_start();
 			$id_anggota = $_SESSION['id_anggota'];
 			$id_jabatan = $_SESSION['id_jabatan'];
 			$id_unit = $_SESSION['id_unit'];
-			if($id_jabatan != 0)
-				$query = $this->connection->query("SELECT * FROM data_kpi WHERE id_anggota = '$id_anggota' AND id_jabatan = '$id_jabatan' AND id_unit = '$id_unit'");
+			if($id_periode != null)
+				$query = $this->connection->query("SELECT k.*, j.nama_jabatan, u.nama_unit, p.tahun, s.nama_satuan, pol.nama_polarisasi FROM data_kpi k LEFT JOIN mst_jabatan j ON j.id_jabatan = k.id_jabatan LEFT JOIN mst_unit u ON u.id_unit = k.id_unit LEFT JOIN mst_periode p ON p.id_periode = k.id_periode LEFT JOIN mst_satuan s ON s.id_satuan = k.satuan LEFT JOIN mst_polarisasi pol ON pol.id_polarisasi = k.sifat_kpi WHERE k.id_anggota = '$id_anggota' AND k.id_jabatan = '$id_jabatan' AND k.id_unit = '$id_unit' AND p.id_periode = '$id_periode'");
 			else
-				$query = $this->connection->query("SELECT * FROM data_kpi");
+				$query = $this->connection->query("SELECT k.*, j.nama_jabatan, u.nama_unit, p.tahun, s.nama_satuan, pol.nama_polarisasi FROM data_kpi k LEFT JOIN mst_jabatan j ON j.id_jabatan = k.id_jabatan LEFT JOIN mst_unit u ON u.id_unit = k.id_unit LEFT JOIN mst_periode p ON p.id_periode = k.id_periode LEFT JOIN mst_satuan s ON s.id_satuan = k.satuan LEFT JOIN mst_polarisasi pol ON pol.id_polarisasi = k.sifat_kpi WHERE k.id_anggota = '$id_anggota' AND k.id_jabatan = '$id_jabatan' AND k.id_unit = '$id_unit'");
 			while($tampil = $query->fetch_array())
 				$hasil[] = $tampil;
 			return $hasil;
@@ -58,8 +58,11 @@
 
 		function tampil_kpi_detail($id_anggota = null, $id_jabatan = null, $id_unit = null){
 			error_reporting(0);
-			$tahun = date('Y');
-			$query = $this->connection->query("SELECT k.*, a.nama, j.nama_jabatan, u.nama_unit FROM data_kpi k JOIN mst_anggota a ON a.id_anggota = k.id_anggota JOIN mst_jabatan j ON j.id_jabatan = k.id_jabatan JOIN mst_unit u ON u.id_unit = k.id_unit WHERE k.id_anggota = '$id_anggota' AND k.id_jabatan = '$id_jabatan' AND k.id_unit = '$id_unit' AND k.tahun = '$tahun'");
+			$queryT = $this->connection->query("SELECT * FROM mst_periode WHERE status = '1'");
+			$id_periode = 0;
+			while($tampilT = $queryT->fetch_array())
+				$id_periode = $tampilT['id_periode'];
+			$query = $this->connection->query("SELECT k.*, a.nama, j.nama_jabatan, u.nama_unit, per.tahun, per.status as status_per FROM data_kpi k LEFT JOIN mst_anggota a ON a.id_anggota = k.id_anggota LEFT JOIN mst_jabatan j ON j.id_jabatan = k.id_jabatan LEFT JOIN mst_unit u ON u.id_unit = k.id_unit LET JOIN mst_periode per ON per.id_periode = k.id_periode WHERE k.id_anggota = '$id_anggota' AND k.id_jabatan = '$id_jabatan' AND k.id_unit = '$id_unit' AND per.id_periode = '$id_periode'");
 			while($tampil = $query->fetch_array())
 				$hasil[] = $tampil;
 			return $hasil;
@@ -266,7 +269,7 @@
 				return 2;
 		}
 
-		function input_kpi($kpi = [], $deskripsi = [], $bobot = [], $sasaran = [], $satuan = [], $sifat_kpi = [], $tahun = 0)
+		function input_kpi($kpi = [], $deskripsi = [], $bobot = [], $sasaran = [], $satuan = [], $sifat_kpi = [], $id_periode = 0)
 		{
 			session_start();
 			$id_anggota = $_SESSION['id_anggota'];
@@ -275,7 +278,7 @@
 			for($a=0; $a<count($kpi); $a++)
 			{
 				$tanggal_input = date('Y-m-d');
-				$query = "INSERT INTO data_kpi VALUES ('', '$id_anggota', '$id_jabatan', '$id_unit', '$tahun','$kpi[$a]', '$deskripsi[$a]', '$bobot[$a]', '$sasaran[$a]', '$satuan[$a]', '$sifat_kpi[$a]', '0', '0', '$tanggal_input', '')";
+				$query = "INSERT INTO data_kpi VALUES ('', '$id_anggota', '$id_jabatan', '$id_unit', '$id_periode','$kpi[$a]', '$deskripsi[$a]', '$bobot[$a]', '$sasaran[$a]', '$satuan[$a]', '$sifat_kpi[$a]', '0', '0', '$tanggal_input', '')";
 				$input = $this->connection->prepare($query);
 				if($input->execute())
 					$cek[$a] = 1;
@@ -468,10 +471,10 @@
 			}
 		}
 
-		function edit_kpi($id_kpi = null, $kpi = null, $deskripsi = null, $bobot = null, $sasaran = null, $satuan = null, $sifat_kpi = null, $tahun = null)
+		function edit_kpi($id_kpi = null, $kpi = null, $deskripsi = null, $bobot = null, $sasaran = null, $satuan = null, $sifat_kpi = null, $id_periode = null)
 		{
 			$tanggal_input = date('Y-m-d');
-			$query = "UPDATE data_kpi SET kpi = '$kpi', status = '0', id_verifikator = '0', tanggal_verifikasi = '0000-00-00', deskripsi = '$deskripsi', bobot = '$bobot', sasaran = '$sasaran', satuan = '$satuan', sifat_kpi = '$sifat_kpi', tahun = '$tahun' WHERE id_kpi = '$id_kpi'";
+			$query = "UPDATE data_kpi SET kpi = '$kpi', status = '0', id_verifikator = '0', tanggal_verifikasi = '0000-00-00', deskripsi = '$deskripsi', bobot = '$bobot', sasaran = '$sasaran', satuan = '$satuan', sifat_kpi = '$sifat_kpi', id_periode = '$id_periode' WHERE id_kpi = '$id_kpi'";
 			$edit = $this->connection->prepare($query);
 			if($edit->execute())
 			{
@@ -960,8 +963,11 @@
 		// Menghitung Data
 		function hitung_data_kpi($id_anggota = null, $id_jabatan = null, $id_unit = null)
 		{
-			$tahun = date('Y');
-			$query = $this->connection->query("SELECT * FROM data_kpi WHERE id_anggota = '$id_anggota' AND id_jabatan = '$id_jabatan' AND id_unit = '$id_unit' AND tahun = '$tahun'");
+			$queryT = $this->connection->query("SELECT * FROM mst_periode WHERE status = '1'");
+			$id_periode = 0;
+			while($tampilT = $queryT->fetch_array())
+				$id_periode = $tampilT['id_periode'];
+			$query = $this->connection->query("SELECT * FROM data_kpi k LEFT JOIN mst_periode p ON p.id_periode = k.id_periode WHERE k.id_anggota = '$id_anggota' AND k.id_jabatan = '$id_jabatan' AND k.id_unit = '$id_unit' AND p.id_periode = '$id_periode'");
 			$jml = 0;
 			while($tampil = $query->fetch_array())
 				$jml = $jml+1;

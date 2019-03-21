@@ -9,6 +9,15 @@
         header("location:login.php");
     $nama = $_SESSION['nama'];
     $jabatan = $_SESSION['id_jabatan'];
+
+    foreach($db->tampil_periode() as $tampilP)
+    {
+        if($tampilP['status'] == 1)
+        {
+            $tA = $tampilP['tahun'];
+            $idA = $tampilP['id_periode'];
+        }
+    }
 ?>
 <!DOCTYPE html>
 <html>
@@ -214,7 +223,7 @@
                                             <th>Sasaran/Target</th>
                                             <th>Satuan</th>
                                             <th>Polarisasi</th>
-                                            <th>Tahun</th>
+                                            <th>Periode</th>
                                             <th>Status</th>
 											<th class="text-right">Actions</th>
 										</tr>
@@ -223,7 +232,7 @@
                                     <?php
                                         $no = 0;
                                         error_reporting(0);
-                                        foreach($db->tampil_kpi() as $data)
+                                        foreach($db->tampil_kpi($idA) as $data)
                                         {
                                             $no = $no+1;
                                     ?>
@@ -232,29 +241,8 @@
                                                 <td><?php echo $data['deskripsi']; ?></td>
                                                 <td><?php echo $data['bobot']; ?></td>
                                                 <td><?php echo $data['sasaran']; ?></td>
-                                                <td>
-                                                    <?php
-                                                        $nama_satuan = '';
-                                                        foreach($db->tampil_satuan() as $tampilS)
-                                                        {
-                                                            if($tampilS['id_satuan'] == $data['satuan'])
-                                                                $nama_satuan = $tampilS['nama_satuan'];
-                                                        }
-                                                        echo $nama_satuan;
-                                                    ?>
-                                                </td>
-                                                <td>
-                                                    <?php
-                                                        $value = $data['sifat_kpi'];
-                                                        foreach($db->tampil_polarisasi() as $tampil)
-                                                        {
-                                                            if($tampil['id_polarisasi'] == $value)
-                                                                $ket = $tampil['nama_polarisasi'];
-                                                        }
-
-                                                        echo $ket;
-                                                    ?>
-                                                </td>
+                                                <td><?php echo $data['nama_satuan']; ?></td>
+                                                <td><?php echo $data['nama_polarisasi']; ?></td>
                                                 <td><?php echo $data['tahun']; ?></td>
                                                 <td><?php echo ($data['status'] == 0)?'Belum Verifikasi':'Sudah Verifikasi'; ?></td>
                                                 <td class="text-right">

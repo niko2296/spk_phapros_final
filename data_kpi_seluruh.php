@@ -211,7 +211,7 @@
                                             <th>Sasaran/Target</th>
                                             <th>Satuan</th>
                                             <th>Polarisasi</th>
-                                            <th>Tahun</th>
+                                            <th>Periode</th>
                                             <th>Status</th>
 										</tr>
 									</thead>
@@ -255,7 +255,7 @@
                                                         echo $ket;
                                                     ?>
                                                 </td>
-                                                <td><?php echo $data['tahun']; ?></td>
+                                                <td><?php echo $data['id_periode']; ?></td>
                                                 <td><?php echo ($data['status'] == 0)?'Belum Verifikasi':'Sudah Verifikasi'; ?></td>
                                             </tr>
                                     <?php

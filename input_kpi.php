@@ -9,6 +9,15 @@
         header("location:login.php");
     $nama = $_SESSION['nama'];
 	$jabatan = $_SESSION['id_jabatan'];
+
+	foreach($db->tampil_periode() as $tP)
+	{
+		if($tP['status'] == 1)
+		{
+			$tA = $tP['tahun'];
+			$idA = $tP['id_periode'];
+		}	
+	}
 ?>
 <!DOCTYPE html>
 <html>
@@ -198,12 +207,22 @@
 					<?php
 						if(isset($_POST['tombolKirim']))
 						{
-							echo '
+							$html = '
 							<br><br><br>
 							<form action="simpan_kpi.php" method="POST">
 							<div class="row">
 								<div class="col-md-4">
-									<input type="text" name="tahun" value="" placeholder="Tahun" class="form-control">
+									<select name="tahun" class="form-control">
+							';
+										foreach($db->tampil_periode() as $tampilP)
+										{
+											if($tampilP['status'] == 1)
+											{
+												$html .= '<option value="'.$tampilP['id_periode'].'">'.$tampilP['tahun'].'</option>';
+											}
+										}
+							$html .= '
+									</select>
 								</div>
 							</div>
 							<br>
@@ -224,6 +243,8 @@
 											</thead>
 							';
 
+							echo $html;
+
 							$jml_kpi = $_POST['jml_kpi'];
 							for($i=1; $i<=$jml_kpi; $i++)
 							{
@@ -241,9 +262,9 @@
 														<select id="<?php echo $id1; ?>" name="satuan[]" class="select" style="width:100%;" onchange="fungsi1(<?php echo $i; ?>)">
 															<option value="">Silahkan Pilih Satuan</option>
 															<?php
-																foreach($db->tampil_satuan() as $tampil)
+																foreach($db->tampil_satuan($idA) as $tampil)
 																{
-																	echo '<option value="'.$tampil['id_satuan'].'">'.$tampil['nama_satuan'].'</option>';
+																		echo '<option value="'.$tampil['id_satuan'].'">'.$tampil['nama_satuan'].'</option>';
 																}
 															?>
 														</select>

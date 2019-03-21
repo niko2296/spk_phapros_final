@@ -284,7 +284,15 @@
                     <form action="simpan_kpi.php" method="POST">
                     <div class="row">
                         <div class="col-md-4">
-                            <input type="text" name="tahun" value="" placeholder="Tahun Tujuan" class="form-control">
+                            <select name="id_periode" class="form-control">
+                                <?php
+                                    foreach($db->tampil_periode() as $tampilPer)
+                                    {
+                                        if($tampilPer['status'] == 1)
+                                            echo '<option value="'.$tampilPer['id_periode'].'">'.$tampilPer['tahun'].'</option>';
+                                    }
+                                ?>
+                            </select>
                         </div>
                     </div>
                     <br>
