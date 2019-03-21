@@ -998,10 +998,125 @@
 				{
 					$nama_satuan = $tampil1['nama_satuan'];
 					$jenis_polarisasi = $tampil1['jenis_polarisasi'];
+
+					foreach(unserialize($jenis_polarisasi) as $key => $value)
+					{
+						$query2 = $this->connection->query("SELECT * FROM mst_polarisasi WHERE id_polarisasi = '$value'");
+						while($tampil2 = $query2->fetch_array())
+							$nama_polarisasi = $tampil2['nama_polarisasi'];
+						$cek = 0;
+						$query3 = $this->connection->query("SELECT * FROM mst_polarisasi WHERE nama_polarisasi = '$nama_polarisasi' AND id_periode = '$id_periode'");
+						while($tampil3 = $query3->fetch_array())
+						{
+							$idP = $tampil3['id_polarisasi'];
+							$cek = $cek+1;
+						}
+
+						if($cek == 0)
+						{
+							$queryInput2 = "INSERT INTO mst_polarisasi VALUES ('', '$nama_polarisasi', '$id_periode', '$tanggal')";
+							$input2 = $this->connection->prepare($queryInput2);
+							if($input2->execute())
+							{
+								$query3 = $this->connection->query("SELECT * FROM mst_polarisasi WHERE nama_polarisasi = '$nama_polarisasi' AND id_periode = '$id_periode'");
+								while($tampil3 = $query3->fetch_array())
+									$id_polarisasi_baru = $tampil3['id_polarisasi'];
+								$query4 = $this->connection->query("SELECT * FROM aturan_polarisasi WHERE id_polarisasi = '$value'");
+								while($tampil4 = $query4->fetch_array())
+								{
+									$bmi = $tampil4['bmi'];
+									$bma = $tampil4['bma'];
+									$poin = $tampil4['poin'];
+
+									$queryInput3 = "INSERT INTO aturan_polarisasi VALUES ('', '$id_polarisasi_baru', '$bmi', '$bma', '$poin', '$tanggal')";
+									$input3 = $this->connection->prepare($queryInput3);
+									$input3->execute();
+								}
+								$jp[] = $id_polarisasi_baru;
+							}
+						}
+						else {
+							$jp[] = $idP;
+						}
+					}
+					$jP2 = serialize($jp);
+					$queryInput1 = "INSERT INTO mst_satuan VALUES ('', '$nama_satuan', '$jP2', '$id_periode', '$tanggal')";
+					$input1 = $this->connection->prepare($queryInput1);
+					if($input1->execute())
+						$k[] = 1;
+					else 
+						$k[] = 0;
 				}
-				$query2 = "INSERT INTO mst_satuan VALUES ('', '$nama_satuan', '$jenis_polarisasi', '$id_periode', '$tanggal')";
-				$input1 = $this->connection->prepare($query2);
+
+				if(in_array(0, $k))
+					return 2;
+				else 
+					header('location:data_satuan.php');
 				
+			}
+			else if($jenis == 2 || $jenis == '2')
+			{
+				$a = 0;
+				$query1 = $this->connection->query("SELECT * FROM mst_satuan WHERE id_periode = '$id_satuan'");
+				while($tampil1 = $query1->fetch_array())
+				{
+					$a = $a+1;
+					$nama_satuan = $tampil1['nama_satuan'];
+					$jenis_polarisasi = $tampil1['jenis_polarisasi'];
+
+					foreach(unserialize($jenis_polarisasi) as $key => $value)
+					{
+						$query2 = $this->connection->query("SELECT * FROM mst_polarisasi WHERE id_polarisasi = '$value'");
+						while($tampil2 = $query2->fetch_array())
+							$nama_polarisasi = $tampil2['nama_polarisasi'];
+						$cek = 0;
+						$query3 = $this->connection->query("SELECT * FROM mst_polarisasi WHERE nama_polarisasi = '$nama_polarisasi' AND id_periode = '$id_periode'");
+						while($tampil3 = $query3->fetch_array())
+						{
+							$idP = $tampil3['id_polarisasi'];
+							$cek = $cek+1;
+						}
+
+						if($cek == 0)
+						{
+							$queryInput2 = "INSERT INTO mst_polarisasi VALUES ('', '$nama_polarisasi', '$id_periode', '$tanggal')";
+							$input2 = $this->connection->prepare($queryInput2);
+							if($input2->execute())
+							{
+								$query3 = $this->connection->query("SELECT * FROM mst_polarisasi WHERE nama_polarisasi = '$nama_polarisasi' AND id_periode = '$id_periode'");
+								while($tampil3 = $query3->fetch_array())
+									$id_polarisasi_baru = $tampil3['id_polarisasi'];
+								$query4 = $this->connection->query("SELECT * FROM aturan_polarisasi WHERE id_polarisasi = '$value'");
+								while($tampil4 = $query4->fetch_array())
+								{
+									$bmi = $tampil4['bmi'];
+									$bma = $tampil4['bma'];
+									$poin = $tampil4['poin'];
+
+									$queryInput3 = "INSERT INTO aturan_polarisasi VALUES ('', '$id_polarisasi_baru', '$bmi', '$bma', '$poin', '$tanggal')";
+									$input3 = $this->connection->prepare($queryInput3);
+									$input3->execute();
+								}
+								$jp[$a][] = $id_polarisasi_baru;
+							}
+						}
+						else {
+							$jp[$a][] = $idP;
+						}
+					}
+					$jP2 = serialize($jp[$a]);
+					$queryInput1 = "INSERT INTO mst_satuan VALUES ('', '$nama_satuan', '$jP2', '$id_periode', '$tanggal')";
+					$input1 = $this->connection->prepare($queryInput1);
+					if($input1->execute())
+						$k[] = 1;
+					else 
+						$k[] = 0;
+				}
+
+				if(in_array(0, $k))
+					return 2;
+				else 
+					header('location:data_satuan.php');
 			}
 		}
 
