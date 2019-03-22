@@ -212,7 +212,7 @@
 							<form action="simpan_kpi.php" method="POST">
 							<div class="row">
 								<div class="col-md-4">
-									<select name="tahun" class="form-control">
+									<select name="id_periode" class="form-control">
 							';
 										foreach($db->tampil_periode() as $tampilP)
 										{

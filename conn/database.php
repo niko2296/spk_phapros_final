@@ -675,16 +675,23 @@
 			}
 		}
 
-		function hapus_kpi($id_kpi = null)
+		function hapus_kpi($id_kpi = null, $jenis = null)
 		{
 			if($id_kpi != null)
 			{
 				$query = "DELETE FROM data_kpi WHERE id_kpi = '$id_kpi'";
 				$hapus = $this->connection->prepare($query);
 				if($hapus->execute())
-					header("location:data_kpi.php");
+				{
+					if($jenis == null)
+						header("location:data_kpi.php");
+					else 
+						return 1;
+				}
 				else
+				{
 					return 2;
+				}
 			}
 			else {
 				return 3;

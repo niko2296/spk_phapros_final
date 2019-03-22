@@ -235,7 +235,8 @@
                                             <th>Satuan</th>
                                             <th>Polarisasi</th>
                                             <th>Tahun</th>
-											<th class="text-right">Actions</th>
+											<th class="text-right">Verifikasi</th>
+											<th class="text-right">Action</th>
 										</tr>
 									</thead>
                                     <form action="" method="POST">
@@ -248,6 +249,9 @@
                                             $no = $no+1;
                                             $id1 = 'bobot'.$data['id_kpi'];
                                             $id2 = 'sasaran'.$data['id_kpi'];
+                                            $id3 = 'hapusData'.$data['id_kpi'];
+                                            $id4 = 'baris'.$data['id_kpi'];
+                                            $id5 = 'tempat'.$data['id_kpi'];
                                             $r1 = '';
                                             $r2 = '';
 
@@ -257,7 +261,7 @@
                                                 $r2 = 'readonly="readonly"';
                                             }
                                     ?>
-                                            <tr>
+                                            <tr id="<?php echo $id4; ?>">
                                                 <td><?php echo $data['nama']; ?></td>
                                                 <td><?php echo $data['nama_jabatan']; ?></td>
                                                 <td><?php echo $data['nama_unit']; ?></td>
@@ -275,6 +279,9 @@
                                                     <div class="dropdown">
                                                         <input data-id="<?php echo $data['id_kpi']; ?>" type="checkbox" <?php echo ($data['status'] == '1')?'checked':''; ?> data-field='status1' id='verifikasi1' <?php echo $k1; ?>>
                                                     </div>
+                                                </td>
+                                                <td class="text-center" id="<?php echo $id5; ?>">
+                                                    <a href="#" id="<?php echo $id3; ?>" class="btn btn-danger" onclick="fungsi_hapus(<?php echo $data['id_kpi']; ?>)">Hapus</a>
                                                 </td>
                                             </tr>
                                     <?php
@@ -322,6 +329,7 @@
                     var paramId = $(this).data('id');
                     var id1 = 'bobot';
                     var id2 = 'sasaran';
+                    var id3 = 'tempat';
                     $.ajax({
                         url : 'verifikasi.php',
                         type : 'get',
@@ -336,6 +344,7 @@
                                 setTimeout(function(){$("#notifikasi1").fadeOut('#notifikasi1');}, 1500);
                                 document.getElementById(id1+paramId).readOnly = true;
                                 document.getElementById(id2+paramId).readOnly = true;
+                                document.getElementById(id3+paramId).innerHTML = '<a href="#" id="hapusData'+paramId+'" class="btn btn-danger" disabled="disabled">Hapus</a>'; 
                             }
                             else if(html == 2)
                             {
@@ -343,11 +352,36 @@
                                 setTimeout(function(){$("#notifikasi2").fadeOut('#notifikasi2');}, 1500);
                                 document.getElementById(id1+paramId).readOnly = false;
                                 document.getElementById(id2+paramId).readOnly = false;
+                                document.getElementById(id3+paramId).innerHTML = '<a href="#" id="hapusData'+paramId+'" class="btn btn-danger" onclick="fungsi_hapus('+paramId+')">Hapus</a>';
                             }
                         }
                     });
                 });
             });
+
+            function fungsi_hapus(id_kpi = null){
+                var id = '#baris'+id_kpi;
+                $.ajax({
+                    url : 'verifikasi_final.php',
+                    type : 'get',
+                    data:{
+                        'id_kpi' : id_kpi,
+                        'jenis' : 'hapus_kpi'
+                    },
+                    success:function(html){
+                        if(html == 1)
+                        {
+                            $(id).fadeOut("slow", function(){
+                                $(id).remove();
+                            });
+                        }
+                        else
+                        {
+                            alert('Gagal Dihapus');
+                        }
+                    }
+                });
+            }
         </script>
     </body>
 </html>

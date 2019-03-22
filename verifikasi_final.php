@@ -43,5 +43,13 @@
                 echo 2;
         }
     }
+    else if($_GET['jenis'] == 'hapus_kpi')
+    {
+        $eksekusi = $db->hapus_kpi($_GET['id_kpi'], 1);
+        if($eksekusi == 1)
+            echo 1;
+        else 
+            echo 2;
+    }
 
 ?>
