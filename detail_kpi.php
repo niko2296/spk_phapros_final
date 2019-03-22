@@ -209,19 +209,47 @@
 					</div>
 					<div class="row">
 						<div class="col-md-12">
+                            <?php
+                                if(isset($_POST['tombolKembali']))
+                                {
+                                    header('location:data_kpi_verifikasi.php');
+                                }
+                                else if(isset($_POST['tombolSimpan']))
+                                {
+                                    $eksekusi = $db->revisi_nilai($_POST['id_kpi'], $_POST['bobot'], $_POST['sasaran']);
+                                    if($eksekusi == 2 || $eksekusi == 3)
+                                        echo '<center><div style="background-color:red; width:20%; color:white; padding:5px; margin-bottom:1%;">Data Gagal Disimpan</div></center>';
+                                }
+                                else if(isset($_POST['tombolCatatan']))
+                                {
+                                    $eksekusi = $db->input_catatan($id_anggotaD, $id_jabatanD, $id_unitD, $idA, $_POST['catatan']);
+                                    if($eksekusi == 2 || $eksekusi == 3)
+                                        echo '<center><div style="background-color:red; width:20%; color:white; padding:5px; margin-bottom:1%;">Data Gagal Disimpan</div></center>';
+                                }
+                                else if(isset($_POST['tombolHapusC']))
+                                {
+                                    $eksekusi = $db->hapus_catatan($id_anggotaD, $id_jabatanD, $id_unitD, $idA);
+                                    if($eksekusi == 2 || $eksekusi == 3)
+                                        echo '<center><div style="background-color:red; width:20%; color:white; padding:5px; margin-bottom:1%;">Data Gagal Dihapus</div></center>';
+                                }
+
+                                if($db->hitung_catatan($id_anggotaD, $id_jabatanD, $id_unitD, $idA) > 0)
+                                {
+                                    echo '<div class="alert alert-danger">
+                                            <div class="row" style="vertical-align:bottom;">
+                                                <div class="col-md-10">
+                                                '.$db->tampil_catatan($id_anggotaD, $id_jabatanD, $id_unitD, $idA).'
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <form method="POST">
+                                                        <button type="submit" name="tombolHapusC" class="btn btn-danger">Hapus Catatan</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                          </div>';
+                                }
+                            ?>
 							<div class="table-responsive">
-                                <?php
-                                    if(isset($_POST['tombolKembali']))
-                                    {
-                                        header('location:data_kpi_verifikasi.php');
-                                    }
-                                    else if(isset($_POST['tombolSimpan']))
-                                    {
-                                        $eksekusi = $db->revisi_nilai($_POST['id_kpi'], $_POST['bobot'], $_POST['sasaran']);
-                                        if($eksekusi == 2 || $eksekusi == 3)
-                                            echo '<center><div style="background-color:red; width:20%; color:white; padding:5px; margin-bottom:1%;">Data Gagal Disimpan</div></center>';
-                                    }
-                                ?>
 								<table class="table table-striped custom-table m-b-0 display" id="">
 									<thead>
 										<tr>
@@ -281,7 +309,12 @@
                                                     </div>
                                                 </td>
                                                 <td class="text-center" id="<?php echo $id5; ?>">
-                                                    <a href="#" id="<?php echo $id3; ?>" class="btn btn-danger" onclick="fungsi_hapus(<?php echo $data['id_kpi']; ?>)">Hapus</a>
+                                                    <?php
+                                                        if($data['status'] == 0)
+                                                            echo '<a href="#" id="'.$id3.'" class="btn btn-danger" onclick="fungsi_hapus('.$data['id_kpi'].')">Hapus</a>';
+                                                        else
+                                                            echo '<a href="#" id="'.$id3.'" class="btn btn-danger" disabled="disabled">Hapus</a>';                                       
+                                                    ?>
                                                 </td>
                                             </tr>
                                     <?php
@@ -290,14 +323,42 @@
 									</tbody>
                                     <tbody>
                                         <tr style="background:none;">
-                                            <td colspan="11" class="text-right">
+                                            <td colspan="12" class="text-right">
                                                 <button type="" name="tombolKembali" class="btn btn-primary">Kembali</button>
+                                                <a href="#" class="btn btn-info" data-toggle="modal" data-target="#laporan">Catatan</a>
                                                 <button type="submit" name="tombolSimpan" class="btn btn-success">Simpan</button>
                                             </td>
                                         </tr>
                                     </tbody>
                                     </form>
 								</table>
+
+                                <!-- Modal Laporan -->
+                                <div id="laporan" class="modal custom-modal fade" role="dialog">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content modal-md">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">Data Catatan KPI</h4>
+                                            </div>
+                                            <form method="POST" action="#" id="inputan">
+                                                <div class="modal-body card-box">
+                                                    <?php
+                                                        if($db->hitung_catatan($id_anggotaD, $id_jabatanD, $id_unitD, $idA) == 0)
+                                                            echo '<textarea name="catatan" cols="30" rows="10" class="form-control" placeholder="Silahkan Masukkan Catatan Untuk Data KPI yang Ada"></textarea>';
+                                                        else
+                                                            echo '<textarea name="catatan" cols="30" rows="10" class="form-control">'.$db->tampil_catatan($id_anggotaD, $id_jabatanD, $id_unitD, $idA).'</textarea>';
+                                                    ?>
+                                                    <div class="m-t-20"> 
+                                                        <a href="#" class="btn btn-default" data-dismiss="modal">Close</a>
+                                                        <button type="submit" name="tombolCatatan" class="btn btn-success">Simpan</button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Akhiran Modal Laporan -->
+
 							</div>
 						</div>
 					</div>
@@ -322,6 +383,20 @@
                 $('#tabel').DataTable({
                     searching : true,
                     ordering : false
+                });
+
+                $("#inputan").on("submit", function(e){
+                    var inputan = $("#inputan").find("textarea");
+                    var v = '';
+                    $.each(inputan, function(i){
+                        v = $(this).val();
+                        if(v == '')
+                        {
+                            e.preventDefault();
+                            alert('Masih Ada data yang kosong');
+                        }
+                        v = '';
+                    });
                 });
 
                 $('.table').on('change','#verifikasi1',function(e){

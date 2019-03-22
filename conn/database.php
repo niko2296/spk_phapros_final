@@ -206,6 +206,14 @@
 				$hasil[] = $tampil;
 			return $hasil;
 		}
+
+		function tampil_catatan($id_anggota = null, $id_jabatan = null, $id_unit = null, $id_periode = null)
+		{
+			$query = $this->connection->query("SELECT * FROM data_catatan WHERE id_anggota = '$id_anggota' AND id_jabatan = '$id_jabatan' AND id_unit = '$id_unit' AND id_periode = '$id_periode'");
+			$tampil = $query->fetch_array();
+			$catatan = $tampil['catatan'];
+			return $catatan;
+		}
 		//Akhiran Fungsi Tampil
 
 		//Fungsi Input
@@ -371,6 +379,32 @@
 			$input = $this->connection->prepare($query);
 			if($input->execute())
 				header('location:data_periode.php');
+			else 
+				return 2;
+		}
+
+		function input_catatan($id_anggota = null, $id_jabatan = null, $id_unit = null, $id_periode = null, $catatan = null){
+			$tanggal = date('Y-m-d');
+			$query = $this->connection->query("SELECT * FROM data_catatan WHERE id_anggota = '$id_anggota' AND id_jabatan = '$id_jabatan' AND id_unit = '$id_unit' AND id_periode = '$id_periode'");
+			$tampil = $query->fetch_array();
+			$k = 0;
+			if(count($tampil) == 0)
+			{
+				$query = "INSERT INTO data_catatan VALUES ('', '$id_anggota', '$id_jabatan', '$id_unit', '$id_periode', '$catatan', '$tanggal')";
+				$input = $this->connection->prepare($query);
+				if($input->execute())
+					$k = 1;
+			}
+			else {
+				$idC = $tampil['id_catatan'];
+				$query = "UPDATE data_catatan SET catatan = '$catatan' WHERE id_catatan = '$idC'";
+				$edit = $this->connection->prepare($query);
+				if($edit->execute())
+					$k = 1;
+			}
+
+			if($k == 1)
+				header("location:detail_kpi.php?id_anggota=$id_anggota&&id_jabatan=$id_jabatan&&id_unit=$id_unit");
 			else 
 				return 2;
 		}
@@ -783,6 +817,17 @@
 					return 2;
 			}
 		}
+
+		function hapus_catatan($id_anggota = null, $id_jabatan = null, $id_unit = null, $id_periode = null)
+		{
+
+			$query = "DELETE FROM data_catatan WHERE id_anggota = '$id_anggota' AND id_jabatan = '$id_jabatan' AND id_unit = '$id_unit' AND id_periode = '$id_periode'";
+			$hapus = $this->connection->prepare($query);
+			if($hapus->execute())
+				header("location:detail_kpi.php?id_anggota=$id_anggota&&id_jabatan=$id_jabatan&&id_unit=$id_unit");
+			else 
+				return 2;
+		}
 		//Akhiran Fungsi Hapus
 
 		//Fungsi Cek Login
@@ -1016,6 +1061,13 @@
 			$jml = 0;
 			while($tampil = $query->fetch_array())
 				$jml = $jml+1;
+			return $jml;
+		}
+
+		function hitung_catatan($id_anggota = null, $id_jabatan = null, $id_unit = null, $id_periode = null)
+		{
+			$query = $this->connection->query("SELECT * FROM data_catatan WHERE id_anggota = '$id_anggota' AND id_jabatan = '$id_jabatan' AND id_unit = '$id_unit' AND id_periode = '$id_periode'");
+			$jml = count($query->fetch_array());
 			return $jml;
 		}
 		// Akhiran Menghitung Data
