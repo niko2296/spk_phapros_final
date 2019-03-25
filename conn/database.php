@@ -1016,12 +1016,35 @@
 		{
 			if($id_verifikasi != null)
 			{
-				$query = "UPDATE mst_periode SET status = '$status' WHERE id_periode = '$id_verifikasi'";
-				$verif = $this->connection->prepare($query);
-				if($verif->execute())
-					return 1;
-				else 
-					return 2;
+				$queryT = $this->connection->query("SELECT * FROM mst_periode WHERE status = 1");
+				$idV = [];
+				while($tampilT = $queryT->fetch_array())
+				{
+					$idV[] = $tampilT['id_periode'];
+				}
+				if(count($idV) > 0)
+				{
+					if($status == 1 AND !in_array($id_verifikasi, $idV))
+					{
+						return 3;
+					}
+					else{
+						$query = "UPDATE mst_periode SET status = '$status' WHERE id_periode = '$id_verifikasi'";
+						$verif = $this->connection->prepare($query);
+						if($verif->execute())
+							return 1;
+						else 
+							return 2;
+					}
+				}
+				else {
+					$query = "UPDATE mst_periode SET status = '$status' WHERE id_periode = '$id_verifikasi'";
+					$verif = $this->connection->prepare($query);
+					if($verif->execute())
+						return 1;
+					else 
+						return 2;
+				}
 			}
 		}
 		// Akhiran Fungsi Verifikasi

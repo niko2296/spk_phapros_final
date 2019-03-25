@@ -42,6 +42,10 @@
             else if($_GET['value'] == 0)
                 echo 2;
         }
+        else if($eksekusi == 3)
+        {
+            echo 3;
+        }
     }
     else if($_GET['jenis'] == 'hapus_kpi')
     {

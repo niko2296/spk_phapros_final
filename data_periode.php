@@ -372,6 +372,11 @@
                                 $(document).ready(function(){setTimeout(function(){$("#notifikasi2").fadeIn('slow');}, 300);});
                                 setTimeout(function(){$("#notifikasi2").fadeOut('#notifikasi2');}, 1500);
                             }
+                            else if(html == 3)
+                            {
+                                alert('Suda Terdapat Periode yang Di-Aktifkan');
+                                location.href = "data_periode.php";
+                            }
                         }
                     });
                 });
