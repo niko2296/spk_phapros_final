@@ -4,11 +4,15 @@
     $db = new database();
     $nama = '';
     $jabatan = '';
+    $id_anggotaD = '';
+    $id_unitD = '';
 	session_start();
 	if($_SESSION['login'] == FALSE)
         header("location:login.php");
     $nama = $_SESSION['nama'];
     $jabatan = $_SESSION['id_jabatan'];
+    $id_anggotaD = $_SESSION['id_anggota'];
+    $id_unitD = $_SESSION['id_unit'];
 
     foreach($db->tampil_periode() as $tampilP)
     {
@@ -209,6 +213,17 @@
                             if(isset($_POST['tombolHapus']))
                             {
                                 $db->hapus_kpi($_POST['id_kpi_hapus']);
+                            }
+
+                            if($db->hitung_catatan($id_anggotaD, $jabatan, $id_unitD, $idA) > 0)
+                            {
+                                echo '<div class="alert alert-danger">
+                                        <div class="row" style="vertical-align:bottom;">
+                                            <div class="col-md-12">
+                                            '.$db->tampil_catatan($id_anggotaD, $jabatan, $id_unitD, $idA).'
+                                            </div>
+                                        </div>
+                                        </div>';
                             }
                         ?>
 
