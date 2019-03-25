@@ -9,6 +9,7 @@
         header("location:login.php");
     $nama = $_SESSION['nama'];
     $jabatan = $_SESSION['id_jabatan'];
+    $id_unitD = $_SESSION['id_unit'];
 
     foreach($db->tampil_periode() as $tPer)
     {
@@ -223,39 +224,27 @@
                                         <table class="table table-striped custom-table m-b-0 display" id="tabel">
                                             <thead>
                                                 <tr>
-                                                    <th>Nama Pegawai</th>
                                                     <th>Jabatan</th>
-                                                    <th>KPI</th>
-                                                    <th>Deskripsi</th>
-                                                    <th>Bobot (%)</th>
-                                                    <th>Sasaran/Target</th>
-                                                    <th>Satuan</th>
-                                                    <th>Polarisasi</th>
-                                                    <th>Tahun</th>
-                                                    <th class="text-right">Actions</th>
+                                                    <th>Unit</th>
+                                                    <th>Jumlah Anggota</th>
+                                                    <th>Actions</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                             <?php
                                                 $no = 0;
                                                 error_reporting(0);
-                                                foreach($db->tampil_kpi_verifikasi($idA) as $data)
+                                                foreach($db->tampil_jabatan_grup($jabatan, $id_unitD) as $data)
                                                 {
                                                     $no = $no+1;
                                             ?>
                                                     <tr>
-                                                        <td><?php echo $data['nama']; ?></td>
                                                         <td><?php echo $data['nama_jabatan']; ?></td>
-                                                        <td><?php echo $data['kpi']; ?></td>
-                                                        <td><?php echo $data['deskripsi']; ?></td>
-                                                        <td><?php echo $data['bobot']; ?></td>
-                                                        <td><?php echo $data['sasaran']; ?></td>
-                                                        <td><?php echo $data['nama_satuan']; ?></td>
-                                                        <td><?php echo $data['nama_polarisasi']; ?></td>
-                                                        <td><?php echo $data['tahun']; ?></td>
+                                                        <td><?php echo $data['nama_unit']; ?></td>
+                                                        <td><?php echo $db->hitung_jabatan_grup($data['id_jabatan_dinilai'], $data['id_unit_dinilai']); ?> Anggota</td>
                                                         <td class="text-center  ">
                                                             <div class="dropdown">
-                                                                <input data-id="<?php echo $data['id_kpi']; ?>" type="checkbox" <?php echo ($data['status'] == '1')?'checked':''; ?> data-field='status1' id='verifikasi1' <?php echo $k1; ?>>
+                                                                <a href="detail_jabatan.php?id_jabatan=<?php echo $data['id_jabatan_dinilai']."&&id_unit=".$data['id_unit_dinilai']; ?>">Detail</a>
                                                             </div>
                                                         </td>
                                                     </tr>

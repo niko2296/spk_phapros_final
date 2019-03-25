@@ -214,6 +214,28 @@
 			$catatan = $tampil['catatan'];
 			return $catatan;
 		}
+
+		function tampil_jabatan_grup($id_jabatatan_penilai = null, $id_unit_penilai = null)
+		{
+			error_reporting(0);
+			$query = $this->connection->query("SELECT a.*, j.nama_jabatan, u.nama_unit FROM aturan_penilai a LEFT JOIN mst_jabatan j ON j.id_jabatan = a.id_jabatan_dinilai LEFT JOIN mst_unit u ON u.id_unit = a.id_unit_dinilai WHERE a.id_jabatan_penilai = '$id_jabatatan_penilai' AND a.id_unit_penilai = '$id_unit_penilai'");
+			while($tampil = $query->fetch_array())
+			{
+				$hasil[] = $tampil;
+			}
+			return $hasil;
+		}
+
+		function tampil_anggota_grup2($id_jabatan = null, $id_unit = null)
+		{
+			$query = $this->connection->query("SELECT a.*, j.nama_jabatan, u.nama_unit FROM mst_anggota a JOIN mst_jabatan j ON j.id_jabatan = a.id_jabatan JOIN mst_unit u ON u.id_unit = a.id_unit WHERE a.id_jabatan = '$id_jabatan' AND a.id_unit = '$id_unit' GROUP BY a.nik");
+			while($tampil = $query->fetch_array())
+			{
+				$hasil[] = $tampil;
+			}
+
+			return $hasil;
+		}
 		//Akhiran Fungsi Tampil
 
 		//Fungsi Input
@@ -1090,6 +1112,18 @@
 		{
 			$query = $this->connection->query("SELECT * FROM data_catatan WHERE id_anggota = '$id_anggota' AND id_jabatan = '$id_jabatan' AND id_unit = '$id_unit' AND id_periode = '$id_periode'");
 			$jml = count($query->fetch_array());
+			return $jml;
+		}
+
+		function hitung_jabatan_grup($id_jabatan = null, $id_unit = null)
+		{
+			error_reporting(0);
+			$query = $this->connection->query("SELECT * FROM mst_anggota WHERE id_jabatan = '$id_jabatan' AND id_unit = '$id_unit'");
+			$jml = 0;
+			while($tampil = $query->fetch_array())
+			{
+				$jml = $jml+1;
+			}
 			return $jml;
 		}
 		// Akhiran Menghitung Data
