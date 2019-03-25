@@ -303,12 +303,12 @@
 							<h4 class="modal-title">Tambah Data Jabatan</h4>
 						</div>
 						<div class="modal-body">
-							<form method="POST" action="#">
+							<form method="POST" action="#" id="jabatan_input">
 								<div class="row">
 									<div class="col-md-6">
 										<div class="form-group">
 											<label>Nama Jabatan</label>
-											<input class="form-control" type="text" name="nama_jabatan">
+											<input class="form-control cek" type="text" name="nama_jabatan">
 										</div>
 									</div>
 								</div>
@@ -339,6 +339,34 @@
                 $('#tabel').DataTable({
                     searching : true,
                     ordering : false
+                });
+                $("#jabatan_input").on("submit", function(e){
+                    var inputan = $("#jabatan_input").find(".cek");
+                    var v = '';
+                    var k = [];
+                    var p = 0;
+                    $.each(inputan, function(i){
+                        v = $(this).val();
+                        if(v == '')
+                        {
+                            k[p] = 1;
+                        }
+                        else{
+                            k[p] = 0;
+                        }
+                        v = '';
+                        p = p+1;
+                    });
+                    
+                    for(var c=0; c < p; c++)
+                    {
+                        if(k[c] == 1)
+                        {
+                            e.preventDefault();
+                            alert('Masih Terdapat yg Kosong');
+                            break;
+                        }
+                    }
                 });
             });
         </script>

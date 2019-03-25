@@ -313,12 +313,12 @@
 							<h4 class="modal-title">Tambah Data Periode</h4>
 						</div>
 						<div class="modal-body">
-							<form method="POST" action="#">
+							<form method="POST" action="#" id="periode_input">
 								<div class="row">
 									<div class="col-md-6">
 										<div class="form-group">
 											<label>Tahun Periode</label>
-											<input class="form-control" type="number" name="tahun" value="<?php echo date('Y'); ?>">
+											<input class="form-control cek" type="number" name="tahun" value="<?php echo date('Y'); ?>">
 										</div>
 									</div>
 								</div>
@@ -379,6 +379,35 @@
                             }
                         }
                     });
+                });
+
+                $("#periode_input").on("submit", function(e){
+                    var inputan = $("#periode_input").find(".cek");
+                    var v = '';
+                    var k = [];
+                    var p = 0;
+                    $.each(inputan, function(i){
+                        v = $(this).val();
+                        if(v == '')
+                        {
+                            k[p] = 1;
+                        }
+                        else{
+                            k[p] = 0;
+                        }
+                        v = '';
+                        p = p+1;
+                    });
+                    
+                    for(var c=0; c < p; c++)
+                    {
+                        if(k[c] == 1)
+                        {
+                            e.preventDefault();
+                            alert('Masih Terdapat yg Kosong');
+                            break;
+                        }
+                    }
                 });
             });
         </script>

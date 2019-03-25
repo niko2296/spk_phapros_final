@@ -209,10 +209,10 @@
 						{
 							$html = '
 							<br><br><br>
-							<form action="simpan_kpi.php" method="POST">
+							<form action="simpan_kpi.php" method="POST" id="kpi_input">
 							<div class="row">
 								<div class="col-md-4">
-									<select name="id_periode" class="form-control">
+									<select name="id_periode" class="form-control cek">
 							';
 										foreach($db->tampil_periode() as $tampilP)
 										{
@@ -253,13 +253,13 @@
 											<tbody>
 												<?php $id4 = "konten".$i; ?>
 												<tr id="<?php echo $id4; ?>">
-													<td><input type="text" value="" class="form-control" name="kpi[]"></td>
-													<td><textarea name="deskripsi[]" id="" cols="30" rows="0" class="form-control"></textarea></td>
-													<td><input type="text" value="" class="form-control" name="bobot[]"></td>
-													<td><input type="text" value="" class="form-control" name="sasaran[]"></td>
+													<td><input type="text" value="" class="form-control cek" name="kpi[]"></td>
+													<td><textarea name="deskripsi[]" id="" cols="30" rows="0" class="form-control cek"></textarea></td>
+													<td><input type="text" value="" class="form-control cek cek2" name="bobot[]"></td>
+													<td><input type="text" value="" class="form-control cek" name="sasaran[]"></td>
 													<td>
 														<?php $id1 = "satuan".$i; ?>
-														<select id="<?php echo $id1; ?>" name="satuan[]" class="select" style="width:100%;" onchange="fungsi1(<?php echo $i; ?>)">
+														<select id="<?php echo $id1; ?>" name="satuan[]" class="select cek" style="width:100%;" onchange="fungsi1(<?php echo $i; ?>)">
 															<option value="">Silahkan Pilih Satuan</option>
 															<?php
 																foreach($db->tampil_satuan($idA) as $tampil)
@@ -271,7 +271,7 @@
 													</td>
 													<td>
 														<?php $id2 = "sifat_kpi".$i; ?>
-														<select id="<?php echo $id2; ?>" name="sifat_kpi[]" class="select" style="width:100%;">
+														<select id="<?php echo $id2; ?>" name="sifat_kpi[]" class="select cek" style="width:100%;">
 															<option value="">Silahkan Pilih Polarisasi</option>
 														</select>
 													</td>
@@ -314,6 +314,47 @@
 			$(document).ready(function () {
                 $(".select").select2({
                     placeholder: "Please Select"
+                });
+
+				$("#kpi_input").on("submit", function(e){
+                    var inputan = $("#kpi_input").find(".cek");
+                    var inputan2 = $("#kpi_input").find(".cek2");
+                    var v = '';
+                    var k = [];
+                    var p = 0;
+					var j = 0;
+                    $.each(inputan, function(i){
+                        v = $(this).val();
+                        if(v == '')
+                        {
+                            k[p] = 1;
+                        }
+                        else{
+                            k[p] = 0;
+                        }
+                        v = '';
+                        p = p+1;
+                    });
+                    for(var c=0; c < p; c++)
+                    {
+                        if(k[c] == 1)
+                        {
+                            e.preventDefault();
+                            alert('Masih Terdapat yg Kosong');
+                            break;
+                        }
+                    }
+
+					$.each(inputan2, function(i){
+                        v = $(this).val();
+                        j = parseInt(j) + parseInt(v);
+                    });
+					if(j > 100)
+					{
+						e.preventDefault();
+						alert('Bobot Melebihi 100%');
+						j = 0;
+					}
                 });
             });
 

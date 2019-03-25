@@ -323,18 +323,18 @@
 							<h4 class="modal-title">Tambah Data Waktu Input</h4>
 						</div>
 						<div class="modal-body">
-							<form method="POST" action="#">
+							<form method="POST" action="#" id="verif_input">
 								<div class="row">
 									<div class="col-md-6">
 										<div class="form-group">
 											<label>Tanggal Awal Input</label>
-											<div class="cal-icon"><input class="form-control datetimepicker" type="text" name="tanggal_awal_verifikasi" id="tanggal_awal_verifikasi" placeholder="dd/mm/yyyy"></div>
+											<div class="cal-icon"><input class="form-control datetimepicker cek" type="text" name="tanggal_awal_verifikasi" id="tanggal_awal_verifikasi" placeholder="dd/mm/yyyy"></div>
 										</div>
 									</div>
                                     <div class="col-md-6">
 										<div class="form-group">
 											<label>Tanggal Akhir Input</label>
-                                            <div class="cal-icon"><input class="form-control datetimepicker" type="text" name="tanggal_akhir_verifikasi" id="tanggal_akhir_verifikasi" placeholder="dd/mm/yyyy"></div>
+                                            <div class="cal-icon"><input class="form-control datetimepicker cek" type="text" name="tanggal_akhir_verifikasi" id="tanggal_akhir_verifikasi" placeholder="dd/mm/yyyy"></div>
 										</div>
 									</div>
 								</div>
@@ -365,6 +365,35 @@
                 $('#tabel').DataTable({
                     ordering : false,
                     searching : true
+                });
+
+                $("#verif_input").on("submit", function(e){
+                    var inputan = $("#verif_input").find(".cek");
+                    var v = '';
+                    var k = [];
+                    var p = 0;
+                    $.each(inputan, function(i){
+                        v = $(this).val();
+                        if(v == '')
+                        {
+                            k[p] = 1;
+                        }
+                        else{
+                            k[p] = 0;
+                        }
+                        v = '';
+                        p = p+1;
+                    });
+                    
+                    for(var c=0; c < p; c++)
+                    {
+                        if(k[c] == 1)
+                        {
+                            e.preventDefault();
+                            alert('Masih Terdapat yg Kosong');
+                            break;
+                        }
+                    }
                 });
             });
         </script>

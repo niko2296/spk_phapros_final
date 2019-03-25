@@ -248,14 +248,14 @@
 							<h4 class="modal-title">Tambah Data Satuan</h4>
 						</div>
 						<div class="modal-body">
-							<form method="POST" action="#">
+							<form method="POST" action="#" id="satuan_input">
 								<div class="row">
 									<div class="col-md-6">
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <div class="form-group">
                                                     <label>Nama Satuan</label>
-                                                    <input class="form-control" type="text" name="nama_satuan">
+                                                    <input class="form-control cek" type="text" name="nama_satuan">
                                                 </div>
                                             </div>
                                         </div>
@@ -263,7 +263,7 @@
 									        <div class="col-md-12">
                                                 <div class="form-group">
                                                     <label>Periode</label>
-                                                    <select name="periode" class="form-control">
+                                                    <select name="periode" class="form-control cek">
                                                         <?php
                                                             foreach($db->tampil_periode(null) as $tampilP)
                                                             {
@@ -294,7 +294,7 @@
                                                                 {
                                                     ?>
                                                                     <label class="btn btn-default">
-                                                                        <input class="form-control" type="checkbox" name="jenis_polarisasi[]" value="<?php echo $tampil['id_polarisasi']; ?>"> <?php echo $tampil['nama_polarisasi']; ?>
+                                                                        <input class="form-control cek" type="checkbox" name="jenis_polarisasi[]" value="<?php echo $tampil['id_polarisasi']; ?>"> <?php echo $tampil['nama_polarisasi']; ?>
                                                                     </label>
                                                     <?php
                                                                 }
@@ -333,6 +333,35 @@
                 searching : true,
                 ordering : false
             });
+
+            $("#satuan_input").on("submit", function(e){
+                    var inputan = $("#satuan_input").find(".cek");
+                    var v = '';
+                    var k = [];
+                    var p = 0;
+                    $.each(inputan, function(i){
+                        v = $(this).val();
+                        if(v == '')
+                        {
+                            k[p] = 1;
+                        }
+                        else{
+                            k[p] = 0;
+                        }
+                        v = '';
+                        p = p+1;
+                    });
+                    
+                    for(var c=0; c < p; c++)
+                    {
+                        if(k[c] == 1)
+                        {
+                            e.preventDefault();
+                            alert('Masih Terdapat yg Kosong');
+                            break;
+                        }
+                    }
+                });
         </script>
     </body>
 </html>

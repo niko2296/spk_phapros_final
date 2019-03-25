@@ -199,12 +199,12 @@
                     <!-- Form Kedua -->
                     <div class="row">
                         <div class="col-md-10 col-md-offset-1">
-                            <form action="#" method="POST">
+                            <form action="#" method="POST" id="penilai_input">
                                 <div class="row">
                                     <div class="col-sm-6">
                                         <div class="form-group">
                                             <label>Jabatan Penilai</label>
-                                            <select name="id_jabatan_penilai" id="id_jabatan_penilai" class="form-control">
+                                            <select name="id_jabatan_penilai" id="id_jabatan_penilai" class="form-control cek">
                                                 <option value="">Silahkan Pilih Jabatan</option>
                                                 <?php
                                                     foreach($db->tampil_jabatan() as $tampil)
@@ -220,7 +220,7 @@
                                     <div class="col-sm-6">
                                         <div class="form-group">
                                             <label>Unit Penilai</label>
-                                            <select name="id_unit_penilai" id="id_unit_penilai" class="form-control">
+                                            <select name="id_unit_penilai" id="id_unit_penilai" class="form-control cek">
                                                 <option value="">Silahkan Pilih Unit</option>
                                                 <?php
                                                     foreach($db->tampil_unit() as $tampil)
@@ -238,7 +238,7 @@
                                     <div class="col-sm-6">
                                         <div class="form-group">
                                             <label>Jabatan Dinilai</label>
-                                            <select name="id_jabatan_dinilai[]" id="id_jabatan_dinilai" class="form-control" multiple="multiple">
+                                            <select name="id_jabatan_dinilai[]" id="id_jabatan_dinilai" class="form-control cek" multiple="multiple">
                                                 <option value="">Silahkan Pilih Jabatan</option>
                                                 <?php
                                                     foreach($db->tampil_jabatan() as $tampil)
@@ -254,7 +254,7 @@
                                     <div class="col-sm-6">
                                         <div class="form-group">
                                             <label>Unit Dinilai</label>
-                                            <select name="id_unit_dinilai" id="id_unit_dinilai" class="form-control">
+                                            <select name="id_unit_dinilai" id="id_unit_dinilai" class="form-control cek">
                                                 <option value="">Silahkan Pilih Unit</option>
                                                 <?php
                                                     foreach($db->tampil_unit() as $tampil)
@@ -302,6 +302,35 @@
                 });
                 $('#id_unit_penilai').select2({
                     placeholder: "Please Select"
+                });
+
+                $("#penilai_input").on("submit", function(e){
+                    var inputan = $("#penilai_input").find(".cek");
+                    var v = '';
+                    var k = [];
+                    var p = 0;
+                    $.each(inputan, function(i){
+                        v = $(this).val();
+                        if(v == '')
+                        {
+                            k[p] = 1;
+                        }
+                        else{
+                            k[p] = 0;
+                        }
+                        v = '';
+                        p = p+1;
+                    });
+                    
+                    for(var c=0; c < p; c++)
+                    {
+                        if(k[c] == 1)
+                        {
+                            e.preventDefault();
+                            alert('Masih Terdapat yg Kosong');
+                            break;
+                        }
+                    }
                 });
             });
         </script>

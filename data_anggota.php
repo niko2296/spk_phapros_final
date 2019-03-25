@@ -482,18 +482,18 @@
 							<h4 class="modal-title">Tambah Data Pegawai</h4>
 						</div>
 						<div class="modal-body">
-                        <form method="POST" action="#">
+                        <form method="POST" action="#" id="anggota_input">
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>NIK</label>
-                                        <input class="form-control" type="text" name="nik">
+                                        <input class="form-control cek" type="text" name="nik">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Nama Pegawai</label>
-                                        <input type="text" name="nama_anggota" id="nama_anggota" class="form-control">
+                                        <input type="text" name="nama_anggota" id="nama_anggota" class="form-control cek">
                                     </div>
                                 </div>
                             </div>
@@ -501,7 +501,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Jenis Kelamin</label>
-                                        <select name="jenis_kelamin" id="jenis_kelamin" class="form-control">
+                                        <select name="jenis_kelamin" id="jenis_kelamin" class="form-control cek">
                                             <option value="">Silahkan Pilih Jenis Kelamin</option>
                                             <option value="1">Pria</option>
                                             <option value="2">Wanita</option>
@@ -511,7 +511,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Tempat Lahir</label>
-                                        <input type="text" name="tempat_lahir" id="tempat_lahir" class="form-control">
+                                        <input type="text" name="tempat_lahir" id="tempat_lahir" class="form-control cek">
                                     </div>
                                 </div>
                             </div>
@@ -519,13 +519,13 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Tanggal Lahir</label>
-                                        <div class="cal-icon"><input class="form-control datetimepicker" type="text" name="tanggal_lahir" id="tanggal_lahir" placeholder="dd/mm/yyyy"></div>
+                                        <div class="cal-icon"><input class="form-control datetimepicker cek" type="text" name="tanggal_lahir" id="tanggal_lahir" placeholder="dd/mm/yyyy"></div>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Status</label>
-                                        <select name="status" id="status" class="form-control">
+                                        <select name="status" id="status" class="form-control cek">
                                             <option value="">Silahkan Pilih Status</option>
                                             <option value="1">Belum Menikah</option>
                                             <option value="2">Sudah Menikah</option>
@@ -537,13 +537,13 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Nomor Handphone</label>
-                                        <input type="text" name="nomor_hp" id="nomor_hp" class="form-control">
+                                        <input type="text" name="nomor_hp" id="nomor_hp" class="form-control cek">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Email</label>
-                                        <input type="text" name="email" id="email" class="form-control">
+                                        <input type="text" name="email" id="email" class="form-control cek">
                                     </div>
                                 </div>
                             </div>
@@ -551,7 +551,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Golongan</label>
-                                        <select name="golongan" id="golongan" class="form-control">
+                                        <select name="golongan" id="golongan" class="form-control cek">
                                             <option value="">Silahkan Pilih Golongan</option>
                                             <?php
                                                 foreach($db->tampil_golongan() as $data)
@@ -567,7 +567,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Jabatan</label>
-                                        <select name="jabatan" id="jabatan" class="form-control">
+                                        <select name="jabatan" id="jabatan" class="form-control cek">
                                             <option value="">Silih Pilih Jabatan</option>
                                             <?php
                                                 foreach($db->tampil_jabatan() as $data)
@@ -585,7 +585,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Unit</label>
-                                        <select name="unit" id="unit" class="form-control">
+                                        <select name="unit" id="unit" class="form-control cek">
                                             <option value="">Silahkan Pilih Departemen/Unit</option>
                                             <?php
                                                 foreach($db->tampil_unit() as $data)
@@ -601,7 +601,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Alamat</label>
-                                        <textarea name="alamat" id="alamat" cols="30" rows="10" class="form-control"></textarea>
+                                        <textarea name="alamat" id="alamat" cols="30" rows="10" class="form-control cek"></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -632,7 +632,36 @@
                 $('#tabel').DataTable({
                     ordering : false,
                     searching : true
-                })
+                });
+
+                $("#anggota_input").on("submit", function(e){
+                    var inputan = $("#anggota_input").find(".cek");
+                    var v = '';
+                    var k = [];
+                    var p = 0;
+                    $.each(inputan, function(i){
+                        v = $(this).val();
+                        if(v == '')
+                        {
+                            k[p] = 1;
+                        }
+                        else{
+                            k[p] = 0;
+                        }
+                        v = '';
+                        p = p+1;
+                    });
+                    
+                    for(var c=0; c < p; c++)
+                    {
+                        if(k[c] == 1)
+                        {
+                            e.preventDefault();
+                            alert('Masih Terdapat yg Kosong');
+                            break;
+                        }
+                    }
+                });
             });
         </script>
     </body>
