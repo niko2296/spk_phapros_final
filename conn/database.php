@@ -305,6 +305,28 @@
 			}
 		}
 
+		function input_kpi_anggota($id_anggota = null, $id_jabatan = null, $id_unit = null, $kpi = [], $deskripsi = [], $bobot = [], $sasaran = [], $satuan = [], $sifat_kpi = [], $id_periode = 0)
+		{
+			for($a=0; $a<count($kpi); $a++)
+			{
+				$tanggal_input = date('Y-m-d');
+				$query = "INSERT INTO data_kpi VALUES ('', '$id_anggota', '$id_jabatan', '$id_unit', '$id_periode','$kpi[$a]', '$deskripsi[$a]', '$bobot[$a]', '$sasaran[$a]', '$satuan[$a]', '$sifat_kpi[$a]', '0', '0', '$tanggal_input', '')";
+				$input = $this->connection->prepare($query);
+				if($input->execute())
+					$cek[$a] = 1;
+				else 
+					$cek[$a] = 0;
+			}
+
+			if(in_array(0, $cek))
+			{
+				return 2;
+			}
+			else{
+				header("location:detail_kpi.php?id_anggota=$id_anggota&&id_jabatan=$id_jabatan&&id_unit=$id_unit");
+			}
+		}
+
 		function input_aturan($jp = null, $up = null, $jd = [], $ud = null){
 			$jml = count($jd);
 			$k = [];

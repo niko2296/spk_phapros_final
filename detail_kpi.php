@@ -184,8 +184,15 @@
             <div class="page-wrapper">
                 <div class="content container-fluid">
 					<div class="row">
-						<div class="col-xs-12">
+						<div class="col-xs-8">
 							<h4 class="page-title">Data KPI Individu Detail</h4>
+                        </div>
+                        <div class="col-xs-4 text-right m-b-30">
+                            <a href="input_kpi_anggota.php?id_anggota=<?php echo $id_anggotaD."&&id_jabatan=".$id_jabatanD."&&id_unit=".$id_unitD; ?>" class="btn btn-primary rounded pull-right"><i class="fa fa-plus"></i> Tambah Data KPI Individu Untuk Anggota Sub Koordinator</a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
                             <?php
                                 $b1 = 0;
                                 $k1 = '';
