@@ -374,7 +374,7 @@
                             }
                             else if(html == 3)
                             {
-                                alert('Suda Terdapat Periode yang Di-Aktifkan');
+                                alert('Sudah Terdapat Periode yang Di-Aktifkan');
                                 location.href = "data_periode.php";
                             }
                         }
