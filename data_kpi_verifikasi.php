@@ -206,7 +206,7 @@
 					</div>
 
                     <ul class="nav nav-tabs">
-                        <li class="active"><a data-toggle="tab" href="#dk">Data Keseluruhan</a></li>
+                        <li class="active"><a data-toggle="tab" href="#dk">Data Per-Jabatan</a></li>
                         <li><a data-toggle="tab" href="#dp">Data Per-Anggota</a></li>
                     </ul>
                     <div class="tab-content">
