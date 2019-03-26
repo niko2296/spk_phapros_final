@@ -951,16 +951,69 @@
 			session_start();
 			$id_anggota = $_SESSION['id_anggota'];
 			if($status == 1)
+			{
 				$tanggal = date('Y-m-d');
+				$query = "UPDATE data_kpi SET status = '$status', tanggal_verifikasi = '$tanggal', id_verifikator = '$id_anggota' WHERE id_kpi = '$id'";
+				$verif = $this->connection->prepare($query);
+				if($verif->execute())
+				{
+					$queryT = $this->connection->query("SELECT k.*, j.nama_jabatan, u.nama_unit, p.tahun FROM data_kpi k LEFT JOIN mst_jabatan j ON k.id_jabatan = j.id_jabatan LEFT JOIN mst_unit u ON k.id_unit = u.id_unit LEFT JOIN mst_periode p ON k.id_periode = p.id_periode WHERE k.id_kpi = '$id'");
+					while($tampilT = $queryT->fetch_array())
+					{
+						$id_kpi_asli = $tampilT['id_kpi'];
+						$id_anggota = $tampilT['id_anggota'];
+						$jabatan = $tampilT['nama_jabatan'];
+						$unit = $tampilT['nama_unit'];
+						$tahun = $tampilT['tahun'];
+						$kpi = $tampilT['kpi'];
+						$deskripsi = $tampilT['deskripsi'];
+						$bobot = $tampilT['bobot'];
+						$sasaran = $tampilT['sasaran'];
+						$satuan = $tampilT['satuan'];
+						$sifat_kpi = $tampilT['sifat_kpi'];
+						$status = $tampilT['status'];
+						$id_verifikator = $tampilT['id_verifikator'];
+						$tanggal_input = $tampilT['tanggal_input'];
+						$tanggal_verifikasi = $tampilT['tanggal_verifikasi'];
+
+						$queryI = "INSERT INTO data_kpi_verifikasi VALUES ('', '$id_kpi_asli', '$id_anggota', '$jabatan', '$unit', '$tahun', '$kpi', '$deskripsi', '$bobot', '$sasaran', '$satuan', '$sifat_kpi', '$status', '$id_verifikator', '$tanggal_input', '$tanggal_verifikasi')";
+						$input1 = $this->connection->prepare($queryI);
+						if($input1->execute())
+							$c[] = 1;
+						else 
+							$c[] = 0;
+					}
+				}
+				else{
+					return 2;
+				}
+			}
 			else 
+			{
 				$tanggal = '0000-00-00';
-			$query = "UPDATE data_kpi SET status = '$status', tanggal_verifikasi = '$tanggal', id_verifikator = '$id_anggota' WHERE id_kpi = '$id'";
-			$verif = $this->connection->prepare($query);
-			if($verif->execute())
-				return 1;
-			else
-			{ 
+				$query = "UPDATE data_kpi SET status = '$status', tanggal_verifikasi = '$tanggal', id_verifikator = '$id_anggota' WHERE id_kpi = '$id'";
+				$verif = $this->connection->prepare($query);
+				if($verif->execute())
+				{
+					$queryH = "DELETE FROM data_kpi_verifikasi WHERE id_kpi_asli = '$id'";
+					$hapus = $this->connection->prepare($queryH);
+					if($hapus->execute())
+						$c[] = 1;
+					else 
+						$c[] = 0;
+				}
+				else {
+					return 2;
+				}
+			}
+
+			if(in_array(0, $c))
+			{
 				return 2;
+			}
+			else
+			{
+				return 1;
 			}
 		}
 
@@ -1001,12 +1054,40 @@
 				$query1 = "UPDATE data_kpi SET status = '1', tanggal_verifikasi = '$tgl' WHERE id_kpi = '$id'";
 				$vAll = $this->connection->prepare($query1);
 				if($vAll->execute())
-					$n[] = 1;
-				else 
-					$n[] = 0;
+				{
+					$queryT = $this->connection->query("SELECT k.*, j.nama_jabatan, u.nama_unit, p.tahun FROM data_kpi k LEFT JOIN mst_jabatan j ON k.id_jabatan = j.id_jabatan LEFT JOIN mst_unit u ON k.id_unit = u.id_unit LEFT JOIN mst_periode p ON k.id_periode = p.id_periode WHERE k.id_kpi = '$id'");
+					while($tampilT = $queryT->fetch_array())
+					{
+						$id_kpi_asli = $tampilT['id_kpi'];
+						$id_anggota = $tampilT['id_anggota'];
+						$jabatan = $tampilT['nama_jabatan'];
+						$unit = $tampilT['nama_unit'];
+						$tahun = $tampilT['tahun'];
+						$kpi = $tampilT['kpi'];
+						$deskripsi = $tampilT['deskripsi'];
+						$bobot = $tampilT['bobot'];
+						$sasaran = $tampilT['sasaran'];
+						$satuan = $tampilT['satuan'];
+						$sifat_kpi = $tampilT['sifat_kpi'];
+						$status = $tampilT['status'];
+						$id_verifikator = $tampilT['id_verifikator'];
+						$tanggal_input = $tampilT['tanggal_input'];
+						$tanggal_verifikasi = $tampilT['tanggal_verifikasi'];
+
+						$queryI = "INSERT INTO data_kpi_verifikasi VALUES ('', '$id_kpi_asli', '$id_anggota', '$jabatan', '$unit', '$tahun', '$kpi', '$deskripsi', '$bobot', '$sasaran', '$satuan', '$sifat_kpi', '$status', '0', '$tanggal_input', '$tanggal_verifikasi')";
+						$input1 = $this->connection->prepare($queryI);
+						if($input1->execute())
+							$c[] = 1;
+						else 
+							$c[] = 0;
+					}
+				}
+				else{
+					return 'Gagal Memverifikasi';
+				}
 			}
 			
-			if(in_array(0, $n))
+			if(in_array(0, $c))
 				return 'Gagal Memverifikasi';
 			else 
 				return 1;
