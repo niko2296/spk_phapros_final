@@ -9,6 +9,8 @@
         header("location:login.php");
     $nama = $_SESSION['nama'];
 	$jabatan = $_SESSION['id_jabatan'];
+	$id_anggotaD = $_SESSION['id_anggota'];
+	$id_unitD = $_SESSION['id_unit'];
 
 	foreach($db->tampil_periode() as $tP)
 	{
@@ -207,6 +209,8 @@
 					<?php
 						if(isset($_POST['tombolKirim']))
 						{
+							$jmlB = $db->total_bobot($id_anggotaD, $jabatan, $id_unitD, $idA);
+
 							$html = '
 							<br><br><br>
 							<form action="simpan_kpi.php" method="POST" id="kpi_input">
@@ -223,6 +227,15 @@
 										}
 							$html .= '
 									</select>
+								</div>
+								<div class="col-md-8">
+									<div class="alert alert-info">
+										<div class="row" style="vertical-align:bottom;">
+											<div class="col-md-12" align="center">
+												<b>Bobot Saat Ini : <font id="skor">'.$jmlB.'</font>%</b>
+											</div>
+										</div>
+									</div>
 								</div>
 							</div>
 							<br>
@@ -348,12 +361,19 @@
 					$.each(inputan2, function(i){
                         v = $(this).val();
                         j = parseInt(j) + parseInt(v);
-                    });
-					if(j > 100)
+					});
+					var tot = parseInt(document.getElementById('skor').innerHTML) + j;
+					if(tot > 100)
 					{
 						e.preventDefault();
-						alert('Bobot Melebihi 100%');
-						j = 0;
+						alert('Bobot Melebihi dari 100%');
+						tot = 0;
+					}
+					else if(tot < 100)
+					{
+						e.preventDefault();
+						alert('Bobot Kurang dari 100%');
+						tot = 0;
 					}
                 });
             });

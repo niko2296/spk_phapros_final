@@ -1149,6 +1149,16 @@
 			}
 			return $jml;
 		}
+
+		function total_bobot($id_anggota = null, $id_jabatan = null, $id_unit = null, $id_periode = null)
+		{
+			error_reporting(0);
+			$query = $this->connection->query("SELECT * FROM data_kpi WHERE id_anggota = '$id_anggota' AND id_jabatan = '$id_jabatan' AND id_unit = '$id_unit' AND id_periode = '$id_periode'");
+			$jml = 0;
+			while($tampil = $query->fetch_array())
+				$jml = $jml + $tampil['bobot'];
+			return $jml;
+		}
 		// Akhiran Menghitung Data
 
 		// Fungsi Copy Data
