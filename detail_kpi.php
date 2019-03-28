@@ -200,7 +200,7 @@
                                 foreach($db->tampil_waktu_verifikasi() as $tampil)
                                 {
                                     $sekarang = date('Y-m-d');
-                                    if($sekarang >= $tampil['tanggal_awal_verifikasi'] AND $sekarang <= $tampil['tanggal_akhir_verifikasi'])
+                                    if($sekarang >= $tampil['tanggal_awal_verifikasi'] AND $sekarang <= $tampil['tanggal_akhir_verifikasi'] AND $tampil['jenis_verifikasi'] == 1)
                                         $b1 = 1;
                                 }
 

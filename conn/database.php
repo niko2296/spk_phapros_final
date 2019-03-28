@@ -378,9 +378,9 @@
 				return 2;
 		}
 
-		function input_verifikasi($tanggal1 = null, $tanggal2 = null){
+		function input_verifikasi($tanggal1 = null, $tanggal2 = null, $jenis_verifikasi = null){
 			$tanggal = date('Y-m-d');
-			$query = "INSERT INTO waktu_verifikasi VALUES ('', '$tanggal1', '$tanggal2', '$tanggal')";
+			$query = "INSERT INTO waktu_verifikasi VALUES ('', '$tanggal1', '$tanggal2', '$jenis_verifikasi', '$tanggal')";
 			$input = $this->connection->prepare($query);
 			if($input->execute())
 				return 1;
@@ -575,9 +575,9 @@
 				return 2;
 		}
 
-		function edit_verifikasi($id = null, $tanggal1 = null, $tanggal2 = null)
+		function edit_verifikasi($id = null, $tanggal1 = null, $tanggal2 = null, $jenis_verifikasi = null)
 		{
-			$query = "UPDATE waktu_verifikasi SET tanggal_awal_verifikasi = '$tanggal1', tanggal_akhir_verifikasi = '$tanggal2' WHERE id_waktu_verifikasi = '$id'";
+			$query = "UPDATE waktu_verifikasi SET tanggal_awal_verifikasi = '$tanggal1', tanggal_akhir_verifikasi = '$tanggal2', jenis_verifikasi = '$jenis_verifikasi' WHERE id_waktu_verifikasi = '$id'";
 			$edit = $this->connection->prepare($query);
 			if($edit->execute())
 				header("location:waktu_verifikasi.php");

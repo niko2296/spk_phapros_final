@@ -187,7 +187,8 @@
                                 $tanggal1 = $a1[2].'-'.$a1[1].'-'.$a1[0];
                                 $a2 = explode('/', $_POST['tanggal_akhir_verifikasi']);
                                 $tanggal2 = $a2[2].'-'.$a2[1].'-'.$a2[0];
-                                $eksekusi = $db->input_verifikasi($tanggal1, $tanggal2);
+                                $jenis_verifikasi = $_POST['jenis_verifikasi'];
+                                $eksekusi = $db->input_verifikasi($tanggal1, $tanggal2, $jenis_verifikasi);
                                 if($eksekusi == 2)
                                 {
                                     echo '<div class="alert alert-danger">Data Gagal Disimpan</div>';
@@ -202,7 +203,8 @@
                                 $tanggal1 = $a1[2].'-'.$a1[1].'-'.$a1[0];
                                 $a2 = explode('/', $_POST['tanggal_akhir_verifikasi_edit']);
                                 $tanggal2 = $a2[2].'-'.$a2[1].'-'.$a2[0];
-                                $eksekusi = $db->edit_verifikasi($_POST['id_waktu_edit'], $tanggal1, $tanggal2);
+                                $jenis_verifikasi_edit = $_POST['jenis_verifikasi_edit']; 
+                                $eksekusi = $db->edit_verifikasi($_POST['id_waktu_edit'], $tanggal1, $tanggal2, $jenis_verifikasi_edit);
                                 if($eksekusi == 2 || $eksekusi == 3)
                                 {
                                     echo '<div class="alert alert-danger">Data Gagal Disimpan</div>';
@@ -225,6 +227,7 @@
 										<tr>
 											<th>Tanggal Mulai</th>
                                             <th>Tanggal Selesai</th>
+                                            <th>Jenis Verifikasi</th>
 											<th class="text-right">Actions</th>
 										</tr>
 									</thead>
@@ -239,6 +242,14 @@
                                             <tr>
                                                 <td><?php echo date('d F Y', strtotime($data['tanggal_awal_verifikasi'])); ?></td>
                                                 <td><?php echo date('d F Y', strtotime($data['tanggal_akhir_verifikasi'])); ?></td>
+                                                <td><?php
+                                                    if($data['jenis_verifikasi'] == 1)
+                                                        echo 'Verifikasi Pengajuan KPI';
+                                                    else if($data['jenis_verifikasi'] == 2)
+                                                        echo 'Verifikasi Realisasi KPI';
+                                                    else 
+                                                        echo '-';
+                                                ?></td>
                                                 <td class="text-right">
                                                     <div class="dropdown">
                                                         <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
@@ -272,6 +283,18 @@
                                                                         <div class="form-group">
                                                                             <label>Tanggal Akhir Input</label>
                                                                             <div class="cal-icon"><input class="form-control datetimepicker" type="text" name="tanggal_akhir_verifikasi_edit" id="tanggal_akhir_verifikasi_edit" value="<?php echo date('d/m/Y', strtotime($data['tanggal_akhir_verifikasi'])); ?>"></div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group">
+                                                                            <label>Jenis Verifikasi</label>
+                                                                            <select name="jenis_verifikasi_edit" id="jenis_verifikasi_edit" class="form-control">
+                                                                                <option value="">Pilih Jenis Verifikasi</option>
+                                                                                <option value="1" <?php echo ($data['jenis_verifikasi'] == 1)?'selected="selected"':''; ?>>Verifikasi Pengajuan KPI</option>
+                                                                                <option value="2" <?php echo ($data['jenis_verifikasi'] == 2)?'selected="selected"':''; ?>>Verifikasi Realisasi KPI</option>
+                                                                            </select>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -335,6 +358,18 @@
 										<div class="form-group">
 											<label>Tanggal Akhir Input</label>
                                             <div class="cal-icon"><input class="form-control datetimepicker cek" type="text" name="tanggal_akhir_verifikasi" id="tanggal_akhir_verifikasi" placeholder="dd/mm/yyyy"></div>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-6">
+										<div class="form-group">
+											<label>Jenis Verifikasi</label>
+											<select name="jenis_verifikasi" id="jenis_verifikasi" class="form-control">
+                                                <option value="">Pilih Jenis Verifikasi</option>
+                                                <option value="1">Verifikasi Pengajuan KPI</option>
+                                                <option value="2">Verifikasi Realisasi KPI</option>
+                                            </select>
 										</div>
 									</div>
 								</div>
