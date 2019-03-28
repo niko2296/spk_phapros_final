@@ -368,9 +368,9 @@
 				return 1;
 		}
 
-		function input_awal_input($tanggal1 = null, $tanggal2 = null){
+		function input_awal_input($tanggal1 = null, $tanggal2 = null, $jenis_input = null){
 			$tanggal = date('Y-m-d');
-			$query = "INSERT INTO waktu_input VALUES ('', '$tanggal1', '$tanggal2', '$tanggal')";
+			$query = "INSERT INTO waktu_input VALUES ('', '$tanggal1', '$tanggal2', '$jenis_input', '$tanggal')";
 			$input = $this->connection->prepare($query);
 			if($input->execute())
 				return 1;
@@ -565,9 +565,9 @@
 			}
 		}
 
-		function edit_awal_input($id_awal_input = null, $tanggal1 = null, $tanggal2 = null)
+		function edit_awal_input($id_awal_input = null, $tanggal1 = null, $tanggal2 = null, $jenis_inputan = null)
 		{
-			$query = "UPDATE waktu_input SET tanggal_awal_input = '$tanggal1', tanggal_akhir_input = '$tanggal2' WHERE id_waktu_input = '$id_awal_input'";
+			$query = "UPDATE waktu_input SET tanggal_awal_input = '$tanggal1', tanggal_akhir_input = '$tanggal2', jenis_input = '$jenis_inputan' WHERE id_waktu_input = '$id_awal_input'";
 			$edit = $this->connection->prepare($query);
 			if($edit->execute())
 				header("location:waktu_input.php");

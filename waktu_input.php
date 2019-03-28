@@ -187,7 +187,8 @@
                                 $tanggal1 = $a1[2].'-'.$a1[1].'-'.$a1[0];
                                 $a2 = explode('/', $_POST['tanggal_akhir_input']);
                                 $tanggal2 = $a2[2].'-'.$a2[1].'-'.$a2[0];
-                                $eksekusi = $db->input_awal_input($tanggal1, $tanggal2);
+                                $jenis_input = $_POST['jenis_input'];
+                                $eksekusi = $db->input_awal_input($tanggal1, $tanggal2, $jenis_input);
                                 if($eksekusi == 2)
                                 {
                                     echo '<div class="alert alert-danger">Data Gagal Disimpan</div>';
@@ -202,7 +203,8 @@
                                 $tanggal1 = $a1[2].'-'.$a1[1].'-'.$a1[0];
                                 $a2 = explode('/', $_POST['tanggal_akhir_input_edit']);
                                 $tanggal2 = $a2[2].'-'.$a2[1].'-'.$a2[0];
-                                $eksekusi = $db->edit_awal_input($_POST['id_waktu_edit'], $tanggal1, $tanggal2);
+                                $jenis_input_edit = $_POST['jenis_input_edit'];
+                                $eksekusi = $db->edit_awal_input($_POST['id_waktu_edit'], $tanggal1, $tanggal2, $jenis_input_edit);
                                 if($eksekusi == 2 || $eksekusi == 3)
                                 {
                                     echo '<div class="alert alert-danger">Data Gagal Disimpan</div>';
@@ -225,6 +227,7 @@
 										<tr>
 											<th>Tanggal Mulai</th>
                                             <th>Tanggal Selesai</th>
+                                            <th>Jenis Input</th>
 											<th class="text-right">Actions</th>
 										</tr>
 									</thead>
@@ -239,6 +242,14 @@
                                             <tr>
                                                 <td><?php echo date('d F Y', strtotime($data['tanggal_awal_input'])); ?></td>
                                                 <td><?php echo date('d F Y', strtotime($data['tanggal_akhir_input'])); ?></td>
+                                                <td><?php
+                                                    if($data['jenis_input'] == 0)
+                                                        echo '-';
+                                                    else if($data['jenis_input'] == 1)
+                                                        echo 'Input Pengajuan KPI';
+                                                    else if($data['jenis_input'] == 2)
+                                                        echo 'Input Realisasi KPI';
+                                                ?></td>
                                                 <td class="text-right">
                                                     <div class="dropdown">
                                                         <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
@@ -272,6 +283,18 @@
                                                                         <div class="form-group">
                                                                             <label>Tanggal Akhir Input</label>
                                                                             <div class="cal-icon"><input class="form-control datetimepicker" type="text" name="tanggal_akhir_input_edit" id="tanggal_akhir_input_edit" value="<?php echo date('d/m/Y', strtotime($data['tanggal_akhir_input'])); ?>"></div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group">
+                                                                            <label>Jenis Waktu Input</label>
+                                                                            <select name="jenis_input_edit" id="jenis_input_edit" class="form-control">
+                                                                                <option value="">Pilih Jenis Input</option>
+                                                                                <option value="1" <?php echo ($data['jenis_input'] == 1)?'selected="selected"':''; ?>>Input Pengajuan KPI</option>
+                                                                                <option value="2" <?php echo ($data['jenis_input'] == 2)?'selected="selected"':''; ?>>Input Realisasi KPI</option>
+                                                                            </select>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -335,6 +358,18 @@
 										<div class="form-group">
 											<label>Tanggal Akhir Input</label>
                                             <div class="cal-icon"><input class="form-control datetimepicker cek" type="text" name="tanggal_akhir_input" id="tanggal_akhir_input" placeholder="dd/mm/yyyy"></div>
+										</div>
+									</div>
+								</div>
+                                <div class="row">
+									<div class="col-md-6">
+										<div class="form-group">
+											<label>Jenis Waktu Input</label>
+											<select name="jenis_input" id="jenis_input" class="form-control cek">
+                                                <option value="">Pilih Jenis Waktu Input</option>
+                                                <option value="1">Input Pengajuan KPI</option>
+                                                <option value="2">Input Realisasi KPI</option>
+                                            </select>
 										</div>
 									</div>
 								</div>

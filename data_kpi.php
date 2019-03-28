@@ -185,25 +185,46 @@
             <div class="page-wrapper">
                 <div class="content container-fluid">
 					<div class="row">
-						<div class="col-xs-8">
+						<div class="col-xs-6">
 							<h4 class="page-title">Data KPI Individu</h4>
 						</div>
-						<div class="col-xs-4 text-right m-b-30">
+						<div class="col-xs-6 text-right m-b-30">
                             <?php
                                 $b1 = 0;
+                                $b2 = 0;
                                 error_reporting(0);
                                 foreach($db->tampil_waktu_input() as $tampil)
                                 {
                                     $sekarang = date('Y-m-d');
-                                    if($sekarang >= $tampil['tanggal_awal_input'] AND $sekarang <= $tampil['tanggal_akhir_input'])
+                                    if($sekarang >= $tampil['tanggal_awal_input'] AND $sekarang <= $tampil['tanggal_akhir_input'] AND $tampil['jenis_input'] == 1)
                                         $b1 = 1;
+                                    if($sekarang >= $tampil['tanggal_awal_input'] AND $sekarang <= $tampil['tanggal_akhir_input'] AND $tampil['jenis_input'] == 2)
+                                        $b2 = 1;
                                 }
 
+                                $b1 = 1;
                                 if($b1 == 1)
                                 {
-                            ?>
-							        <a href="input_kpi.php" class="btn btn-primary rounded pull-right"><i class="fa fa-plus"></i> Tambah Data KPI Individu</a>
-                            <?php
+                                    $c = 6;
+                                    if($b2 == 0)
+                                        $c = 12;
+                                    echo '
+                                        <div class="col-xs-6'.$c.'">
+                                            <a href="input_kpi.php" class="btn btn-primary rounded pull-right"><i class="fa fa-plus"></i> Tambah Data KPI Individu</a>
+                                        </div>
+                                    ';
+                                }
+
+                                if($b2 == 1)
+                                {
+                                    $c = 6;
+                                    if($b1 == 0)
+                                        $c = 12;
+                                    echo '
+                                        <div class="col-xs-'.$c.'">
+                                            <a href="input_realisasi_kpi.php" class="btn btn-info rounded pull-right"> Input Realisasi KPI Individu</a>
+                                        </div>
+                                    ';
                                 }
                             ?>
                         </div>

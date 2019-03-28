@@ -197,7 +197,7 @@
                                 if($b1 == 0)
                                 {
                                     $k1 = 'disabled="disabled"';
-                                    echo '<center><div style="background-color:orange; width:30%; color:white; padding:5px;">Waktu Verifikasi Sudah Ditutup</div></center>';
+                                    echo '<center><div style="background-color:orange; width:30%; color:white; padding:5px;">Waktu Verifikasi Sudah Ditutup</div></center><br>';
                                 }
                             ?>
                             <center><div style="background-color:#7CFC00; width:20%; color:white; padding:5px; display:none;" id="notifikasi1">Data Diverifikasi</div></center>
