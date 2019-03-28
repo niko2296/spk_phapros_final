@@ -134,7 +134,7 @@
                             <li class="submenu">
 								<a href="#"><i class="la la-calendar"></i> <span> Aturan Waktu</span> <span class="menu-arrow"></span></a>
 								<ul style="display: none;">
-									<li><a href="waktu_input.php">Waktu Input KPI</a></li>
+									<li><a href="waktu_input.php">Waktu Input</a></li>
                                     <li><a href="waktu_verifikasi.php">Waktu Verifikasi</a></li>
                                 </ul>
 							</li>
