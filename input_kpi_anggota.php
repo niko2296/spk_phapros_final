@@ -10,6 +10,10 @@
     $nama = $_SESSION['nama'];
 	$jabatan = $_SESSION['id_jabatan'];
 
+	$id_anggotaD = $_GET['id_anggota'];
+	$id_jabatanD = $_GET['id_jabatan'];
+	$id_unitD = $_GET['id_unit'];
+
 	foreach($db->tampil_periode() as $tP)
 	{
 		if($tP['status'] == 1)
@@ -208,9 +212,10 @@
 					<?php
 						if(isset($_POST['tombolKirim']))
 						{
+							$jmlB = $db->total_bobot($id_anggotaD, $id_jabatanD, $id_unitD, $idA);
 							$html = '
 							<br><br><br>
-							<form action="simpan_kpi_anggota.php" method="POST">
+							<form action="simpan_kpi_anggota.php" method="POST" id="kpi_input">
 							<div class="row">
                                 <div class="col-md-4">
                                     <input type="hidden" name="id_anggota" value="'.$_GET['id_anggota'].'">
@@ -227,6 +232,15 @@
 										}
 							$html .= '
 									</select>
+								</div>
+								<div class="col-md-8">
+									<div class="alert alert-info">
+										<div class="row" style="vertical-align:bottom;">
+											<div class="col-md-12" align="center">
+												<b>Bobot Saat Ini : <font id="skor">'.$jmlB.'</font>%</b>
+											</div>
+										</div>
+									</div>
 								</div>
 							</div>
 							<br>
@@ -257,13 +271,13 @@
 											<tbody>
 												<?php $id4 = "konten".$i; ?>
 												<tr id="<?php echo $id4; ?>">
-													<td><input type="text" value="" class="form-control" name="kpi[]"></td>
-													<td><textarea name="deskripsi[]" id="" cols="30" rows="0" class="form-control"></textarea></td>
-													<td><input type="text" value="" class="form-control" name="bobot[]"></td>
-													<td><input type="text" value="" class="form-control" name="sasaran[]"></td>
+													<td><input type="text" value="" class="form-control cek" name="kpi[]"></td>
+													<td><textarea name="deskripsi[]" id="" cols="30" rows="0" class="form-control cek"></textarea></td>
+													<td><input type="text" value="" class="form-control cek cek2" name="bobot[]"></td>
+													<td><input type="text" value="" class="form-control cek" name="sasaran[]"></td>
 													<td>
 														<?php $id1 = "satuan".$i; ?>
-														<select id="<?php echo $id1; ?>" name="satuan[]" class="select" style="width:100%;" onchange="fungsi1(<?php echo $i; ?>)">
+														<select id="<?php echo $id1; ?>" name="satuan[] cek" class="select" style="width:100%;" onchange="fungsi1(<?php echo $i; ?>)">
 															<option value="">Silahkan Pilih Satuan</option>
 															<?php
 																foreach($db->tampil_satuan($idA) as $tampil)
@@ -275,7 +289,7 @@
 													</td>
 													<td>
 														<?php $id2 = "sifat_kpi".$i; ?>
-														<select id="<?php echo $id2; ?>" name="sifat_kpi[]" class="select" style="width:100%;">
+														<select id="<?php echo $id2; ?>" name="sifat_kpi[] cek" class="select" style="width:100%;">
 															<option value="">Silahkan Pilih Polarisasi</option>
 														</select>
 													</td>
@@ -301,9 +315,6 @@
                         }
                         else if(isset($_POST['tombolKembali']))
                         {
-                            $id_anggotaD = $_GET['id_anggota'];
-                            $id_jabatanD = $_GET['id_jabatan'];
-                            $id_unitD = $_GET['id_unit'];
                             header("location:detail_kpi.php?id_anggota=$id_anggotaD&&id_jabatan=$id_jabatanD&&id_unit=$id_unitD");
                         }
 					?>
@@ -325,6 +336,54 @@
 			$(document).ready(function () {
                 $(".select").select2({
                     placeholder: "Please Select"
+                });
+
+				$("#kpi_input").on("submit", function(e){
+                    var inputan = $("#kpi_input").find(".cek");
+                    var inputan2 = $("#kpi_input").find(".cek2");
+                    var v = '';
+                    var k = [];
+                    var p = 0;
+					var j = 0;
+                    $.each(inputan, function(i){
+                        v = $(this).val();
+                        if(v == '')
+                        {
+                            k[p] = 1;
+                        }
+                        else{
+                            k[p] = 0;
+                        }
+                        v = '';
+                        p = p+1;
+                    });
+                    for(var c=0; c < p; c++)
+                    {
+                        if(k[c] == 1)
+                        {
+                            e.preventDefault();
+                            alert('Masih Terdapat yg Kosong');
+                            break;
+                        }
+                    }
+
+					$.each(inputan2, function(i){
+                        v = $(this).val();
+                        j = parseInt(j) + parseInt(v);
+					});
+					var tot = parseInt(document.getElementById('skor').innerHTML) + j;
+					if(tot > 100)
+					{
+						e.preventDefault();
+						alert('Bobot Melebihi dari 100%');
+						tot = 0;
+					}
+					else if(tot < 100)
+					{
+						e.preventDefault();
+						alert('Bobot Kurang dari 100%');
+						tot = 0;
+					}
                 });
             });
 
