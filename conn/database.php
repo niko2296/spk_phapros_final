@@ -236,6 +236,22 @@
 
 			return $hasil;
 		}
+
+		function tampil_realisasi($jenis = 1, $id_kpi = null)
+		{
+			if($jenis == 1)
+			{
+				$query = $this->connection->query("SELECT * FROM data_realisasi_kpi WHERE id_kpi = '$id_kpi'");
+				$t = $query->fetch_array();
+				return $t['realisasi'];
+			}
+			else if($jenis == 2)
+			{
+				$query = $this->connection->query("SELECT * FROM data_realisasi_kpi WHERE id_kpi = '$id_kpi'");
+				$t = $query->fetch_array();
+				return $t['keterangan'];
+			}
+		}
 		//Akhiran Fungsi Tampil
 
 		//Fungsi Input
@@ -460,14 +476,30 @@
 			if($jml > 0)
 			{
 				$k = [];
+				$c = 0;
 				for($a=0; $a<$jml; $a++)
 				{
-					$query = "INSERT INTO data_realisasi_kpi VALUES ('', '$id_kpi[$a]', '$realisasi[$a]', '$keterangan[$a]', '0', '$tanggal', '0', '0000-00-00')";
-					$input = $this->connection->prepare($query);
-					if($input->execute())
-						$k[] = 1;
-					else 
-						$k[] = 0;
+					$qc = $this->connection->query("SELECT * FROM data_realisasi_kpi WHERE id_kpi = '$id_kpi[$a]'");
+					while($t = $qc->fetch_array())
+						$c = $c+1;
+					if($c == 0)
+					{
+						$query = "INSERT INTO data_realisasi_kpi VALUES ('', '$id_kpi[$a]', '$realisasi[$a]', '$keterangan[$a]', '0', '$tanggal', '0', '0000-00-00')";
+						$input = $this->connection->prepare($query);
+						if($input->execute())
+							$k[] = 1;
+						else 
+							$k[] = 0;
+					}
+					else {
+						$query = "UPDATE data_realisasi_kpi SET realisasi = '$realisasi[$a]', keterangan = '$keterangan[$a]' WHERE id_kpi = '$id_kpi[$a]'";
+						$edit = $this->connection->prepare($query);
+						if($edit->execute())
+							$k[] = 1;
+						else 
+							$k[] = 0;
+					}
+					$c = 0;
 				}
 			}
 			else{
@@ -477,7 +509,7 @@
 			if(in_array(0, $k))
 				return 2;
 			else
-				header('location:data_kpi.php');
+				return 1;
 		}
 		//Akhiran Fungsi Input
 
@@ -1265,6 +1297,14 @@
 			$jml = 0;
 			while($tampil = $query->fetch_array())
 				$jml = $jml + $tampil['bobot'];
+			return $jml;
+		}
+		function hitung_realisasi($id_kpi = null)
+		{
+			$query = $this->connection->query("SELECT * FROM data_realisasi_kpi WHERE id_kpi = '$id_kpi'");
+			$jml = 0;
+			while($t = $query->fetch_array())
+				$jml = $jml+1;
 			return $jml;
 		}
 		// Akhiran Menghitung Data
