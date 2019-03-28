@@ -292,7 +292,10 @@
                                                         <td><?php echo $data['nama_jabatan']; ?></td>
                                                         <td><?php echo $data['nama_unit']; ?></td>
                                                         <td><?php echo $db->hitung_data_kpi($data['id_anggota'], $data['id_jabatan'], $data['id_unit'], $idA); ?> KPI</td>
-                                                        <td class="text-center"><a href="detail_kpi.php?id_anggota=<?php echo $data['id_anggota']."&&id_jabatan=".$data['id_jabatan']."&&id_unit=".$data['id_unit']; ?>">Detail</a></td>
+                                                        <td class="text-center">
+                                                            <a href="detail_kpi.php?id_anggota=<?php echo $data['id_anggota']."&&id_jabatan=".$data['id_jabatan']."&&id_unit=".$data['id_unit']; ?>">Detail KPI</a>&nbsp;
+                                                            <a href="detail_realisasi.php?id_anggota=<?php echo $data['id_anggota']."&&id_jabatan=".$data['id_jabatan']."&&id_unit=".$data['id_unit']; ?>">Detail Realisasi KPI</a>
+                                                        </td>
                                                     </tr>
                                             <?php
                                                 }
