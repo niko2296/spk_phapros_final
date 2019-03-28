@@ -188,166 +188,205 @@
 						<div class="col-xs-6">
 							<h4 class="page-title">Data KPI Individu</h4>
 						</div>
-						<div class="col-xs-6 text-right m-b-30">
-                            <?php
-                                $b1 = 0;
-                                $b2 = 0;
-                                error_reporting(0);
-                                foreach($db->tampil_waktu_input() as $tampil)
-                                {
-                                    $sekarang = date('Y-m-d');
-                                    if($sekarang >= $tampil['tanggal_awal_input'] AND $sekarang <= $tampil['tanggal_akhir_input'] AND $tampil['jenis_input'] == 1)
-                                        $b1 = 1;
-                                    if($sekarang >= $tampil['tanggal_awal_input'] AND $sekarang <= $tampil['tanggal_akhir_input'] AND $tampil['jenis_input'] == 2)
-                                        $b2 = 1;
-                                }
-
-                                $b1 = 1;
-                                if($b1 == 1)
-                                {
-                                    $c = 6;
-                                    if($b2 == 0)
-                                        $c = 12;
-                                    echo '
-                                        <div class="col-xs-6'.$c.'">
-                                            <a href="input_kpi.php" class="btn btn-primary rounded pull-right"><i class="fa fa-plus"></i> Tambah Data KPI Individu</a>
-                                        </div>
-                                    ';
-                                }
-
-                                if($b2 == 1)
-                                {
-                                    $c = 6;
-                                    if($b1 == 0)
-                                        $c = 12;
-                                    echo '
-                                        <div class="col-xs-'.$c.'">
-                                            <a href="input_realisasi_kpi.php" class="btn btn-info rounded pull-right"> Input Realisasi KPI Individu</a>
-                                        </div>
-                                    ';
-                                }
-                            ?>
-                        </div>
 					</div>
-					<div class="row">
-                        <?php
-                            if(isset($_POST['tombolHapus']))
-                            {
-                                $db->hapus_kpi($_POST['id_kpi_hapus']);
-                            }
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a data-toggle="tab" href="#dpk">Data Pengajuan KPI</a></li>
+                        <li><a data-toggle="tab" href="#drk">Data Realisasi KPI</a></li>
+                    </ul>
 
-                            $ket = '';
-                            $totB = $db->total_bobot($id_anggotaD, $jabatan, $id_unitD, $idA);
-                            if($totB < 100)
-                                $ket = 'Bobot Masih Kurang dari 100%';
-                            else if($totB > 100)
-                                $ket = 'Bobot Lebih dari 100%';
-
-                            if($ket != '')
-                            {
-                                echo    '<div class="alert alert-danger">
-                                            <div class="row" style="vertical-align:bottom;">
-                                                <div class="col-md-12" align="center">
-                                                    <b>!! '.$ket.' !!</b>
-                                                </div>
+                    <div class="tab-content">
+                        <!-- Tab Pertama -->
+                        <div id="dpk" class="tab-pane fade in active">
+                            <div class="row">
+                                <?php
+                                    $b1 = 0;
+                                    error_reporting(0);
+                                    foreach($db->tampil_waktu_input() as $tampil)
+                                    {
+                                        $sekarang = date('Y-m-d');
+                                        if($sekarang >= $tampil['tanggal_awal_input'] AND $sekarang <= $tampil['tanggal_akhir_input'] AND $tampil['jenis_input'] == 1)
+                                            $b1 = 1;
+                                    }
+                                    
+                                    if($b1 == 1)
+                                    {
+                                        echo '
+                                            <div class="col-md-12 text-right m-b-30">
+                                                <a href="input_kpi.php" class="btn btn-primary rounded pull-right"><i class="fa fa-plus"></i> Tambah Data KPI Individu</a>
                                             </div>
-                                        </div>';
-                            }
+                                        ';
+                                    }
+                                ?>
+                            </div>
+                            <div class="row">
+                                <?php
+                                    if(isset($_POST['tombolHapus']))
+                                    {
+                                        $db->hapus_kpi($_POST['id_kpi_hapus']);
+                                    }
 
-                            if($db->hitung_catatan($id_anggotaD, $jabatan, $id_unitD, $idA) > 0)
-                            {
-                                echo '<div class="alert alert-info">
-                                        <div class="row" style="vertical-align:bottom;">
-                                            <div class="col-md-12">
-                                                <b>Catatan</b> : '.$db->tampil_catatan($id_anggotaD, $jabatan, $id_unitD, $idA).'
-                                            </div>
-                                        </div>
-                                        </div>';
-                            }
-                        ?>
+                                    $ket = '';
+                                    $totB = $db->total_bobot($id_anggotaD, $jabatan, $id_unitD, $idA);
+                                    if($totB < 100)
+                                        $ket = 'Bobot Masih Kurang dari 100%';
+                                    else if($totB > 100)
+                                        $ket = 'Bobot Lebih dari 100%';
 
-						<div class="col-md-12">
-							<div class="table-responsive">
-								<table class="table table-striped custom-table m-b-0 display" id="tabel">
-									<thead>
-										<tr>
-											<th>KPI</th>
-                                            <th>Deskripsi</th>
-                                            <th>Bobot (%)</th>
-                                            <th>Sasaran/Target</th>
-                                            <th>Satuan</th>
-                                            <th>Polarisasi</th>
-                                            <th>Periode</th>
-                                            <th>Status</th>
-											<th class="text-right">Actions</th>
-										</tr>
-									</thead>
-									<tbody>
-                                    <?php
-                                        $no = 0;
-                                        error_reporting(0);
-                                        foreach($db->tampil_kpi($idA) as $data)
-                                        {
-                                            $no = $no+1;
-                                    ?>
-                                            <tr>
-                                                <td><?php echo $data['kpi']; ?></td>
-                                                <td><?php echo $data['deskripsi']; ?></td>
-                                                <td><?php echo $data['bobot']; ?></td>
-                                                <td><?php echo $data['sasaran']; ?></td>
-                                                <td><?php echo $data['nama_satuan']; ?></td>
-                                                <td><?php echo $data['nama_polarisasi']; ?></td>
-                                                <td><?php echo $data['tahun']; ?></td>
-                                                <td><?php echo ($data['status'] == 0)?'Belum Verifikasi':'Sudah Verifikasi'; ?></td>
-                                                <td class="text-right">
-                                                    <div class="dropdown">
-                                                        <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
-                                                        <ul class="dropdown-menu pull-right">
-                                                            <?php
-                                                                if($b1 == 1 AND $data['status'] != 1)
-                                                                {
-                                                            ?>
-                                                                    <li><a href="edit_kpi.php?id=<?php echo $data['id_kpi']; ?>"><i class="fa fa-pencil m-r-5"></i> Edit</a></li>
-                                                                    <li><a href="#" title="Delete" data-toggle="modal" data-target="#delete_ticket<?php echo $data['id_kpi']; ?>"><i class="fa fa-trash-o m-r-5"></i> Delete</a></li>
-                                                            <?php
-                                                                }
-                                                                else {
-                                                                    echo '<li><center>Tidak Terdapat Aksi</center></li>';
-                                                                }
-                                                            ?>
-                                                        </ul>
-                                                    </div>
-                                                </td>
-                                            </tr>
-
-                                            <!-- Modal Hapus -->
-                                            <div id="delete_ticket<?php echo $data['id_kpi']; ?>" class="modal custom-modal fade" role="dialog">
-                                                <div class="modal-dialog">
-                                                    <div class="modal-content modal-md">
-                                                        <div class="modal-header">
-                                                            <h4 class="modal-title">Hapus Data KPI Individu</h4>
+                                    if($ket != '')
+                                    {
+                                        echo    '<div class="alert alert-danger">
+                                                    <div class="row" style="vertical-align:bottom;">
+                                                        <div class="col-md-12" align="center">
+                                                            <b>!! '.$ket.' !!</b>
                                                         </div>
-                                                        <form method="POST" action="#">
-                                                            <div class="modal-body card-box">
-                                                                <p>Yakin Untuk Menghapus Data KPI Individu : <?php echo $data['kpi']; ?> ?</p>
-                                                                <input type="hidden" name="id_kpi_hapus" value="<?php echo $data['id_kpi']; ?>">
-                                                                <div class="m-t-20"> <a href="#" class="btn btn-default" data-dismiss="modal">Close</a>
-                                                                    <button type="submit" name="tombolHapus" class="btn btn-danger">Delete</button>
-                                                                </div>
-                                                            </div>
-                                                        </form>
+                                                    </div>
+                                                </div>';
+                                    }
+
+                                    if($db->hitung_catatan($id_anggotaD, $jabatan, $id_unitD, $idA) > 0)
+                                    {
+                                        echo '<div class="alert alert-info">
+                                                <div class="row" style="vertical-align:bottom;">
+                                                    <div class="col-md-12">
+                                                        <b>Catatan</b> : '.$db->tampil_catatan($id_anggotaD, $jabatan, $id_unitD, $idA).'
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <!-- Akhiran Modal Hapus -->
-                                    <?php
-                                        }
-                                    ?>
-									</tbody>
-								</table>
-							</div>
-						</div>
-					</div>
+                                                </div>';
+                                    }
+                                ?>
+
+                                <div class="col-md-12">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped custom-table m-b-0 display" id="tabel">
+                                            <thead>
+                                                <tr>
+                                                    <th>KPI</th>
+                                                    <th>Deskripsi</th>
+                                                    <th>Bobot (%)</th>
+                                                    <th>Sasaran/Target</th>
+                                                    <th>Satuan</th>
+                                                    <th>Polarisasi</th>
+                                                    <th>Periode</th>
+                                                    <th>Status</th>
+                                                    <th class="text-right">Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            <?php
+                                                $no = 0;
+                                                error_reporting(0);
+                                                foreach($db->tampil_kpi($idA) as $data)
+                                                {
+                                                    $no = $no+1;
+                                            ?>
+                                                    <tr>
+                                                        <td><?php echo $data['kpi']; ?></td>
+                                                        <td><?php echo $data['deskripsi']; ?></td>
+                                                        <td><?php echo $data['bobot']; ?></td>
+                                                        <td><?php echo $data['sasaran']; ?></td>
+                                                        <td><?php echo $data['nama_satuan']; ?></td>
+                                                        <td><?php echo $data['nama_polarisasi']; ?></td>
+                                                        <td><?php echo $data['tahun']; ?></td>
+                                                        <td><?php echo ($data['status'] == 0)?'Belum Verifikasi':'Sudah Verifikasi'; ?></td>
+                                                        <td class="text-right">
+                                                            <div class="dropdown">
+                                                                <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
+                                                                <ul class="dropdown-menu pull-right">
+                                                                    <?php
+                                                                        if($b1 == 1 AND $data['status'] != 1)
+                                                                        {
+                                                                    ?>
+                                                                            <li><a href="edit_kpi.php?id=<?php echo $data['id_kpi']; ?>"><i class="fa fa-pencil m-r-5"></i> Edit</a></li>
+                                                                            <li><a href="#" title="Delete" data-toggle="modal" data-target="#delete_ticket<?php echo $data['id_kpi']; ?>"><i class="fa fa-trash-o m-r-5"></i> Delete</a></li>
+                                                                    <?php
+                                                                        }
+                                                                        else {
+                                                                            echo '<li><center>Tidak Terdapat Aksi</center></li>';
+                                                                        }
+                                                                    ?>
+                                                                </ul>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+
+                                                    <!-- Modal Hapus -->
+                                                    <div id="delete_ticket<?php echo $data['id_kpi']; ?>" class="modal custom-modal fade" role="dialog">
+                                                        <div class="modal-dialog">
+                                                            <div class="modal-content modal-md">
+                                                                <div class="modal-header">
+                                                                    <h4 class="modal-title">Hapus Data KPI Individu</h4>
+                                                                </div>
+                                                                <form method="POST" action="#">
+                                                                    <div class="modal-body card-box">
+                                                                        <p>Yakin Untuk Menghapus Data KPI Individu : <?php echo $data['kpi']; ?> ?</p>
+                                                                        <input type="hidden" name="id_kpi_hapus" value="<?php echo $data['id_kpi']; ?>">
+                                                                        <div class="m-t-20"> <a href="#" class="btn btn-default" data-dismiss="modal">Close</a>
+                                                                            <button type="submit" name="tombolHapus" class="btn btn-danger">Delete</button>
+                                                                        </div>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- Akhiran Modal Hapus -->
+                                            <?php
+                                                }
+                                            ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Akhiran Tab Pertama -->
+                        <!-- Tab Kedua -->
+                        <div id="drk" class="tab-pane fade">
+                            <div class="row">
+                            <div class="col-md-12">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped custom-table m-b-0 display" id="tabel">
+                                            <thead>
+                                                <tr>
+                                                    <th>KPI</th>
+                                                    <th>Deskripsi</th>
+                                                    <th>Bobot (%)</th>
+                                                    <th>Sasaran/Target</th>
+                                                    <th>Satuan</th>
+                                                    <th>Polarisasi</th>
+                                                    <th>Periode</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            <?php
+                                                $no = 0;
+                                                error_reporting(0);
+                                                foreach($db->tampil_kpi($idA) as $data)
+                                                {
+                                                    $no = $no+1;
+                                                    if($data['status'] == 1)
+                                                    {
+                                            ?>
+                                                    <tr>
+                                                        <td><?php echo $data['kpi']; ?></td>
+                                                        <td><?php echo $data['deskripsi']; ?></td>
+                                                        <td><?php echo $data['bobot']; ?></td>
+                                                        <td><?php echo $data['sasaran']; ?></td>
+                                                        <td><?php echo $data['nama_satuan']; ?></td>
+                                                        <td><?php echo $data['nama_polarisasi']; ?></td>
+                                                        <td><?php echo $data['tahun']; ?></td>
+                                                    </tr>
+                                            <?php
+                                                    }
+                                                }
+                                            ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Akhiran Tab Kedua -->
+                    </div>
                 </div>
             </div>
         </div>
