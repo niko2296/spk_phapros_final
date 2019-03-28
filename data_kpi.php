@@ -341,6 +341,20 @@
                         <!-- Akhiran Tab Pertama -->
                         <!-- Tab Kedua -->
                         <div id="drk" class="tab-pane fade">
+                            <?php
+                            if(isset($_POST['tombolSimpanRealisasi']))
+                            {
+                                $input = $db->input_realisasi($_POST['id_kpi'], $_POST['realisasi'], $_POST['keterangan']);
+                                if($input == 2)
+                                {
+                                    echo '
+                                        <script>
+                                            alert("Data Gagal Disimpan");
+                                        </script>
+                                    ';
+                                }
+                            }
+                            ?>
                             <div class="row">
                             <div class="col-md-12">
                                     <div class="table-responsive">
@@ -354,15 +368,16 @@
                                                     <th>Satuan</th>
                                                     <th>Polarisasi</th>
                                                     <th>Periode</th>
+                                                    <th style="width:100px;">Realisasi</th>
+                                                    <th>Keterangan</th>
                                                 </tr>
                                             </thead>
+                                            <form action="#" method="POST">
                                             <tbody>
                                             <?php
-                                                $no = 0;
                                                 error_reporting(0);
                                                 foreach($db->tampil_kpi($idA) as $data)
                                                 {
-                                                    $no = $no+1;
                                                     if($data['status'] == 1)
                                                     {
                                             ?>
@@ -374,12 +389,21 @@
                                                         <td><?php echo $data['nama_satuan']; ?></td>
                                                         <td><?php echo $data['nama_polarisasi']; ?></td>
                                                         <td><?php echo $data['tahun']; ?></td>
+                                                        <td>
+                                                            <input type="hidden" name="id_kpi[]" id="id_kpi" class="form-control" value="<?php echo $data['id_kpi']; ?>">
+                                                            <input type="text" name="realisasi[]" id="realisasi" class="form-control" value="0">
+                                                        </td>
+                                                        <td><textarea name="keterangan[]" id="keterangan" cols="10" rows="1" class="form-control" placeholder="Isikan Keterangan"></textarea></td>
                                                     </tr>
                                             <?php
                                                     }
                                                 }
                                             ?>
+                                                <tr>
+                                                    <td colspan="9" align="right"><button class="btn btn-primary" type="submit" name="tombolSimpanRealisasi">Simpan Data</button></td>
+                                                </tr>
                                             </tbody>
+                                            </form>
                                         </table>
                                     </div>
                                 </div>

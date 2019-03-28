@@ -452,6 +452,33 @@
 			else 
 				return 2;
 		}
+
+		function input_realisasi($id_kpi = [], $realisasi = [], $keterangan = [])
+		{
+			$tanggal = date('Y-m-d');
+			$jml = count($id_kpi);
+			if($jml > 0)
+			{
+				$k = [];
+				for($a=0; $a<$jml; $a++)
+				{
+					$query = "INSERT INTO data_realisasi_kpi VALUES ('', '$id_kpi[$a]', '$realisasi[$a]', '$keterangan[$a]', '0', '$tanggal', '0', '0000-00-00')";
+					$input = $this->connection->prepare($query);
+					if($input->execute())
+						$k[] = 1;
+					else 
+						$k[] = 0;
+				}
+			}
+			else{
+				return 2;
+			}
+
+			if(in_array(0, $k))
+				return 2;
+			else
+				header('location:data_kpi.php');
+		}
 		//Akhiran Fungsi Input
 
 		//Fungsi Edit
