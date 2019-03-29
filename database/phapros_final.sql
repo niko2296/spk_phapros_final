@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 25, 2019 at 05:00 AM
+-- Generation Time: Mar 29, 2019 at 09:39 AM
 -- Server version: 10.1.37-MariaDB
 -- PHP Version: 7.2.12
 
@@ -67,7 +67,7 @@ CREATE TABLE `aturan_penilai` (
 --
 
 INSERT INTO `aturan_penilai` (`id_aturan`, `id_jabatan_penilai`, `id_unit_penilai`, `id_jabatan_dinilai`, `id_unit_dinilai`) VALUES
-(1, 2, 1, 3, 1);
+(5, 2, 1, 3, 1);
 
 -- --------------------------------------------------------
 
@@ -129,8 +129,8 @@ CREATE TABLE `data_kpi` (
   `id_periode` bigint(20) NOT NULL DEFAULT '0',
   `kpi` text NOT NULL,
   `deskripsi` text NOT NULL,
-  `bobot` decimal(10,0) NOT NULL DEFAULT '0',
-  `sasaran` decimal(10,0) NOT NULL DEFAULT '0',
+  `bobot` decimal(20,2) NOT NULL DEFAULT '0.00',
+  `sasaran` decimal(20,2) NOT NULL DEFAULT '0.00',
   `satuan` varchar(20) NOT NULL,
   `sifat_kpi` int(2) NOT NULL DEFAULT '0',
   `status` int(2) NOT NULL DEFAULT '0',
@@ -144,8 +144,69 @@ CREATE TABLE `data_kpi` (
 --
 
 INSERT INTO `data_kpi` (`id_kpi`, `id_anggota`, `id_jabatan`, `id_unit`, `id_periode`, `kpi`, `deskripsi`, `bobot`, `sasaran`, `satuan`, `sifat_kpi`, `status`, `id_verifikator`, `tanggal_input`, `tanggal_verifikasi`) VALUES
-(2, 1, 3, 1, 3, 'Coba Edit 2', 'Ini Coba Edit 2', '80', '30', '9', 5, 0, 2, '2019-03-22', '0000-00-00'),
-(3, 1, 3, 1, 3, 'Coba Edit 1', 'Ini Coba Edit 1', '10', '3', '10', 6, 0, 2, '2019-03-22', '0000-00-00');
+(2, 1, 3, 1, 3, 'Coba Edit 2', 'Ini Coba Edit 2', '80.00', '30.00', '9', 5, 1, 2, '2019-03-22', '2019-03-26'),
+(3, 1, 3, 1, 3, 'Coba Edit 1', 'Ini Coba Edit 1', '10.00', '3.00', '10', 6, 1, 2, '2019-03-22', '2019-03-26'),
+(4, 1, 3, 1, 3, 'Coba 3', 'Ini Coba 3', '10.00', '5.00', '9', 5, 1, 2, '2019-03-26', '2019-03-26');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `data_kpi_verifikasi`
+--
+
+CREATE TABLE `data_kpi_verifikasi` (
+  `id_kpi_verifikasi` bigint(20) NOT NULL,
+  `id_kpi_asli` bigint(20) NOT NULL,
+  `id_anggota` bigint(20) NOT NULL DEFAULT '0',
+  `jabatan` varchar(50) NOT NULL DEFAULT '0',
+  `unit` varchar(50) DEFAULT '0',
+  `periode` bigint(20) NOT NULL DEFAULT '0',
+  `kpi` text NOT NULL,
+  `deskripsi` text NOT NULL,
+  `bobot` decimal(10,0) NOT NULL DEFAULT '0',
+  `sasaran` decimal(10,0) NOT NULL DEFAULT '0',
+  `satuan` varchar(20) NOT NULL,
+  `sifat_kpi` int(2) NOT NULL DEFAULT '0',
+  `status` int(2) NOT NULL DEFAULT '0',
+  `id_verifikator` bigint(20) NOT NULL DEFAULT '0',
+  `tanggal_input` date NOT NULL,
+  `tanggal_verifikasi` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `data_kpi_verifikasi`
+--
+
+INSERT INTO `data_kpi_verifikasi` (`id_kpi_verifikasi`, `id_kpi_asli`, `id_anggota`, `jabatan`, `unit`, `periode`, `kpi`, `deskripsi`, `bobot`, `sasaran`, `satuan`, `sifat_kpi`, `status`, `id_verifikator`, `tanggal_input`, `tanggal_verifikasi`) VALUES
+(3, 2, 1, 'Programmer', 'Teknologi Informasi', 2020, 'Coba Edit 2', 'Ini Coba Edit 2', '80', '30', '9', 5, 1, 2, '2019-03-22', '2019-03-26'),
+(6, 3, 1, 'Programmer', 'Teknologi Informasi', 2020, 'Coba Edit 1', 'Ini Coba Edit 1', '10', '3', '10', 6, 1, 0, '2019-03-22', '2019-03-26'),
+(7, 4, 1, 'Programmer', 'Teknologi Informasi', 2020, 'Coba 3', 'Ini Coba 3', '10', '5', '9', 5, 1, 0, '2019-03-26', '2019-03-26');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `data_realisasi_kpi`
+--
+
+CREATE TABLE `data_realisasi_kpi` (
+  `id_realisasi` bigint(20) NOT NULL,
+  `id_kpi` bigint(20) NOT NULL,
+  `realisasi` decimal(20,2) NOT NULL,
+  `keterangan` text NOT NULL,
+  `status` int(5) NOT NULL,
+  `tanggal_input` date NOT NULL,
+  `id_verifikator` bigint(20) NOT NULL,
+  `tanggal_verif` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `data_realisasi_kpi`
+--
+
+INSERT INTO `data_realisasi_kpi` (`id_realisasi`, `id_kpi`, `realisasi`, `keterangan`, `status`, `tanggal_input`, `id_verifikator`, `tanggal_verif`) VALUES
+(4, 2, '6.00', 'a', 1, '2019-03-28', 0, '0000-00-00'),
+(5, 3, '5.00', 'b', 1, '2019-03-28', 0, '0000-00-00'),
+(6, 4, '3.00', 'ini coba keterangan', 0, '2019-03-28', 0, '0000-00-00');
 
 -- --------------------------------------------------------
 
@@ -176,7 +237,8 @@ CREATE TABLE `mst_anggota` (
 
 INSERT INTO `mst_anggota` (`id_anggota`, `nik`, `nama`, `jenis_kelamin`, `tempat_lahir`, `tanggal_lahir`, `status`, `nomor_hp`, `email`, `id_golongan`, `id_jabatan`, `id_unit`, `alamat`, `tanggal_input`) VALUES
 (1, '11111', 'Niko Kusdiarto', 1, 'Kabupaten Semarang', '1996-02-02', 1, '082118009419', 'niko.kusdiarto@gmail.com', 1, 3, 1, 'Ungaran', '2019-03-21'),
-(2, '22222', 'Eko Sudiarto', 1, 'Tegal', '1966-06-22', 2, '085865244793', 'ekosud@gmail.com', 1, 2, 1, 'Leyangan', '2019-03-21');
+(2, '22222', 'Eko Sudiarto', 1, 'Tegal', '1966-06-22', 2, '085865244793', 'ekosud@gmail.com', 1, 2, 1, 'Leyangan', '2019-03-21'),
+(3, '33333', 'Kusneni Rositawati', 1, 'Semarang', '1966-06-30', 2, '081575662267', 'kusneni@gmail.com', 1, 3, 1, 'Leyangan', '2019-03-25');
 
 -- --------------------------------------------------------
 
@@ -195,7 +257,7 @@ CREATE TABLE `mst_golongan` (
 --
 
 INSERT INTO `mst_golongan` (`id_golongan`, `nama_golongan`, `tanggal_input`) VALUES
-(1, 'I A', '2019-03-21');
+(1, 'I A', '2019-03-25');
 
 -- --------------------------------------------------------
 
@@ -323,7 +385,8 @@ CREATE TABLE `user` (
 
 INSERT INTO `user` (`id_user`, `username`, `password`, `status`, `aksus`) VALUES
 (1, '11111', 'b0baee9d279d34fa1dfd71aadb908c3f', 1, 0),
-(2, '22222', '3d2172418ce305c7d16d4b05597c6a59', 1, 0);
+(2, '22222', '3d2172418ce305c7d16d4b05597c6a59', 1, 0),
+(3, '33333', 'b7bc2a2f5bb6d521e64c8974c143e9a0', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -335,6 +398,7 @@ CREATE TABLE `waktu_input` (
   `id_waktu_input` bigint(20) NOT NULL,
   `tanggal_awal_input` date NOT NULL,
   `tanggal_akhir_input` date NOT NULL,
+  `jenis_input` int(5) NOT NULL,
   `tanggal_input` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -342,8 +406,8 @@ CREATE TABLE `waktu_input` (
 -- Dumping data for table `waktu_input`
 --
 
-INSERT INTO `waktu_input` (`id_waktu_input`, `tanggal_awal_input`, `tanggal_akhir_input`, `tanggal_input`) VALUES
-(1, '2019-03-01', '2019-03-31', '2019-03-21');
+INSERT INTO `waktu_input` (`id_waktu_input`, `tanggal_awal_input`, `tanggal_akhir_input`, `jenis_input`, `tanggal_input`) VALUES
+(1, '2019-03-01', '2019-03-31', 2, '2019-03-21');
 
 -- --------------------------------------------------------
 
@@ -355,6 +419,7 @@ CREATE TABLE `waktu_verifikasi` (
   `id_waktu_verifikasi` bigint(20) NOT NULL,
   `tanggal_awal_verifikasi` date NOT NULL,
   `tanggal_akhir_verifikasi` date NOT NULL,
+  `jenis_verifikasi` int(5) NOT NULL,
   `tanggal_input` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -362,8 +427,8 @@ CREATE TABLE `waktu_verifikasi` (
 -- Dumping data for table `waktu_verifikasi`
 --
 
-INSERT INTO `waktu_verifikasi` (`id_waktu_verifikasi`, `tanggal_awal_verifikasi`, `tanggal_akhir_verifikasi`, `tanggal_input`) VALUES
-(1, '2019-03-01', '2019-03-31', '2019-03-21');
+INSERT INTO `waktu_verifikasi` (`id_waktu_verifikasi`, `tanggal_awal_verifikasi`, `tanggal_akhir_verifikasi`, `jenis_verifikasi`, `tanggal_input`) VALUES
+(2, '2019-03-01', '2019-03-31', 1, '2019-03-28');
 
 --
 -- Indexes for dumped tables
@@ -398,6 +463,18 @@ ALTER TABLE `data_catatan`
 --
 ALTER TABLE `data_kpi`
   ADD PRIMARY KEY (`id_kpi`);
+
+--
+-- Indexes for table `data_kpi_verifikasi`
+--
+ALTER TABLE `data_kpi_verifikasi`
+  ADD PRIMARY KEY (`id_kpi_verifikasi`);
+
+--
+-- Indexes for table `data_realisasi_kpi`
+--
+ALTER TABLE `data_realisasi_kpi`
+  ADD PRIMARY KEY (`id_realisasi`);
 
 --
 -- Indexes for table `mst_anggota`
@@ -473,7 +550,7 @@ ALTER TABLE `akses_menu`
 -- AUTO_INCREMENT for table `aturan_penilai`
 --
 ALTER TABLE `aturan_penilai`
-  MODIFY `id_aturan` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_aturan` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `aturan_polarisasi`
@@ -485,19 +562,31 @@ ALTER TABLE `aturan_polarisasi`
 -- AUTO_INCREMENT for table `data_catatan`
 --
 ALTER TABLE `data_catatan`
-  MODIFY `id_catatan` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_catatan` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `data_kpi`
 --
 ALTER TABLE `data_kpi`
-  MODIFY `id_kpi` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id_kpi` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `data_kpi_verifikasi`
+--
+ALTER TABLE `data_kpi_verifikasi`
+  MODIFY `id_kpi_verifikasi` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT for table `data_realisasi_kpi`
+--
+ALTER TABLE `data_realisasi_kpi`
+  MODIFY `id_realisasi` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `mst_anggota`
 --
 ALTER TABLE `mst_anggota`
-  MODIFY `id_anggota` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_anggota` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `mst_golongan`
@@ -539,7 +628,7 @@ ALTER TABLE `mst_unit`
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id_user` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_user` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `waktu_input`
@@ -551,7 +640,7 @@ ALTER TABLE `waktu_input`
 -- AUTO_INCREMENT for table `waktu_verifikasi`
 --
 ALTER TABLE `waktu_verifikasi`
-  MODIFY `id_waktu_verifikasi` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_waktu_verifikasi` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
