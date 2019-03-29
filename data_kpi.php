@@ -200,12 +200,15 @@
                             <div class="row">
                                 <?php
                                     $b1 = 0;
+                                    $b2 = 0;
                                     error_reporting(0);
                                     foreach($db->tampil_waktu_input() as $tampil)
                                     {
                                         $sekarang = date('Y-m-d');
                                         if($sekarang >= $tampil['tanggal_awal_input'] AND $sekarang <= $tampil['tanggal_akhir_input'] AND $tampil['jenis_input'] == 1)
                                             $b1 = 1;
+                                        if($sekarang >= $tampil['tanggal_awal_input'] AND $sekarang <= $tampil['tanggal_akhir_input'] AND $tampil['jenis_input'] == 2)
+                                            $b2 = 1;
                                     }
                                     
                                     if($b1 == 1)
@@ -399,16 +402,19 @@
                                                         <td><?php echo $data['tahun']; ?></td>
                                                         <td>
                                                             <input type="hidden" name="id_kpi[]" class="form-control" value="<?php echo $data['id_kpi']; ?>">
-                                                            <input type="text" name="realisasi[]" class="form-control" value="<?php echo ($db->hitung_realisasi($data['id_kpi']) > 0)?($db->tampil_realisasi(1, $data['id_kpi'])):('0'); ?>" <?php echo ($db->cek_verif_realisasi($data['id_kpi']) == 1)?('readonly="readonly"'):(''); ?>>
+                                                            <input type="text" name="realisasi[]" class="form-control" value="<?php echo ($db->hitung_realisasi($data['id_kpi']) > 0)?($db->tampil_realisasi(1, $data['id_kpi'])):('0'); ?>" <?php echo ($db->cek_verif_realisasi($data['id_kpi']) == 1)?('readonly="readonly"'):(''); ?> <?php echo ($b2 != 1)?('readonly="readonly"'):(''); ?>>
                                                         </td>
-                                                        <td><textarea name="keterangan[]" cols="10" rows="1" class="form-control" placeholder="Isikan Keterangan" <?php echo ($db->cek_verif_realisasi($data['id_kpi']) == 1)?('readonly="readonly"'):(''); ?>><?php echo ($db->hitung_realisasi($data['id_kpi']) > 0)?($db->tampil_realisasi(2, $data['id_kpi'])):(''); ?></textarea></td>
+                                                        <td><textarea name="keterangan[]" cols="10" rows="1" class="form-control" placeholder="Isikan Keterangan" <?php echo ($db->cek_verif_realisasi($data['id_kpi']) == 1)?('readonly="readonly"'):(''); ?> <?php echo ($b2 != 1)?('readonly="readonly"'):(''); ?>><?php echo ($db->hitung_realisasi($data['id_kpi']) > 0)?($db->tampil_realisasi(2, $data['id_kpi'])):(''); ?></textarea></td>
                                                     </tr>
                                             <?php
                                                     }
                                                 }
                                             ?>
                                                 <tr>
-                                                    <td colspan="9" align="right"><button class="btn btn-primary" type="submit" name="tombolSimpanRealisasi">Simpan Data</button></td>
+                                                    <?php 
+                                                        if($b2 == 1)
+                                                            echo '<td colspan="9" align="right"><button class="btn btn-primary" type="submit" name="tombolSimpanRealisasi">Simpan Data</button></td>';
+                                                    ?>
                                                 </tr>
                                             </tbody>
                                             </form>
