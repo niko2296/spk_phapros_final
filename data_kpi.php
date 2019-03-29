@@ -399,9 +399,9 @@
                                                         <td><?php echo $data['tahun']; ?></td>
                                                         <td>
                                                             <input type="hidden" name="id_kpi[]" class="form-control" value="<?php echo $data['id_kpi']; ?>">
-                                                            <input type="text" name="realisasi[]" class="form-control" value="<?php echo ($db->hitung_realisasi($data['id_kpi']) > 0)?($db->tampil_realisasi(1, $data['id_kpi'])):('0'); ?>">
+                                                            <input type="text" name="realisasi[]" class="form-control" value="<?php echo ($db->hitung_realisasi($data['id_kpi']) > 0)?($db->tampil_realisasi(1, $data['id_kpi'])):('0'); ?>" <?php echo ($db->cek_verif_realisasi($data['id_kpi']) == 1)?('readonly="readonly"'):(''); ?>>
                                                         </td>
-                                                        <td><textarea name="keterangan[]" cols="10" rows="1" class="form-control" placeholder="Isikan Keterangan"><?php echo ($db->hitung_realisasi($data['id_kpi']) > 0)?($db->tampil_realisasi(2, $data['id_kpi'])):(''); ?></textarea></td>
+                                                        <td><textarea name="keterangan[]" cols="10" rows="1" class="form-control" placeholder="Isikan Keterangan" <?php echo ($db->cek_verif_realisasi($data['id_kpi']) == 1)?('readonly="readonly"'):(''); ?>><?php echo ($db->hitung_realisasi($data['id_kpi']) > 0)?($db->tampil_realisasi(2, $data['id_kpi'])):(''); ?></textarea></td>
                                                     </tr>
                                             <?php
                                                     }
