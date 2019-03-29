@@ -188,7 +188,23 @@
 							<h4 class="page-title">Data KPI Individu Detail</h4>
                         </div>
                         <div class="col-xs-4 text-right m-b-30">
-                            <a href="input_kpi_anggota.php?id_anggota=<?php echo $id_anggotaD."&&id_jabatan=".$id_jabatanD."&&id_unit=".$id_unitD; ?>" class="btn btn-primary rounded pull-right"><i class="fa fa-plus"></i> Tambah Data KPI Individu Untuk Anggota Sub Koordinator</a>
+                            <?php
+                                $b1 = 0;
+                                error_reporting(0);
+                                foreach($db->tampil_waktu_input() as $tampil)
+                                {
+                                    $sekarang = date('Y-m-d');
+                                    if($sekarang >= $tampil['tanggal_awal_input'] AND $sekarang <= $tampil['tanggal_akhir_input'] AND $tampil['jenis_input'] == 1)
+                                        $b1 = 1;
+                                }
+                                
+                                if($b1 == 1)
+                                {
+                                    echo '
+                                        <a href="input_kpi_anggota.php?id_anggota='.$id_anggotaD.'&&id_jabatan='.$id_jabatanD.'&&id_unit='.$id_unitD.'" class="btn btn-primary rounded pull-right"><i class="fa fa-plus"></i> Tambah Data KPI Individu Untuk Anggota Sub Koordinator</a>
+                                    ';
+                                }
+                            ?>
                         </div>
                     </div>
                     <div class="row">
@@ -335,7 +351,7 @@
                                                 </td>
                                                 <td class="text-center" id="<?php echo $id5; ?>">
                                                     <?php
-                                                        if($data['status'] == 0)
+                                                        if($data['status'] == 0 AND $b1 == 1)
                                                             echo '<a href="#" id="'.$id3.'" class="btn btn-danger" onclick="fungsi_hapus('.$data['id_kpi'].')">Hapus</a>';
                                                         else
                                                             echo '<a href="#" id="'.$id3.'" class="btn btn-danger" disabled="disabled">Hapus</a>';                                       
