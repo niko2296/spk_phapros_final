@@ -1002,6 +1002,13 @@
 				}
 			}
 		}
+
+		function cek_verif_realisasi($id_kpi = null)
+		{
+			$query = $this->connection->query("SELECT * FROM data_realisasi_kpi WHERE id_kpi = '$id_kpi'");
+			$tampil = $query->fetch_array();
+			return ($tampil['status'] == null)?(0):($tampil['status']);
+		}
 		//Akhiran Fungsi Cek Login
 
 		// Fungsi Verifikasi
@@ -1186,6 +1193,16 @@
 						return 2;
 				}
 			}
+		}
+
+		function verif_realisasi($id_kpi = null, $status = null)
+		{
+			$query = "UPDATE data_realisasi_kpi SET status = '$status' WHERE id_kpi = '$id_kpi'";
+			$edit = $this->connection->prepare($query);
+			if($edit->execute())
+				return 1;
+			else 
+				return 2;
 		}
 		// Akhiran Fungsi Verifikasi
 

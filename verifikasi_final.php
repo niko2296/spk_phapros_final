@@ -55,5 +55,20 @@
         else 
             echo 2;
     }
+    else if($_GET['jenis'] == 'verif_realisasi')
+    {
+        $eksekusi = $db->verif_realisasi($_GET['id'], $_GET['value']);
+        if($eksekusi == 1)
+        {
+            if($_GET['value'] == 1)
+                echo 1;
+            else if($_GET['value'] == 0)
+                echo 2;
+        }
+        else{
+            echo 3;
+        }
+        
+    }
 
 ?>

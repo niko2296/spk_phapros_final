@@ -342,29 +342,29 @@
                         <!-- Tab Kedua -->
                         <div id="drk" class="tab-pane fade">
                             <?php
-                            if(isset($_POST['tombolSimpanRealisasi']))
-                            {
-                                $input = $db->input_realisasi($_POST['id_kpi'], $_POST['realisasi'], $_POST['keterangan']);
-                                if($input == 2)
+                                if(isset($_POST['tombolSimpanRealisasi']))
                                 {
-                                    echo '
-                                        <script>
-                                            alert("Data Gagal Disimpan");
-                                        </script>
-                                    ';
+                                    $input = $db->input_realisasi($_POST['id_kpi'], $_POST['realisasi'], $_POST['keterangan']);
+                                    if($input == 2)
+                                    {
+                                        echo '
+                                            <script>
+                                                alert("Data Gagal Disimpan");
+                                            </script>
+                                        ';
+                                    }
+                                    if($input == 1)
+                                    {
+                                        echo '
+                                            <script>
+                                                alert("Data Berhasil Disimpan");
+                                            </script>
+                                        ';
+                                    }
                                 }
-                                if($input == 1)
-                                {
-                                    echo '
-                                        <script>
-                                            alert("Data Berhasil Disimpan");
-                                        </script>
-                                    ';
-                                }
-                            }
                             ?>
                             <div class="row">
-                            <div class="col-md-12">
+                                <div class="col-md-12">
                                     <div class="table-responsive">
                                         <table class="table table-striped custom-table m-b-0 display" id="tabel">
                                             <thead>
