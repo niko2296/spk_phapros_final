@@ -381,6 +381,7 @@
                                                     <th>Periode</th>
                                                     <th style="width:100px;">Realisasi</th>
                                                     <th>Keterangan</th>
+                                                    <th>Status</th>
                                                 </tr>
                                             </thead>
                                             <form action="#" method="POST">
@@ -405,6 +406,7 @@
                                                             <input type="text" name="realisasi[]" class="form-control" value="<?php echo ($db->hitung_realisasi($data['id_kpi']) > 0)?($db->tampil_realisasi(1, $data['id_kpi'])):('0'); ?>" <?php echo ($db->cek_verif_realisasi($data['id_kpi']) == 1)?('readonly="readonly"'):(''); ?> <?php echo ($b2 != 1)?('readonly="readonly"'):(''); ?>>
                                                         </td>
                                                         <td><textarea name="keterangan[]" cols="10" rows="1" class="form-control" placeholder="Isikan Keterangan" <?php echo ($db->cek_verif_realisasi($data['id_kpi']) == 1)?('readonly="readonly"'):(''); ?> <?php echo ($b2 != 1)?('readonly="readonly"'):(''); ?>><?php echo ($db->hitung_realisasi($data['id_kpi']) > 0)?($db->tampil_realisasi(2, $data['id_kpi'])):(''); ?></textarea></td>
+                                                        <td><?php echo ($db->cek_verif_realisasi($data['id_kpi']) == 1)?('Sudah Diverifikasi'):('Belum Diverifikasi'); ?></td>
                                                     </tr>
                                             <?php
                                                     }
