@@ -258,24 +258,6 @@
                                         echo '<center><div style="background-color:red; width:20%; color:white; padding:5px; margin-bottom:1%;">Data Gagal Dihapus</div></center>';
                                 }
 
-                                $ket = '';
-                                $totB = $db->total_bobot($id_anggotaD, $id_jabatanD, $id_unitD, $idA);
-                                if($totB < 100)
-                                    $ket = 'Bobot Masih Kurang dari 100%';
-                                else if($totB > 100)
-                                    $ket = 'Bobot Lebih dari 100%';
-
-                                if($ket != '')
-                                {
-                                    echo    '<div class="alert alert-danger">
-                                                <div class="row" style="vertical-align:bottom;">
-                                                    <div class="col-md-12" align="center">
-                                                        <b>!! '.$ket.' !!</b>
-                                                    </div>
-                                                </div>
-                                            </div>';
-                                }
-
                                 if($db->hitung_catatan($id_anggotaD, $id_jabatanD, $id_unitD, $idA) > 0)
                                 {
                                     echo '<div class="alert alert-info">
