@@ -199,7 +199,7 @@
 					<?php
 
                         $id_kpi = $_GET['id'];
-                        foreach($db->tampil_kpi() as $tampilK)
+                        foreach($db->tampil_kpi($idA) as $tampilK)
                         {
                             if($tampilK['id_kpi'] == $id_kpi)
                             {

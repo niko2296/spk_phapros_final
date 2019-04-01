@@ -252,6 +252,27 @@
 				return $t['keterangan'];
 			}
 		}
+
+		function tampil_kompetensi($id_periode = null, $id_kompetensi = null)
+		{
+			if($id_kompetensi != null)
+			{
+				if($id_periode != null)
+					$query = $this->connection->query("SELECT * FROM mst_kompetensi WHERE id_kompetensi = '$id_kompetensi' AND id_periode = '$id_periode'");
+				else 
+					$query = $this->connection->query("SELECT * FROM mst_kompetensi WHERE id_kompetensi = '$id_kompetensi'");
+			}
+			else 
+			{
+				if($id_periode != null)
+					$query = $this->connection->query("SELECT * FROM mst_kompetensi WHERE id_periode = '$id_periode'");
+				else 	
+					$query = $this->connection->query("SELECT * FROM mst_kompetensi");
+			}
+			while($tampil = $query->fetch_array())
+				$hasil[] = $tampil;
+			return $hasil;
+		}
 		//Akhiran Fungsi Tampil
 
 		//Fungsi Input
@@ -511,6 +532,16 @@
 			else
 				return 1;
 		}
+
+		function input_kompetensi($id_periode = null, $nama_kompetensi = null, $indikator_terendah = null, $indikator_tertinggi = null, $bobot = null)
+		{
+			$query = "INSERT INTO mst_kompetensi VALUES ('', '$id_periode', '$nama_kompetensi', '$indikator_terendah', '$indikator_tertinggi', '$bobot')";
+			$input = $this->connection->prepare($query);
+			if($input->execute())
+				return 1;
+			else 
+				return 2;
+		}
 		//Akhiran Fungsi Input
 
 		//Fungsi Edit
@@ -728,6 +759,16 @@
 			else
 				header('location:data_kpi_verifikasi.php');
 		}
+
+		function edit_kompetensi($id_periode = null, $id_kompetensi = null, $nama_kompetensi = null, $indikator_terendah = null, $indikator_tertinggi = null, $bobot = null)
+		{
+			$query = "UPDATE mst_kompetensi SET nama_kompetensi = '$nama_kompetensi', indikator_terendah = '$indikator_terendah', indikator_tertinggi = '$indikator_tertinggi', bobot = '$bobot' WHERE id_kompetensi = '$id_kompetensi'";
+			$edit = $this->connection->prepare($query);
+			if($edit->execute())
+				header("location:detail_kompetensi.php?id_periode=$id_periode");
+			else 
+				return 2;
+		}
 		//Akhiran Fungsi Edit
 
 		//Fungsi Hapus
@@ -928,6 +969,16 @@
 			$hapus = $this->connection->prepare($query);
 			if($hapus->execute())
 				header("location:detail_kpi.php?id_anggota=$id_anggota&&id_jabatan=$id_jabatan&&id_unit=$id_unit");
+			else 
+				return 2;
+		}
+
+		function hapus_kompetensi($id_kompetensi = null, $id_periode = null)
+		{
+			$query = "DELETE FROM mst_kompetensi WHERE id_kompetensi = '$id_kompetensi' AND id_periode = '$id_periode'";
+			$hapus = $this->connection->prepare($query);
+			if($hapus->execute())
+				header("detail_kompetensi.php?id_periode=$id_periode");
 			else 
 				return 2;
 		}
@@ -1324,6 +1375,15 @@
 				$jml = $jml+1;
 			return $jml;
 		}
+
+		function hitung_kompetensi($id_periode = null)
+		{
+			$query = $this->connection->query("SELECT * FROM mst_kompetensi WHERE id_periode = '$id_periode'");
+			$jml = 0;
+			while($t = $query->fetch_array())
+				$jml = $jml+1;
+			return $jml;
+		}
 		// Akhiran Menghitung Data
 
 		// Fungsi Copy Data
@@ -1537,6 +1597,48 @@
 					return 2;
 				else 
 					header('location:data_polarisasi.php');
+			}
+		}
+
+		function copy_kompetensi($jenis = null, $id_kompetensi = null, $id_periode = null)
+		{
+			if($jenis == 1 || $jenis == '1')
+			{
+				$query1 = $this->connection->query("SELECT * FROM mst_kompetensi WHERE id_kompetensi = '$id_kompetensi'");
+				$tampil = $query1->fetch_array();
+				$nama_kompetensi = $tampil['nama_kompetensi'];
+				$indikator_terendah = $tampil['indikator_terendah'];
+				$indikator_tertinggi = $tampil['indikator_tertinggi'];
+				$bobot = $tampil['bobot'];
+
+				$query2 = "INSERT INTO mst_kompetensi VALUES ('', '$id_periode', '$nama_kompetensi', '$indikator_terendah', '$indikator_tertinggi', '$bobot')";
+				$input = $this->connection->prepare($query2);
+				if($input->execute())
+					header("location:data_kompetensi.php");
+				else 
+					return 2;
+			}
+			else if($jenis == 2 || $jenis == '2')
+			{
+				$query1 = $this->connection->query("SELECT * FROM mst_kompetensi WHERE id_periode = '$id_kompetensi'");
+				while($tampil = $query1->fetch_array())
+				{
+					$nama_kompetensi = $tampil['nama_kompetensi'];
+					$indikator_terendah = $tampil['indikator_terendah'];
+					$indikator_tertinggi = $tampil['indikator_tertinggi'];
+					$bobot = $tampil['bobot'];
+					$query2 = "INSERT INTO mst_kompetensi VALUES ('', '$id_periode', '$nama_kompetensi', '$indikator_terendah', '$indikator_tertinggi', '$bobot')";
+					$input = $this->connection->prepare($query2);
+					if($input->execute())
+						$a[] = 1;
+					else 
+						$a[] = 0;
+				}
+
+				if(in_array(0, $a))
+					return 2;
+				else 
+					header("location:data_kompetensi.php");
 			}
 		}
 		// Akhiran Fungsi Copy Data
