@@ -19,8 +19,11 @@
 			return $hasil;
 		}
 		
-		function tampil_jabatan(){
-			$query = $this->connection->query("SELECT * FROM mst_jabatan");
+		function tampil_jabatan($id_jabatan = null){
+			if($id_jabatan != null)
+				$query = $this->connection->query("SELECT * FROM mst_jabatan WHERE id_jabatan = '$id_jabatan'");
+			else
+				$query = $this->connection->query("SELECT * FROM mst_jabatan");
 			while($tampil = $query->fetch_array())
 				$hasil[] = $tampil;
 			return $hasil;
@@ -294,6 +297,14 @@
 				$hasil[] = $tampil;
 			return $hasil;
 		}
+
+		function tampil_kelompok_jabatan()
+		{
+			$query = $this->connection->query("SELECT * FROM mst_kelompok_jabatan");
+			while($tampil = $query->fetch_array())
+				$hasil[] = $tampil;
+			return $hasil;
+		}
 		//Akhiran Fungsi Tampil
 
 		//Fungsi Input
@@ -356,6 +367,16 @@
 			if($input->execute())
 				return 1;
 			else
+				return 2;
+		}
+
+		function input_kelompok($kelompok = null, $jabatan = null){
+			$arrJabatan = serialize($jabatan);
+			$query = "INSERT INTO mst_kelompok_jabatan VALUES ('', '$kelompok', '$arrJabatan')";
+			$input = $this->connection->prepare($query);
+			if($input->execute())
+				return 1;
+			else 
 				return 2;
 		}
 
@@ -810,6 +831,17 @@
 			else 
 				return 2;
 		}
+
+		function edit_kelompok($id_kelompok = null, $kelompok = null, $id_jabatan = null)
+		{
+			$arrJabatan = serialize($id_jabatan);
+			$query = "UPDATE mst_kelompok_jabatan SET nama_kelompok = '$kelompok', id_jabatan = '$arrJabatan' WHERE id_kelompok = '$id_kelompok'";
+			$edit = $this->connection->prepare($query);
+			if($edit->execute())
+				return 1;
+			else 
+				return 2;
+		}		
 		//Akhiran Fungsi Edit
 
 		//Fungsi Hapus
@@ -1030,6 +1062,16 @@
 			$hapus = $this->connection->prepare($query);
 			if($hapus->execute())
 				header("location:detail_peringkat.php?id_periode=$id_periode");
+			else 
+				return 2;
+		}
+
+		function hapus_kelompok($id_kelompok = null)
+		{
+			$query = "DELETE FROM mst_kelompok_jabatan WHERE id_kelompok = '$id_kelompok'";
+			$hapus = $this->connection->prepare($query);
+			if($hapus->execute())
+				header("location:data_kelompok.php");
 			else 
 				return 2;
 		}
