@@ -273,6 +273,27 @@
 				$hasil[] = $tampil;
 			return $hasil;
 		}
+
+		function tampil_peringkat($id_periode = null, $id_peringkat = null)
+		{
+			if($id_peringkat != null)
+			{
+				if($id_periode != null)
+					$query = $this->connection->query("SELECT * FROM mst_peringkat WHERE id_peringkat = '$id_peringkat' AND id_periode = '$id_periode'");
+				else
+					$query = $this->connection->query("SELECT * FROM mst_peringkat WHERE id_periode = '$id_periode'");
+			}
+			else
+			{
+				if($id_periode != null)
+					$query = $this->connection->query("SELECT * FROM mst_peringkat WHERE id_periode = '$id_periode'");
+				else
+					$query = $this->connection->query("SELECT * FROM mst_peringkat");
+			}
+			while($tampil = $query->fetch_array())
+				$hasil[] = $tampil;
+			return $hasil;
+		}
 		//Akhiran Fungsi Tampil
 
 		//Fungsi Input
@@ -542,6 +563,16 @@
 			else 
 				return 2;
 		}
+
+		function input_peringkat($id_periode = null, $peringkat = null, $nilai = null)
+		{
+			$query = "INSERT INTO mst_peringkat VALUES ('', '$id_periode', '$peringkat', '$nilai')";
+			$input = $this->connection->prepare($query);
+			if($input->execute())
+				return 1;
+			else 
+				return 2;
+		}
 		//Akhiran Fungsi Input
 
 		//Fungsi Edit
@@ -769,6 +800,16 @@
 			else 
 				return 2;
 		}
+
+		function edit_peringkat($id_periode = null, $id_peringkat = null, $peringkat = null, $nilai = null)
+		{
+			$query = "UPDATE mst_peringkat SET peringkat = '$peringkat', nilai = '$nilai' WHERE id_peringkat = '$id_peringkat'";
+			$edit = $this->connection->prepare($query);
+			if($edit->execute())
+				header("location:detail_peringkat.php?id_periode=$id_periode");
+			else 
+				return 2;
+		}
 		//Akhiran Fungsi Edit
 
 		//Fungsi Hapus
@@ -978,7 +1019,17 @@
 			$query = "DELETE FROM mst_kompetensi WHERE id_kompetensi = '$id_kompetensi' AND id_periode = '$id_periode'";
 			$hapus = $this->connection->prepare($query);
 			if($hapus->execute())
-				header("detail_kompetensi.php?id_periode=$id_periode");
+				header("location:detail_kompetensi.php?id_periode=$id_periode");
+			else 
+				return 2;
+		}
+
+		function hapus_peringkat($id_peringkat = null, $id_periode = null)
+		{
+			$query = "DELETE FROM mst_peringkat WHERE id_peringkat = '$id_peringkat'";
+			$hapus = $this->connection->prepare($query);
+			if($hapus->execute())
+				header("location:detail_peringkat.php?id_periode=$id_periode");
 			else 
 				return 2;
 		}
@@ -1384,6 +1435,15 @@
 				$jml = $jml+1;
 			return $jml;
 		}
+
+		function hitung_peringkat($id_periode = null)
+		{
+			$query = $this->connection->query("SELECT * FROM mst_peringkat WHERE id_periode = '$id_periode'");
+			$jml = 0;
+			while($t = $query->fetch_array())
+				$jml = $jml+1;
+			return $jml;
+		}
 		// Akhiran Menghitung Data
 
 		// Fungsi Copy Data
@@ -1639,6 +1699,45 @@
 					return 2;
 				else 
 					header("location:data_kompetensi.php");
+			}
+		}
+
+		function copy_peringkat($jenis = null, $id_peringkat = null, $id_periode = null)
+		{
+			if($jenis == 1 || $jenis == '1')
+			{
+				$query1 = $this->connection->query("SELECT * FROM mst_peringkat WHERE id_peringkat = '$id_peringkat'");
+				$tampil = $query1->fetch_array();
+				$peringkat = $tampil['peringkat'];
+				$nilai = $tampil['nilai'];
+
+				$query2 = "INSERT INTO mst_peringkat VALUES ('', '$id_periode', '$peringkat', '$nilai')";
+				$input = $this->connection->prepare($query2);
+				if($input->execute())
+					header("location:data_peringkat.php");
+				else 
+					return 2;
+			}
+			else if($jenis == 2 || $jenis == '2')
+			{
+				$query1 = $this->connection->query("SELECT * FROM mst_peringkat WHERE id_periode = '$id_peringkat'");
+				while($t = $query1->fetch_array())
+				{
+					$peringkat = $t['peringkat'];
+					$nilai = $t['nilai'];
+
+					$query2 = "INSERT INTO mst_peringkat VALUES ('', '$id_periode', '$peringkat', '$nilai')";
+					$input = $this->connection->prepare($query2);
+					if($input->execute())
+						$a[] = 1;
+					else 
+						$a[] = 0;
+				}
+
+				if(in_array(0, $a))
+					return 2;
+				else 
+					header("location:data_peringkat.php");
 			}
 		}
 		// Akhiran Fungsi Copy Data
