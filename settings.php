@@ -107,6 +107,8 @@
                                             <li><a href="data_periode.php">Periode</a></li>
                                             <li><a href="data_polarisasi.php">Polarisasi</a></li>
                                             <li><a href="data_satuan.php">Satuan</a></li>
+                                            <li><a href="data_kompetensi.php">Kompetensi</a></li>
+                                            <li><a href="data_peringkat.php">Peringkat Kompetensi</a></li>
                                         </ul>
                                     </li>
                             <?php
@@ -162,6 +164,13 @@
                                             echo '<li><a href="data_kpi_seluruh.php">Data KPI Keseluruhan</a></li>';
                                         }
                                     ?>
+                                </ul>
+							</li>
+                            <li class="submenu">
+								<a href="#"><i class="la la-certificate"></i> <span> Kompetensi</span> <span class="menu-arrow"></span></a>
+								<ul style="display: none;">
+									<li><a href="data_kpi.php">Data Kompetensi Individu</a></li>
+									<li><a href="copy_kpi.php">Data Kompetensi Sub Koordinator</a></li>
                                 </ul>
 							</li>
 						</ul>

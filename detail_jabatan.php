@@ -108,6 +108,8 @@
                                             <li><a href="data_periode.php">Periode</a></li>
                                             <li><a href="data_polarisasi.php">Polarisasi</a></li>
                                             <li><a href="data_satuan.php">Satuan</a></li>
+                                            <li><a href="data_kompetensi.php">Kompetensi</a></li>
+                                            <li><a href="data_peringkat.php">Peringkat Kompetensi</a></li>
                                         </ul>
                                     </li>
                             <?php
