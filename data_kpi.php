@@ -184,8 +184,8 @@
                             <li class="submenu">
 								<a href="#"><i class="la la-certificate"></i> <span> Kompetensi</span> <span class="menu-arrow"></span></a>
 								<ul style="display: none;">
-									<li><a href="data_kpi.php">Data Kompetensi Individu</a></li>
-									<li><a href="copy_kpi.php">Data Kompetensi Sub Koordinator</a></li>
+                                    <li><a href="kompetensi_individu.php">Data Kompetensi Individu</a></li>
+									<li><a href="kompetensi_sub.php">Data Kompetensi Sub Koordinator</a></li>
                                 </ul>
 							</li>
 						</ul>
