@@ -201,7 +201,7 @@
 
                         <?php
                             if(isset($_POST['tombolEdit'])){
-                                $eksekusi = $db->edit_kompetensi($_POST['id_periode_edit'], $_POST['id_kompetensi_edit'], $_POST['nama_kompetensi_edit'], $_POST['indikator_terendah_edit'], $_POST['indikator_tertinggi_edit'], $_POST['bobot_edit']);
+                                $eksekusi = $db->edit_kompetensi($_POST['id_periode_edit'], $_POST['kelompok_edit'],$_POST['id_kompetensi_edit'], $_POST['nama_kompetensi_edit'], $_POST['indikator_terendah_edit'], $_POST['indikator_tertinggi_edit'], $_POST['bobot_edit']);
                                 if($eksekusi == 2 || $eksekusi == 3)
                                 {
                                     echo '<div class="alert alert-danger">Data Gagal Disimpan</div>';
@@ -238,6 +238,7 @@
                                 <table class="table table-striped custom-table m-b-0 display" id="">
 									<thead>
 										<tr>
+                                            <th>Kelompok Jabatan</th>
 											<th>Nama Kompetensi</th>
                                             <th>Indikator Terendah</th>
                                             <th>Indikator Tertinggi</th>
@@ -254,6 +255,7 @@
                                             $no = $no+1;
                                     ?>
                                             <tr>
+                                                <td><?php echo $data['nama_kelompok']; ?></td>
                                                 <td><?php echo $data['nama_kompetensi']; ?></td>
                                                 <td><?php echo $data['indikator_terendah']; ?></td>
                                                 <td><?php echo $data['indikator_tertinggi']; ?></td>
@@ -332,6 +334,22 @@
                                                                 <div class="row">
                                                                     <div class="col-md-6">
                                                                         <div class="form-group">
+                                                                            <label>Kelompok Jabatan</label>
+                                                                            <select name="kelompok_edit" class="form-control cek kelompok" style="width:100%;">
+                                                                                <?php
+                                                                                    foreach($db->tampil_kelompok_jabatan() as $tampilK)
+                                                                                    {
+                                                                                        $s = '';
+                                                                                        if($tampilK['id_kelompok'] == $data['id_kelompok'])
+                                                                                            $s = 'selected="selected"';
+                                                                                        echo '<option value="'.$tampilK['id_kelompok'].'" '.$s.'>'.$tampilK['nama_kelompok'].'</option>';
+                                                                                    }
+                                                                                ?>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group">
                                                                             <label>Bobot</label>
                                                                             <input class="form-control cek" type="text" name="bobot_edit" value="<?php echo $data['bobot']; ?>">
                                                                         </div>
@@ -407,7 +425,7 @@
                                         }
                                     ?>
                                     <tr style="background:none;" class="text-right">
-                                        <td colspan="5">
+                                        <td colspan="6">
                                             <a href="data_kompetensi.php" title="Kembali">
                                                 <button class="btn btn-primary" type="submit" name="modalCopyAll">Kembali</button>
                                             </a>
@@ -477,6 +495,9 @@
                 $('#tabel').DataTable({
                     searching : true,
                     ordering : false
+                });
+                $('.kelompok').select2({
+                    placeholder: "Please Select"
                 });
             });
         </script>

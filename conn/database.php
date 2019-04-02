@@ -261,16 +261,16 @@
 			if($id_kompetensi != null)
 			{
 				if($id_periode != null)
-					$query = $this->connection->query("SELECT * FROM mst_kompetensi WHERE id_kompetensi = '$id_kompetensi' AND id_periode = '$id_periode'");
+					$query = $this->connection->query("SELECT k.*, j.nama_kelompok FROM mst_kompetensi k LEFT JOIN mst_kelompok_jabatan j ON k.id_kelompok = j.id_kelompok WHERE k.id_kompetensi = '$id_kompetensi' AND k.id_periode = '$id_periode'");
 				else 
-					$query = $this->connection->query("SELECT * FROM mst_kompetensi WHERE id_kompetensi = '$id_kompetensi'");
+					$query = $this->connection->query("SELECT k.*, j.nama_kelompok FROM mst_kompetensi k LEFT JOIN mst_kelompok_jabatan j ON k.id_kelompok = j.id_kelompok WHERE k.id_kompetensi = '$id_kompetensi'");
 			}
 			else 
 			{
 				if($id_periode != null)
-					$query = $this->connection->query("SELECT * FROM mst_kompetensi WHERE id_periode = '$id_periode'");
+					$query = $this->connection->query("SELECT k.*, j.nama_kelompok FROM mst_kompetensi k LEFT JOIN mst_kelompok_jabatan j ON k.id_kelompok = j.id_kelompok WHERE k.id_periode = '$id_periode'");
 				else 	
-					$query = $this->connection->query("SELECT * FROM mst_kompetensi");
+					$query = $this->connection->query("SELECT k.*, j.nama_kelompok FROM mst_kompetensi k LEFT JOIN mst_kelompok_jabatan j ON k.id_kelompok = j.id_kelompok");
 			}
 			while($tampil = $query->fetch_array())
 				$hasil[] = $tampil;
@@ -575,9 +575,9 @@
 				return 1;
 		}
 
-		function input_kompetensi($id_periode = null, $nama_kompetensi = null, $indikator_terendah = null, $indikator_tertinggi = null, $bobot = null)
+		function input_kompetensi($id_periode = null, $id_kelompok = null, $nama_kompetensi = null, $indikator_terendah = null, $indikator_tertinggi = null, $bobot = null)
 		{
-			$query = "INSERT INTO mst_kompetensi VALUES ('', '$id_periode', '$nama_kompetensi', '$indikator_terendah', '$indikator_tertinggi', '$bobot')";
+			$query = "INSERT INTO mst_kompetensi VALUES ('', '$id_periode', '$id_kelompok', '$nama_kompetensi', '$indikator_terendah', '$indikator_tertinggi', '$bobot')";
 			$input = $this->connection->prepare($query);
 			if($input->execute())
 				return 1;
@@ -812,9 +812,9 @@
 				header('location:data_kpi_verifikasi.php');
 		}
 
-		function edit_kompetensi($id_periode = null, $id_kompetensi = null, $nama_kompetensi = null, $indikator_terendah = null, $indikator_tertinggi = null, $bobot = null)
+		function edit_kompetensi($id_periode = null, $id_kelompok = null, $id_kompetensi = null, $nama_kompetensi = null, $indikator_terendah = null, $indikator_tertinggi = null, $bobot = null)
 		{
-			$query = "UPDATE mst_kompetensi SET nama_kompetensi = '$nama_kompetensi', indikator_terendah = '$indikator_terendah', indikator_tertinggi = '$indikator_tertinggi', bobot = '$bobot' WHERE id_kompetensi = '$id_kompetensi'";
+			$query = "UPDATE mst_kompetensi SET id_kelompok = '$id_kelompok', nama_kompetensi = '$nama_kompetensi', indikator_terendah = '$indikator_terendah', indikator_tertinggi = '$indikator_tertinggi', bobot = '$bobot' WHERE id_kompetensi = '$id_kompetensi'";
 			$edit = $this->connection->prepare($query);
 			if($edit->execute())
 				header("location:detail_kompetensi.php?id_periode=$id_periode");

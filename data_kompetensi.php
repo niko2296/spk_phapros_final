@@ -193,7 +193,7 @@
 
                         <?php
                             if(isset($_POST['tombolSimpan'])){
-                                $eksekusi = $db->input_kompetensi($_POST['id_periode'], $_POST['nama_kompetensi'], $_POST['indikator_terendah'], $_POST['indikator_tertinggi'], $_POST['bobot']);
+                                $eksekusi = $db->input_kompetensi($_POST['id_periode'], $_POST['kelompok'], $_POST['nama_kompetensi'], $_POST['indikator_terendah'], $_POST['indikator_tertinggi'], $_POST['bobot']);
                                 if($eksekusi == 2)
                                 {
                                     echo '<div class="alert alert-danger">Data Gagal Disimpan</div>';
@@ -286,6 +286,17 @@
                                 <div class="row">
                                     <div class="col-md-6">
 										<div class="form-group">
+											<label>Kelompok Jabatan</label>
+											<select name="kelompok" id="kelompok" class="form-control cek" style="width:100%;">
+                                                <?php
+                                                    foreach($db->tampil_kelompok_jabatan() as $tampil)
+                                                        echo '<option value="'.$tampil['id_kelompok'].'">'.$tampil['nama_kelompok'].'</option>';
+                                                ?>
+                                            </select>
+										</div>
+									</div>
+                                    <div class="col-md-6">
+										<div class="form-group">
 											<label>Bobot</label>
 											<input class="form-control cek" type="text" name="bobot">
 										</div>
@@ -318,6 +329,10 @@
                 $('#tabel').DataTable({
                     searching : true,
                     ordering : false
+                });
+
+                $('#kelompok').select2({
+                    placeholder: "Please Select"
                 });
 
                 $("#polarisasi_input").on("submit", function(e){
