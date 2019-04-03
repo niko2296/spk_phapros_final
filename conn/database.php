@@ -194,6 +194,7 @@
 		}
 
 		function tampil_akses(){
+			$hasil = [];
 			$query = $this->connection->query("SELECT * FROM akses_menu");
 			while($tampil = $query->fetch_array())
 				$hasil[] = $tampil;
@@ -277,6 +278,28 @@
 			return $hasil;
 		}
 
+		function tampil_kompetensi_individu($id_anggota = null, $id_periode = null)
+		{
+			$hasil = [];
+			if($id_anggota != null)
+			{
+				if($id_periode != null)
+					$query = $this->connection->query("SELECT ki.*, mk.nama_kompetensi, mk.id_periode, mk.indikator_terendah, mk.indikator_tertinggi, p.peringkat, p.nilai FROM data_kompetensi_individu ki LEFT JOIN mst_kompetensi mk ON ki.id_kompetensi = mk.id_kompetensi LEFT JOIN mst_peringkat p ON ki.id_peringkat = p.id_peringkat WHERE ki.id_anggota = '$id_anggota' AND mk.id_periode = '$id_periode'");
+				else
+					$query = $this->connection->query("SELECT ki.*, mk.nama_kompetensi, mk.id_periode, mk.indikator_terendah, mk.indikator_tertinggi, p.peringkat, p.nilai FROM data_kompetensi_individu ki LEFT JOIN mst_kompetensi mk ON ki.id_kompetensi = mk.id_kompetensi LEFT JOIN mst_peringkat p ON ki.id_peringkat = p.id_peringkat WHERE ki.id_anggota = '$id_anggota'");
+			}
+			else
+			{
+				if($id_periode != null)
+					$query = $this->connection->query("SELECT ki.*, mk.nama_kompetensi, mk.id_periode, mk.indikator_terendah, mk.indikator_tertinggi, p.peringkat, p.nilai FROM data_kompetensi_individu ki LEFT JOIN mst_kompetensi mk ON ki.id_kompetensi = mk.id_kompetensi LEFT JOIN mst_peringkat p ON ki.id_peringkat = p.id_peringkat WHERE mk.id_periode = '$id_periode'");
+				else
+					$query = $this->connection->query("SELECT ki.*, mk.nama_kompetensi, mk.id_periode, mk.indikator_terendah, mk.indikator_tertinggi, p.peringkat, p.nilai FROM data_kompetensi_individu ki LEFT JOIN mst_kompetensi mk ON ki.id_kompetensi = mk.id_kompetensi LEFT JOIN mst_peringkat p ON ki.id_peringkat = p.id_peringkat");
+			}
+			while($tampil = $query->fetch_array())
+				$hasil[] = $tampil;
+			return $hasil;
+		}
+
 		function tampil_peringkat($id_periode = null, $id_peringkat = null)
 		{
 			if($id_peringkat != null)
@@ -303,6 +326,29 @@
 			$query = $this->connection->query("SELECT * FROM mst_kelompok_jabatan");
 			while($tampil = $query->fetch_array())
 				$hasil[] = $tampil;
+			return $hasil;
+		}
+
+		function tampil_soal($id_periode = null, $id_jabatan = null)
+		{
+			$id_kelompok = null;
+			$hasil = [];
+			$query1 = $this->connection->query("SELECT * FROM mst_kelompok_jabatan");
+			while($tampil = $query1->fetch_array())
+			{
+				foreach(unserialize($tampil['id_jabatan']) as $key => $value)
+				{
+					if($value == $id_jabatan)
+					{
+						$id_kelompok = $tampil['id_kelompok'];
+						break;
+					}
+				}
+			}
+
+			$query2 = $this->connection->query("SELECT * FROM mst_kompetensi WHERE id_periode = '$id_periode' AND id_kelompok = '$id_kelompok'");
+			while($tampil2 = $query2->fetch_array())
+				$hasil[] = $tampil2;
 			return $hasil;
 		}
 		//Akhiran Fungsi Tampil
@@ -594,6 +640,49 @@
 			else 
 				return 2;
 		}
+
+		function input_kompetensi_individu($id_anggota = null, $id_kompetensi = [], $id_peringkat = [])
+		{
+			$jml = count($id_kompetensi);
+			if($jml > 0)
+			{
+				for($a=0; $a<$jml; $a++)
+				{
+					$tanggal = date('Y-m-d');
+					$jml2 = 0;
+					$qc = $this->connection->query("SELECT * FROM data_kompetensi_individu WHERE id_anggota = '$id_anggota' AND id_kompetensi = '$id_kompetensi[$a]'");
+					while($tc = $qc->fetch_array())
+					{
+						$jml2 = $jml2+1;
+						$id_ki = $tc['id_kompetensi_individu'];
+					}
+
+					if($jml2 > 0)
+					{
+						$query = "UPDATE data_kompetensi_individu SET id_peringkat = '$id_peringkat[$a]' WHERE id_kompetensi_individu = '$id_ki'";
+						$input = $this->connection->prepare($query);
+						if($input->execute())
+							$k[] = 1;
+						else 
+							$k[] = 0;
+					}
+					else
+					{
+						$query = "INSERT INTO data_kompetensi_individu VALUES ('', '$id_anggota', '$id_kompetensi[$a]', '$id_peringkat[$a]', '$tanggal')";
+						$input = $this->connection->prepare($query);
+						if($input->execute())
+							$k[] = 1;
+						else 
+							$k[] = 0;
+					}
+				}
+
+				if(in_array(0, $k))
+					return 2;
+				else 
+					return 1;
+			}
+		}
 		//Akhiran Fungsi Input
 
 		//Fungsi Edit
@@ -842,6 +931,16 @@
 			else 
 				return 2;
 		}		
+
+		function edit_kompetensi_individu($id_ki = null, $id_peringkat = null)
+		{
+			$query = "UPDATE data_kompetensi_individu SET id_peringkat = '$id_peringkat' WHERE id_kompetensi_individu = '$id_ki'";
+			$edit = $this->connection->prepare($query);
+			if($edit->execute())
+				return 1;
+			else 
+				return 2;
+		}
 		//Akhiran Fungsi Edit
 
 		//Fungsi Hapus
