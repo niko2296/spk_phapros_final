@@ -167,7 +167,7 @@
                                         if($m6 == 1 || $_SESSION['aksus'] == TRUE)
                                         {
                                     ?>
-                                    <li><a href="data_kpi_verifikasi.php">Data KPI Sub Koordinator</a></li>
+                                    <li><a href="data_kpi_verifikasi.php">Data KPI Sub Ordinat</a></li>
                                     <?php
                                         }
                                         if($m7 == 1 || $_SESSION['aksus'] == TRUE)
@@ -181,7 +181,7 @@
 								<a href="#"><i class="la la-certificate"></i> <span> Kompetensi</span> <span class="menu-arrow"></span></a>
 								<ul style="display: none;">
                                     <li><a href="kompetensi_individu.php">Data Kompetensi Individu</a></li>
-									<li><a href="kompetensi_sub.php">Data Kompetensi Sub Koordinator</a></li>
+									<li><a href="kompetensi_sub.php">Data Kompetensi Sub Ordinat</a></li>
                                 </ul>
 							</li>
 						</ul>
@@ -192,7 +192,7 @@
                 <div class="content container-fluid">
 					<div class="row">
 						<div class="col-xs-12">
-							<h4 class="page-title">Data Kompetensi Sub Koordinator</h4>
+							<h4 class="page-title">Data Kompetensi Sub Ordinat</h4>
 						</div>
 					</div>
 

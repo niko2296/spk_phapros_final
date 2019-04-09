@@ -94,7 +94,7 @@
 										if($jabatan <= 3)
 										{
 									?>
-									<li><a href="data_kpi_verifikasi.php">Data KPI Sub Koordinator</a></li>
+									<li><a href="data_kpi_verifikasi.php">Data KPI Sub Ordinat</a></li>
 									<?php
 										}
 									?>

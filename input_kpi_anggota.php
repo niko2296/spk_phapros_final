@@ -170,7 +170,7 @@
                                         if($m6 == 1 || $_SESSION['aksus'] == TRUE)
                                         {
                                     ?>
-                                    <li><a href="data_kpi_verifikasi.php">Data KPI Sub Koordinator</a></li>
+                                    <li><a href="data_kpi_verifikasi.php">Data KPI Sub Ordinat</a></li>
                                     <?php
 										}
 										if($m7 == 1 || $_SESSION['aksus'] == TRUE)
@@ -184,7 +184,7 @@
 								<a href="#"><i class="la la-certificate"></i> <span> Kompetensi</span> <span class="menu-arrow"></span></a>
 								<ul style="display: none;">
 									<li><a href="kompetensi_individu.php">Data Kompetensi Individu</a></li>
-									<li><a href="kompetensi_sub.php">Data Kompetensi Sub Koordinator</a></li>
+									<li><a href="kompetensi_sub.php">Data Kompetensi Sub Ordinat</a></li>
                                 </ul>
 							</li>
 						</ul>
@@ -195,7 +195,7 @@
                 <div class="content container-fluid">
 					<div class="row">
 						<div class="col-xs-8">
-							<h4 class="page-title">Input Data KPI Individu Untuk Anggota Sub Koordinator</h4>
+							<h4 class="page-title">Input Data KPI Individu Untuk Anggota Sub Ordinat</h4>
 						</div>
 						<div class="col-xs-4 text-right m-b-30">
 							<!-- <a href="#" class="btn btn-primary rounded pull-right" data-toggle="modal" data-target="#add_ticket"><i class="fa fa-plus"></i> Tambah Data KPI Individu</a> -->
