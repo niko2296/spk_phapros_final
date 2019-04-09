@@ -722,7 +722,7 @@
 					}
 					else
 					{
-						$query = "INSERT INTO data_kompetensi_individu VALUES ('', '$id_anggota', '$id_jabatan', '$id_unit', '$id_kompetensi[$a]', '$id_peringkat[$a]', '$id_periode', '0', '0','$tanggal')";
+						$query = "INSERT INTO data_kompetensi_individu VALUES ('', '$id_anggota', '$id_jabatan', '$id_unit', '$id_kompetensi[$a]', '$id_peringkat[$a]', '$id_periode', '0', '0', '0000-00-00','$tanggal')";
 						$input = $this->connection->prepare($query);
 						if($input->execute())
 							$k[] = 1;
@@ -1556,9 +1556,14 @@
 		function verif_kompetensi($id_kompetensi = null, $status = null, $id_verifikator = null)
 		{
 			if($status == null || $status == 0 || $status == '0')
+			{
 				$id_verifikator = 0;
-
-			$query = "UPDATE data_kompetensi_individu SET status = '$status', id_verifikator = '$id_verifikator' WHERE id_kompetensi_individu = '$id_kompetensi'";
+				$tanggal = '0000-00-00';
+			}
+			else {
+				$tanggal = date('Y-m-d');
+			}
+			$query = "UPDATE data_kompetensi_individu SET status = '$status', id_verifikator = '$id_verifikator', tanggal_verifikasi = '$tanggal' WHERE id_kompetensi_individu = '$id_kompetensi'";
 			$edit = $this->connection->prepare($query);
 			if($edit->execute())
 				return 1;
