@@ -9,6 +9,7 @@
         header("location:login.php");
     $nama = $_SESSION['nama'];
     $jabatan = $_SESSION['id_jabatan'];
+    $id_anggotaV = $_SESSION['id_anggota'];
     $idA = 'kosong';
 
     foreach($db->tampil_periode() as $tPer)
@@ -337,7 +338,7 @@
                                                             }
                                                         ?>
                                                         </td>
-                                                        <td align="center"><input type="checkbox" name="verifikasi" id="verifikasi" class="form-control" data-id="<?php echo $data['id_kompetensi_individu']; ?>" <?php echo ($db->cek_verif_kompetensi($data['id_kompetensi_individu']) == 1)?('checked'):(''); ?>></td>
+                                                        <td align="center"><input type="checkbox" name="verifikasi" id="verifikasi" class="form-control" data-verifikator="<?php echo $id_anggotaV; ?>" data-id="<?php echo $data['id_kompetensi_individu']; ?>" <?php echo ($db->cek_verif_kompetensi($data['id_kompetensi_individu']) == 1)?('checked'):(''); ?>></td>
                                                     </tr>
                                             <?php
                                                 }
@@ -411,6 +412,7 @@
                 $('.table').on('change','#verifikasi',function(e){
                     var v = ($(this).is(':checked'))?'1':'0';
                     var paramId = $(this).data('id');
+                    var verifikator = $(this).data('verifikator');
                     var id1 = 'realisasi';
                     var id2 = 'keterangan';
                     $.ajax({
@@ -419,7 +421,8 @@
                         data:{
                             'id' : paramId,
                             'value' : v,
-                            'jenis' : 'verif_kompetensi'
+                            'jenis' : 'verif_kompetensi',
+                            'verifikator' : verifikator
                         },
                         success:function(html){
                             if(html == 1)

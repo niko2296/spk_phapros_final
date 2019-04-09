@@ -72,7 +72,7 @@
     }
     else if($_GET['jenis'] == 'verif_kompetensi')
     {
-        $eksekusi = $db->verif_kompetensi($_GET['id'], $_GET['value']);
+        $eksekusi = $db->verif_kompetensi($_GET['id'], $_GET['value'], $_GET['verifikator']);
         if($eksekusi == 1)
         {
             if($_GET['value'] == 1)
