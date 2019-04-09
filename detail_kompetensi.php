@@ -9,6 +9,8 @@
         header("location:login.php");
     $nama = $_SESSION['nama'];
     $jabatan = $_SESSION['id_jabatan'];
+    $id_periode = $_GET['id_periode'];
+    $id_kelompok = $_GET['id_kelompok'];
 ?>
 <!DOCTYPE html>
 <html>
@@ -183,14 +185,21 @@
                 <div class="content container-fluid">
 					<div class="row">
 						<div class="col-xs-12">
-							<h4 class="page-title">Detail Kompetensi (<b>Periode 
+							<h4 class="page-title">Detail Kompetensi Kelompok Jabatan 
+                            <b>
                                 <?php
-                                    $id_periode = $_GET['id_periode'];
+                                    foreach($db->tampil_kelompok_jabatan($id_kelompok) as $tampilKL)
+                                        $nama_kelompok = $tampilKL['nama_kelompok'];
                                     foreach($db->tampil_periode($id_periode) as $tampil)
                                     {
                                         $tahun_asli = $tampil['tahun'];
                                         $status_asli = $tampil['status'];
                                     }
+                                    echo $nama_kelompok;
+                                ?>
+                            </b> 
+                            (<b>Periode 
+                                <?php
                                     echo $tahun_asli;
                                 ?>
                             </b>)
@@ -209,7 +218,7 @@
                             }
                             else if(isset($_POST['tombolHapus']))
                             {
-                                $eksekusi = $db->hapus_kompetensi($_POST['id_kompetensi_hapus'], $id_periode);
+                                $eksekusi = $db->hapus_kompetensi($_POST['id_kompetensi_hapus'], $id_periode, $id_kelompok);
                                 if($eksekusi == 2 || $eksekusi == 3)
                                 {
                                     echo '<div class="alert alert-danger">Data Gagal Dihapus</div>';
@@ -223,22 +232,13 @@
                                     echo '<div class="alert alert-danger">Data Gagal Disimpan</div>';
                                 }
                             }
-                            else if(isset($_POST['tombolCopyAll']))
-                            {
-                                $eksekusi = $db->copy_kompetensi(2, $_POST['id_copy'], $_POST['periode']);
-                                if($eksekusi == 2 || $eksekusi == 3)
-                                {
-                                    echo '<div class="alert alert-danger">Data Gagal Disimpan</div>';
-                                }
-                            }
                         ?>
 
 						<div class="col-md-12">
 							<div class="table-responsive">
-                                <table class="table table-striped custom-table m-b-0 display" id="">
+                                <table class="table table-striped custom-table m-b-0 display" id="tabel">
 									<thead>
 										<tr>
-                                            <th>Kelompok Jabatan</th>
 											<th>Nama Kompetensi</th>
                                             <th>Indikator Terendah</th>
                                             <th>Indikator Tertinggi</th>
@@ -250,12 +250,11 @@
                                     <?php
                                         $no = 0;
                                         error_reporting(0);
-                                        foreach($db->tampil_kompetensi($id_periode) as $data)
+                                        foreach($db->tampil_kompetensi2($id_periode, $id_kelompok) as $data)
                                         {
                                             $no = $no+1;
                                     ?>
                                             <tr>
-                                                <td><?php echo $data['nama_kelompok']; ?></td>
                                                 <td><?php echo $data['nama_kompetensi']; ?></td>
                                                 <td><?php echo $data['indikator_terendah']; ?></td>
                                                 <td><?php echo $data['indikator_tertinggi']; ?></td>
@@ -424,55 +423,17 @@
                                     <?php
                                         }
                                     ?>
-                                    <tr style="background:none;" class="text-right">
-                                        <td colspan="6">
-                                            <a href="data_kompetensi.php" title="Kembali">
-                                                <button class="btn btn-primary" type="submit" name="modalCopyAll">Kembali</button>
-                                            </a>
-                                            <a href="#" title="CopyAll" data-toggle="modal" data-target="#copyAll">
-                                                <button class="btn btn-danger" type="submit" name="modalCopyAll">Copy Semua Data</button>
-                                            </a>
-                                        </td>
-                                    </tr>
 									</tbody>
 								</table>
-
-                                <!-- Modal Copy All -->
-                                <div id="copyAll" class="modal custom-modal fade" role="dialog">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content modal-md">
-                                            <div class="modal-header">
-                                                <h4 class="modal-title">Copy Kompetensi</h4>
-                                            </div>
-                                            <form method="POST" action="#">
-                                                <div class="modal-body card-box">
-                                                    <p class="label label-danger">Otomatis Meng-<i>copy</i> Data Secara Lengkap</p>
-                                                    <p>Yakin Untuk Meng-<i>copy</i> Kompetensi <?php echo "Pada Periode ".$tahun_asli; ?> ?</p>
-                                                    <input type="hidden" name="id_copy" value="<?php echo $id_periode; ?>">
-                                                    <select name="periode" class="form-control">
-                                                        <option value="">Silahkan Pilih Periode</option>
-                                                        <?php
-                                                            foreach($db->tampil_periode() as $tampilP)
-                                                            {
-                                                                if($tampilP['status'] == 1)
-                                                                {
-                                                                    echo '<option value="'.$tampilP['id_periode'].'">'.$tampilP['tahun'].'</option>';
-                                                                }
-                                                            }
-                                                        ?>
-                                                    </select>
-                                                    <div class="m-t-20"> <a href="#" class="btn btn-default" data-dismiss="modal">Close</a>
-                                                        <button type="submit" name="tombolCopyAll" class="btn btn-primary">Copy Data</button>
-                                                    </div>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- Akhiran Modal Copy All -->
-
 							</div>
 						</div>
+
+                        <div class="col-md-12" align="right">
+                            <a href="detail_kk.php?id_periode=<?php echo $id_periode; ?>" title="Kembali">
+                                <button class="btn btn-primary" type="submit" name="modalCopyAll">Kembali</button>
+                            </a>
+                        </div>
+
 					</div>
                 </div>
             </div>
@@ -494,7 +455,9 @@
             $(document).ready(function(){
                 $('#tabel').DataTable({
                     searching : true,
-                    ordering : false
+                    ordering : false,
+                    info : false,
+                    paging : false
                 });
                 $('.kelompok').select2({
                     placeholder: "Please Select"

@@ -13,6 +13,7 @@
     $id_anggotaD = $_GET['id_anggota'];
     $id_jabatanD = $_GET['id_jabatan'];
     $id_unitD = $_GET['id_unit'];
+    $idA = 'kosong';
 
     foreach($db->tampil_periode() as $tPer)
     {
@@ -301,116 +302,118 @@
                                 }
                             ?>
 							<div class="table-responsive">
-								<table class="table table-striped custom-table m-b-0 display" id="">
-									<thead>
-										<tr>
-                                            <th>Nama Pegawai</th>
-                                            <th>Jabatan</th>
-                                            <th>Unit</th>
-											<th>KPI</th>
-                                            <th>Deskripsi</th>
-                                            <th>Bobot (%)</th>
-                                            <th>Sasaran/Target</th>
-                                            <th>Satuan</th>
-                                            <th>Polarisasi</th>
-                                            <th>Tahun</th>
-											<th class="text-right">Verifikasi</th>
-											<th class="text-right">Action</th>
-										</tr>
-									</thead>
+                                <div class="row">
                                     <form action="" method="POST">
-									<tbody>
-                                    <?php
-                                        $no = 0;
-                                        error_reporting(0);
-                                        foreach($db->tampil_kpi_detail($id_anggotaD, $id_jabatanD, $id_unitD, $idA) as $data)
-                                        {
-                                            $no = $no+1;
-                                            $id1 = 'bobot'.$data['id_kpi'];
-                                            $id2 = 'sasaran'.$data['id_kpi'];
-                                            $id3 = 'hapusData'.$data['id_kpi'];
-                                            $id4 = 'baris'.$data['id_kpi'];
-                                            $id5 = 'tempat'.$data['id_kpi'];
-                                            $r1 = '';
-                                            $r2 = '';
+                                    <div class="col-md-12">
+                                        <table class="table table-striped custom-table m-b-0 display" id="tabel">
+                                            <thead>
+                                                <tr>
+                                                    <th>Nama Pegawai</th>
+                                                    <th>Jabatan</th>
+                                                    <th>Unit</th>
+                                                    <th>KPI</th>
+                                                    <th>Deskripsi</th>
+                                                    <th>Bobot (%)</th>
+                                                    <th>Sasaran/Target</th>
+                                                    <th>Satuan</th>
+                                                    <th>Polarisasi</th>
+                                                    <th>Tahun</th>
+                                                    <th class="text-right">Verifikasi</th>
+                                                    <th class="text-right">Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            <?php
+                                                $no = 0;
+                                                error_reporting(0);
+                                                foreach($db->tampil_kpi_detail($id_anggotaD, $id_jabatanD, $id_unitD, $idA) as $data)
+                                                {
+                                                    $no = $no+1;
+                                                    $id1 = 'bobot'.$data['id_kpi'];
+                                                    $id2 = 'sasaran'.$data['id_kpi'];
+                                                    $id3 = 'hapusData'.$data['id_kpi'];
+                                                    $id4 = 'baris'.$data['id_kpi'];
+                                                    $id5 = 'tempat'.$data['id_kpi'];
+                                                    $r1 = '';
+                                                    $r2 = '';
 
-                                            if($data['status'])
-                                            {
-                                                $r1 = 'readonly="readonly"';
-                                                $r2 = 'readonly="readonly"';
-                                            }
-                                    ?>
-                                            <tr id="<?php echo $id4; ?>">
-                                                <td><?php echo $data['nama']; ?></td>
-                                                <td><?php echo $data['nama_jabatan']; ?></td>
-                                                <td><?php echo $data['nama_unit']; ?></td>
-                                                <td><?php echo $data['kpi']; ?></td>
-                                                <td><?php echo $data['deskripsi']; ?></td>
-                                                <td>
-                                                    <input type="hidden" class="form-control" name="id_kpi[]" value="<?php echo $data['id_kpi']; ?>">
-                                                    <input type="text" class="form-control" id="<?php echo $id1; ?>" name="bobot[]" value="<?php echo $data['bobot']; ?>" <?php echo $r1; ?>>
-                                                </td>
-                                                <td><input type="text" class="form-control" id="<?php echo $id2; ?>" name="sasaran[]" value="<?php echo $data['sasaran']; ?>" <?php echo $r2; ?>></td>
-                                                <td><?php echo $data['nama_satuan']; ?></td>
-                                                <td><?php echo $data['nama_polarisasi']; ?></td>
-                                                <td><?php echo $data['tahun']; ?></td>
-                                                <td class="text-center">
-                                                    <div class="dropdown">
-                                                        <input data-id="<?php echo $data['id_kpi']; ?>" type="checkbox" <?php echo ($data['status'] == '1')?'checked':''; ?> data-field='status1' id='verifikasi1' <?php echo $k1; ?>>
-                                                    </div>
-                                                </td>
-                                                <td class="text-center" id="<?php echo $id5; ?>">
-                                                    <?php
-                                                        if($data['status'] == 0 AND $b1 == 1)
-                                                            echo '<a href="#" id="'.$id3.'" class="btn btn-danger" onclick="fungsi_hapus('.$data['id_kpi'].')">Hapus</a>';
-                                                        else
-                                                            echo '<a href="#" id="'.$id3.'" class="btn btn-danger" disabled="disabled">Hapus</a>';                                       
-                                                    ?>
-                                                </td>
-                                            </tr>
-                                    <?php
-                                        }
-                                    ?>
-									</tbody>
-                                    <tbody>
-                                        <tr style="background:none;">
-                                            <td colspan="12" class="text-right">
-                                                <button type="" name="tombolKembali" class="btn btn-primary">Kembali</button>
-                                                <a href="#" class="btn btn-info" data-toggle="modal" data-target="#laporan">Catatan</a>
-                                                <button type="submit" name="tombolSimpan" class="btn btn-success">Simpan</button>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                    </form>
-								</table>
-
-                                <!-- Modal Laporan -->
-                                <div id="laporan" class="modal custom-modal fade" role="dialog">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content modal-md">
-                                            <div class="modal-header">
-                                                <h4 class="modal-title">Data Catatan KPI</h4>
-                                            </div>
-                                            <form method="POST" action="#" id="inputan">
-                                                <div class="modal-body card-box">
-                                                    <?php
-                                                        if($db->hitung_catatan($id_anggotaD, $id_jabatanD, $id_unitD, $idA) == 0)
-                                                            echo '<textarea name="catatan" cols="30" rows="10" class="form-control" placeholder="Silahkan Masukkan Catatan Untuk Data KPI yang Ada"></textarea>';
-                                                        else
-                                                            echo '<textarea name="catatan" cols="30" rows="10" class="form-control">'.$db->tampil_catatan($id_anggotaD, $id_jabatanD, $id_unitD, $idA).'</textarea>';
-                                                    ?>
-                                                    <div class="m-t-20"> 
-                                                        <a href="#" class="btn btn-default" data-dismiss="modal">Close</a>
-                                                        <button type="submit" name="tombolCatatan" class="btn btn-success">Simpan</button>
-                                                    </div>
-                                                </div>
-                                            </form>
-                                        </div>
+                                                    if($data['status'])
+                                                    {
+                                                        $r1 = 'readonly="readonly"';
+                                                        $r2 = 'readonly="readonly"';
+                                                    }
+                                            ?>
+                                                    <tr id="<?php echo $id4; ?>">
+                                                        <td><?php echo $data['nama']; ?></td>
+                                                        <td><?php echo $data['nama_jabatan']; ?></td>
+                                                        <td><?php echo $data['nama_unit']; ?></td>
+                                                        <td><?php echo $data['kpi']; ?></td>
+                                                        <td><?php echo $data['deskripsi']; ?></td>
+                                                        <td>
+                                                            <input type="hidden" class="form-control" name="id_kpi[]" value="<?php echo $data['id_kpi']; ?>">
+                                                            <input type="text" class="form-control" id="<?php echo $id1; ?>" name="bobot[]" value="<?php echo $data['bobot']; ?>" <?php echo $r1; ?>>
+                                                        </td>
+                                                        <td><input type="text" class="form-control" id="<?php echo $id2; ?>" name="sasaran[]" value="<?php echo $data['sasaran']; ?>" <?php echo $r2; ?>></td>
+                                                        <td><?php echo $data['nama_satuan']; ?></td>
+                                                        <td><?php echo $data['nama_polarisasi']; ?></td>
+                                                        <td><?php echo $data['tahun']; ?></td>
+                                                        <td class="text-center">
+                                                            <div class="dropdown">
+                                                                <input data-id="<?php echo $data['id_kpi']; ?>" type="checkbox" <?php echo ($data['status'] == '1')?'checked':''; ?> data-field='status1' id='verifikasi1' <?php echo $k1; ?>>
+                                                            </div>
+                                                        </td>
+                                                        <td class="text-center" id="<?php echo $id5; ?>">
+                                                            <?php
+                                                                if($data['status'] == 0 AND $b1 == 1)
+                                                                    echo '<a href="#" id="'.$id3.'" class="btn btn-danger" onclick="fungsi_hapus('.$data['id_kpi'].')">Hapus</a>';
+                                                                else
+                                                                    echo '<a href="#" id="'.$id3.'" class="btn btn-danger" disabled="disabled">Hapus</a>';                                       
+                                                            ?>
+                                                        </td>
+                                                    </tr>
+                                            <?php
+                                                }
+                                            ?>
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
-                                <!-- Akhiran Modal Laporan -->
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-md-12" align="right">
+                                    <button type="" name="tombolKembali" class="btn btn-primary">Kembali</button>
+                                    <a href="#" class="btn btn-info" data-toggle="modal" data-target="#laporan">Catatan</a>
+                                    <button type="submit" name="tombolSimpan" class="btn btn-success">Simpan</button>
+                                </div>
+                                </form>
+                            </div>
 
-							</div>
+                            <!-- Modal Laporan -->
+                            <div id="laporan" class="modal custom-modal fade" role="dialog">
+                                <div class="modal-dialog">
+                                    <div class="modal-content modal-md">
+                                        <div class="modal-header">
+                                            <h4 class="modal-title">Data Catatan KPI</h4>
+                                        </div>
+                                        <form method="POST" action="#" id="inputan">
+                                            <div class="modal-body card-box">
+                                                <?php
+                                                    if($db->hitung_catatan($id_anggotaD, $id_jabatanD, $id_unitD, $idA) == 0)
+                                                        echo '<textarea name="catatan" cols="30" rows="10" class="form-control" placeholder="Silahkan Masukkan Catatan Untuk Data KPI yang Ada"></textarea>';
+                                                    else
+                                                        echo '<textarea name="catatan" cols="30" rows="10" class="form-control">'.$db->tampil_catatan($id_anggotaD, $id_jabatanD, $id_unitD, $idA).'</textarea>';
+                                                ?>
+                                                <div class="m-t-20"> 
+                                                    <a href="#" class="btn btn-default" data-dismiss="modal">Close</a>
+                                                    <button type="submit" name="tombolCatatan" class="btn btn-success">Simpan</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Akhiran Modal Laporan -->
 						</div>
 					</div>
                 </div>
@@ -432,8 +435,10 @@
         <script type="text/javascript">
             $(document).ready(function(){
                 $('#tabel').DataTable({
-                    searching : true,
-                    ordering : false
+                    searching : false,
+                    ordering : false,
+                    info : false,
+                    paging : false,
                 });
 
                 $("#inputan").on("submit", function(e){

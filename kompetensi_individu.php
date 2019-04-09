@@ -10,7 +10,8 @@
     $nama = $_SESSION['nama'];
     $jabatan = $_SESSION['id_jabatan'];
     $id_anggotaD = $_SESSION['id_anggota'];
-	$id_unitD = $_SESSION['id_unit'];
+    $id_unitD = $_SESSION['id_unit'];
+    $idA = 'kosong';
 
 	foreach($db->tampil_periode() as $tP)
 	{
@@ -212,7 +213,7 @@
                                         $peringkat[] = $_POST[$var];
                                     }
 
-                                    $eksekusi = $db->input_kompetensi_individu($id_anggotaD, $_POST['id_kompetensi'], $peringkat);
+                                    $eksekusi = $db->input_kompetensi_individu($id_anggotaD, $jabatan, $id_unitD, $_POST['id_kompetensi'], $peringkat, $idA);
                                     if($eksekusi == 1)
                                         echo '
                                             <script>
@@ -246,6 +247,17 @@
                                             </script>
                                         ';
                                 }
+
+                                if($db->hitung_catatan2($id_anggotaD, $jabatan, $id_unitD, $idA) > 0)
+                                {
+                                    echo '<div class="alert alert-info">
+                                            <div class="row" style="vertical-align:bottom;">
+                                                <div class="col-md-12">
+                                                    <b>Catatan : </b>'.$db->tampil_catatan2($id_anggotaD, $jabatan, $id_unitD, $idA).'
+                                                </div>
+                                            </div>
+                                          </div>';
+                                }
                             ?>
                         </div>
                     </div>
@@ -266,7 +278,7 @@
                                     <?php
                                         $no = 0;
                                         error_reporting(0);
-                                        foreach($db->tampil_kompetensi_individu($id_anggotaD, $idA) as $data)
+                                        foreach($db->tampil_kompetensi_individu($id_anggotaD, $jabatan, $id_unitD, $idA) as $data)
                                         {
                                             $no = $no+1;
                                     ?>
@@ -279,7 +291,12 @@
                                                     <div class="dropdown">
                                                         <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
                                                         <ul class="dropdown-menu pull-right">
-                                                            <li><a href="#" title="Edit" data-toggle="modal" data-target="#edit_ticket<?php echo $data['id_kompetensi_individu']; ?>"><i class="fa fa-pencil m-r-5"></i> Edit</a></li>
+                                                            <?php
+                                                                if($db->cek_verif_kompetensi($data['id_kompetensi_individu']) == 1)
+                                                                    echo '<li>Tidak Terdapat Aksi</li>';
+                                                                else 
+                                                                    echo '<li><a href="#" title="Edit" data-toggle="modal" data-target="#edit_ticket'.$data['id_kompetensi_individu'].'"><i class="fa fa-pencil m-r-5"></i> Edit</a></li>';
+                                                            ?>
                                                         </ul>
                                                     </div>
                                                 </td>
@@ -358,6 +375,7 @@
 						</div>
 						<div class="modal-body">
                             <div class="row">
+                                <form method="POST" action="#" id="golongan_input">
                                 <div class="col-md-12">
                                     <table class="table table-striped custom-table m-b-0" id="tabel2">
                                         <thead>
@@ -368,45 +386,53 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <form method="POST" action="#" id="golongan_input">
                                             <?php
                                                 $no = 0;
+                                                $c = 0;
                                                 foreach ($db->tampil_soal($idA, $jabatan) as $tampilS)
                                                 {
-                                                    $no = $no+1;
+                                                    if($db->cek_kompetensi($id_anggotaD, $jabatan, $id_unitD, $tampilS['id_kompetensi']) == 0)
+                                                    {
+                                                        $no = $no+1;
                                             ?>
-                                                    <tr>
-                                                        <div class="form-group">
-                                                            <td><?php echo $tampilS['indikator_terendah']; ?></td>
-                                                            <td>
-                                                                <div align="center">
-                                                                    <?php
-                                                                        $v1 = 'peringkat'.$no;
-                                                                        foreach($db->tampil_peringkat($idA) as $tampilP)
-                                                                            echo '
-                                                                                <label class="btn btn-inline">
-                                                                                    <input class="form-control cek" type="radio" name="'.$v1.'" value="'.$tampilP['id_peringkat'].'"> '.$tampilP['peringkat'].'
-                                                                                </label>
-                                                                            ';
-                                                                        echo '<input type="hidden" value="'.$tampilS['id_kompetensi'].'" name="id_kompetensi[]">';
-                                                                    ?>
-                                                                </div>
-                                                            </td>
-                                                            <td><?php echo $tampilS['indikator_tertinggi']; ?></td>
-                                                        </div>
-                                                    </tr>
+                                                        <tr>
+                                                            <div class="form-group">
+                                                                <td><?php echo $tampilS['indikator_terendah']; ?></td>
+                                                                <td>
+                                                                    <div align="center">
+                                                                        <?php
+                                                                            $v1 = 'peringkat'.$no;
+                                                                            foreach($db->tampil_peringkat($idA) as $tampilP)
+                                                                                echo '
+                                                                                    <label class="btn btn-inline">
+                                                                                        <input class="form-control cek" type="radio" name="'.$v1.'" value="'.$tampilP['id_peringkat'].'"> '.$tampilP['peringkat'].'
+                                                                                    </label>
+                                                                                ';
+                                                                            echo '<input type="hidden" value="'.$tampilS['id_kompetensi'].'" name="id_kompetensi[]">';
+                                                                        ?>
+                                                                    </div>
+                                                                </td>
+                                                                <td><?php echo $tampilS['indikator_tertinggi']; ?></td>
+                                                            </div>
+                                                        </tr>
                                             <?php
+                                                        $c = $c+1;
+                                                    }
                                                 }
-
-                                                echo '<input type="hidden" value="'.$no.'" name="jml">';
                                             ?>
-                                                <tr>
-                                                    <td colspan="3" align="right"><input type="submit" class="btn btn-primary" name="tombolSimpan" value="Simpan"></td>
-                                                </tr>
-                                            </form>
                                         </tbody>
                                     </table> 
+                                </div>
+                                <div class="col-md-12" align="right">
+                                    <?php
+                                        if($c != 0)
+                                        {
+                                            echo '<input type="hidden" value="'.$no.'" name="jml">';
+                                            echo '<input type="submit" class="btn btn-primary" name="tombolSimpan" value="Simpan">';
+                                        }
+                                    ?>
                                 </div>  
+                                </form>
                             </div>
 						</div>
 					</div>
@@ -429,12 +455,16 @@
         <script type="text/javascript">
             $(document).ready(function(){
                 $('#tabel').DataTable({
-                    searching : true,
-                    ordering : false
+                    searching : false,
+                    ordering : false,
+                    info : false,
+                    paging : false
                 });
                 $('#tabel2').DataTable({
                     searching : true,
-                    ordering : false
+                    ordering : false,
+                    info : false,
+                    paging : false
                 });
 
                 $("#golongan_input").on("submit", function(e){

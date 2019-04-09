@@ -9,6 +9,15 @@
         header("location:login.php");
     $nama = $_SESSION['nama'];
     $jabatan = $_SESSION['id_jabatan'];
+    $idA = 'kosong';
+
+    foreach($db->tampil_periode() as $tPer)
+    {
+        if($tPer['status'] == 1)
+        {
+            $idA = $tPer['id_periode'];
+        }
+    }
 ?>
 <!DOCTYPE html>
 <html>

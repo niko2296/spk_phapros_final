@@ -10,6 +10,7 @@
     $nama = $_SESSION['nama'];
     $jabatan = $_SESSION['id_jabatan'];
     $id_unitD = $_SESSION['id_unit'];
+    $idA = 'kosong';
 
     foreach($db->tampil_periode() as $tPer)
     {

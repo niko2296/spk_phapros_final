@@ -224,7 +224,7 @@
                                     ?>
                                             <tr>
                                                 <td><?php echo $data['tahun']; ?></td>
-                                                <td>(Jumlah Kompetensi : <?php echo ($db->hitung_kompetensi($data['id_periode'])); ?>) <a href="detail_kompetensi.php?id_periode=<?php echo $data['id_periode']; ?>">Detail</a></td>
+                                                <td>(Jumlah Kompetensi : <?php echo ($db->hitung_kompetensi($data['id_periode'])); ?>) <a href="detail_kk.php?id_periode=<?php echo $data['id_periode']; ?>">Detail</a></td>
                                             </tr>
                                     <?php
                                         }

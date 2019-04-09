@@ -13,6 +13,7 @@
     $jabatan = $_SESSION['id_jabatan'];
     $id_anggotaD = $_SESSION['id_anggota'];
     $id_unitD = $_SESSION['id_unit'];
+    $idA = 'kosong';
 
     foreach($db->tampil_periode() as $tampilP)
     {
@@ -195,7 +196,7 @@
             <div class="page-wrapper">
                 <div class="content container-fluid">
 					<div class="row">
-						<div class="col-xs-6">
+						<div class="col-xs-12">
 							<h4 class="page-title">Data KPI Individu</h4>
 						</div>
 					</div>
@@ -377,9 +378,10 @@
                                 }
                             ?>
                             <div class="row">
+                                <form action="#" method="POST">
                                 <div class="col-md-12">
                                     <div class="table-responsive">
-                                        <table class="table table-striped custom-table m-b-0 display" id="tabel">
+                                        <table class="table table-striped custom-table m-b-0 display" id="tabel2">
                                             <thead>
                                                 <tr>
                                                     <th>KPI</th>
@@ -394,7 +396,6 @@
                                                     <th>Status</th>
                                                 </tr>
                                             </thead>
-                                            <form action="#" method="POST">
                                             <tbody>
                                             <?php
                                                 error_reporting(0);
@@ -422,17 +423,14 @@
                                                     }
                                                 }
                                             ?>
-                                                <tr>
-                                                    <?php 
-                                                        if($b2 == 1)
-                                                            echo '<td colspan="9" align="right"><button class="btn btn-primary" type="submit" name="tombolSimpanRealisasi">Simpan Data</button></td>';
-                                                    ?>
-                                                </tr>
                                             </tbody>
-                                            </form>
                                         </table>
                                     </div>
                                 </div>
+                                <div class="col-md-12" align="right">
+                                    <button class="btn btn-primary" type="submit" name="tombolSimpanRealisasi">Simpan Data</button>
+                                </div>
+                                </form>
                             </div>
                         </div>
                         <!-- Akhiran Tab Kedua -->
@@ -458,6 +456,12 @@
                 $('#tabel').DataTable({
                     searching : true,
                     ordering : false
+                });
+                $('#tabel2').DataTable({
+                    searching : true,
+                    ordering : false,
+                    paging : false,
+                    info : false
                 });
             });
         </script>

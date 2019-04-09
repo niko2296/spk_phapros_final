@@ -235,7 +235,7 @@
 
 						<div class="col-md-12">
 							<div class="table-responsive">
-                                <table class="table table-striped custom-table m-b-0 display" id="">
+                                <table class="table table-striped custom-table m-b-0 display" id="tabel">
 									<thead>
 										<tr>
 											<th>Peringkat</th>
@@ -388,55 +388,53 @@
                                     <?php
                                         }
                                     ?>
-                                    <tr style="background:none;" class="text-right">
-                                        <td colspan="5">
-                                            <a href="data_peringkat.php" title="Kembali">
-                                                <button class="btn btn-primary" type="submit" name="modalCopyAll">Kembali</button>
-                                            </a>
-                                            <a href="#" title="CopyAll" data-toggle="modal" data-target="#copyAll">
-                                                <button class="btn btn-danger" type="submit" name="modalCopyAll">Copy Semua Data</button>
-                                            </a>
-                                        </td>
-                                    </tr>
 									</tbody>
 								</table>
-
-                                <!-- Modal Copy All -->
-                                <div id="copyAll" class="modal custom-modal fade" role="dialog">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content modal-md">
-                                            <div class="modal-header">
-                                                <h4 class="modal-title">Copy Kompetensi</h4>
-                                            </div>
-                                            <form method="POST" action="#">
-                                                <div class="modal-body card-box">
-                                                    <p class="label label-danger">Otomatis Meng-<i>copy</i> Data Secara Lengkap</p>
-                                                    <p>Yakin Untuk Meng-<i>copy</i> Kompetensi <?php echo "Pada Periode ".$tahun_asli; ?> ?</p>
-                                                    <input type="hidden" name="id_copy" value="<?php echo $id_periode; ?>">
-                                                    <select name="periode" class="form-control">
-                                                        <option value="">Silahkan Pilih Periode</option>
-                                                        <?php
-                                                            foreach($db->tampil_periode() as $tampilP)
-                                                            {
-                                                                if($tampilP['status'] == 1)
-                                                                {
-                                                                    echo '<option value="'.$tampilP['id_periode'].'">'.$tampilP['tahun'].'</option>';
-                                                                }
-                                                            }
-                                                        ?>
-                                                    </select>
-                                                    <div class="m-t-20"> <a href="#" class="btn btn-default" data-dismiss="modal">Close</a>
-                                                        <button type="submit" name="tombolCopyAll" class="btn btn-primary">Copy Data</button>
-                                                    </div>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- Akhiran Modal Copy All -->
-
 							</div>
 						</div>
+                        <div class="col-md-12" align="right">
+                            <a href="data_peringkat.php" title="Kembali">
+                                <button class="btn btn-primary" type="submit" name="modalCopyAll">Kembali</button>
+                            </a>
+                            <a href="#" title="CopyAll" data-toggle="modal" data-target="#copyAll">
+                                <button class="btn btn-danger" type="submit" name="modalCopyAll">Copy Semua Data</button>
+                            </a>
+                        </div>
+
+                        <!-- Modal Copy All -->
+                        <div id="copyAll" class="modal custom-modal fade" role="dialog">
+                            <div class="modal-dialog">
+                                <div class="modal-content modal-md">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">Copy Kompetensi</h4>
+                                    </div>
+                                    <form method="POST" action="#">
+                                        <div class="modal-body card-box">
+                                            <p class="label label-danger">Otomatis Meng-<i>copy</i> Data Secara Lengkap</p>
+                                            <p>Yakin Untuk Meng-<i>copy</i> Kompetensi <?php echo "Pada Periode ".$tahun_asli; ?> ?</p>
+                                            <input type="hidden" name="id_copy" value="<?php echo $id_periode; ?>">
+                                            <select name="periode" class="form-control">
+                                                <option value="">Silahkan Pilih Periode</option>
+                                                <?php
+                                                    foreach($db->tampil_periode() as $tampilP)
+                                                    {
+                                                        if($tampilP['status'] == 1)
+                                                        {
+                                                            echo '<option value="'.$tampilP['id_periode'].'">'.$tampilP['tahun'].'</option>';
+                                                        }
+                                                    }
+                                                ?>
+                                            </select>
+                                            <div class="m-t-20"> <a href="#" class="btn btn-default" data-dismiss="modal">Close</a>
+                                                <button type="submit" name="tombolCopyAll" class="btn btn-primary">Copy Data</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Akhiran Modal Copy All -->
+
 					</div>
                 </div>
             </div>
@@ -458,7 +456,9 @@
             $(document).ready(function(){
                 $('#tabel').DataTable({
                     searching : true,
-                    ordering : false
+                    ordering : false,
+                    info : false,
+                    paging : false
                 });
             });
         </script>
