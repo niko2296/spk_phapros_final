@@ -1412,9 +1412,18 @@
 					$queryH = "DELETE FROM data_kpi_verifikasi WHERE id_kpi_asli = '$id'";
 					$hapus = $this->connection->prepare($queryH);
 					if($hapus->execute())
-						$c[] = 1;
+					{
+						$queryH2 = "DELETE FROM data_realisasi_kpi WHERE id_kpi = '$id'";
+						$hapus2 = $this->connection->prepare($queryH2);
+						if($hapus2->execute())
+							$c[] = 1;
+						else 
+							$c[] = 0;
+					}
 					else 
+					{
 						$c[] = 0;
+					}
 				}
 				else {
 					return 2;

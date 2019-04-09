@@ -9,7 +9,7 @@
         header("location:login.php");
     $nama = $_SESSION['nama'];
     $jabatan = $_SESSION['id_jabatan'];
-
+    $idA = 'kosong';
     foreach($db->tampil_periode() as $tPer)
     {
         if($tPer['status'] == 1)
@@ -230,6 +230,7 @@
                         </div>
                     </div>
 					<div class="row">
+                        <form action="#" method="POST">
                         <div class="col-md-12">
                             <div class="table-responsive">
                                 <table class="table table-striped custom-table m-b-0 display" id="tabel">
@@ -247,7 +248,6 @@
                                             <th>Verifikasi</th>
                                         </tr>
                                     </thead>
-                                    <form action="#" method="POST">
                                     <tbody>
                                     <?php
                                         error_reporting(0);
@@ -275,14 +275,14 @@
                                             }
                                         }
                                     ?>
-                                        <tr>
-                                            <td colspan="10" align="right"><button class="btn btn-primary" type="submit" name="tombolSimpanRealisasi">Simpan Data</button></td>
-                                        </tr>
                                     </tbody>
-                                    </form>
                                 </table>
                             </div>
                         </div>
+                        <div class="col-md-12" align="right">
+                            <button class="btn btn-primary" type="submit" name="tombolSimpanRealisasi">Simpan Data</button>
+                        </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -301,7 +301,15 @@
 		<script type="text/javascript" src="assets/js/app.js"></script>
 
         <script type="text/javascript">
-            $(document).ready(function(){
+            $(document).ready(function()
+            {    
+                $('#tabel').DataTable({
+                    searching : false,
+                    ordering : false,
+                    paging : false,
+                    info : false
+                });
+
                 $('.table').on('change','#verifikasi1',function(e){
                     var v = ($(this).is(':checked'))?'1':'0';
                     var paramId = $(this).data('id');
