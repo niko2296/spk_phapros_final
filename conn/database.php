@@ -1553,7 +1553,7 @@
 				return 2;
 		}
 
-		function verif_kompetensi($id_kompetensi = null, $status = null, $id_verifikator = null)
+		function verif_kompetensi($id_kompetensi = null, $status = null, $id_verifikator = null, $id_anggota = null)
 		{
 			if($status == null || $status == 0 || $status == '0')
 			{
@@ -1566,9 +1566,60 @@
 			$query = "UPDATE data_kompetensi_individu SET status = '$status', id_verifikator = '$id_verifikator', tanggal_verifikasi = '$tanggal' WHERE id_kompetensi_individu = '$id_kompetensi'";
 			$edit = $this->connection->prepare($query);
 			if($edit->execute())
-				return 1;
+			{
+				if($status == null || $status == 0 || $status == '0')
+				{
+					$queryH = "DELETE FROM data_kompetensi_verifikasi WHERE id_kompetensi_individu = '$id_kompetensi'";
+					$hapus = $this->connection->prepare($queryH);
+					if($hapus->execute())
+						return 1;
+					else 
+						return 2;
+				}
+				else{
+					//Kumpulan Query
+					$queryT1 = $this->connection->query("SELECT a.*, j.nama_jabatan, u.nama_unit FROM mst_anggota a LEFT JOIN mst_jabatan j ON a.id_jabatan = j.id_jabatan LEFT JOIN mst_unit u ON a.id_unit = u.id_unit WHERE a.id_anggota = '$id_anggota'");
+					$t1 = $queryT1->fetch_array();
+					$queryT2 = $this->connection->query("SELECT a.*, j.nama_jabatan, u.nama_unit FROM mst_anggota a LEFT JOIN mst_jabatan j ON a.id_jabatan = j.id_jabatan LEFT JOIN mst_unit u ON a.id_unit = u.id_unit WHERE a.id_anggota = '$id_verifikator'");
+					$t2 = $queryT2->fetch_array();
+					$queryT3 = $this->connection->query("SELECT ki.*, k.id_kelompok, k.nama_kompetensi, k.indikator_terendah, k.indikator_tertinggi, k.bobot, pe.peringkat, pe.nilai, p.tahun FROM data_kompetensi_individu ki LEFT JOIN mst_kompetensi k ON ki.id_kompetensi = k.id_kompetensi LEFT JOIN mst_peringkat pe ON ki.id_peringkat = pe.id_peringkat LEFT JOIN mst_periode p ON ki.id_periode = p.id_periode WHERE ki.id_kompetensi_individu = '$id_kompetensi'");
+					$t3 = $queryT3->fetch_array();
+					$id_kelompok = $t3['id_kelompok']; 
+					$queryT4 = $this->connection->query("SELECT nama_kelompok FROM mst_kelompok_jabatan WHERE id_kelompok = '$id_kelompok'");
+					$t4 = $queryT4->fetch_array();
+					// Akhiran Kumpulan Query
+
+					// Ambil Data
+					$nama1 = $t1['nama'];
+					$jabatan1 = $t1['nama_jabatan'];
+					$unit1 = $t1['nama_unit'];
+					$nama2 = $t2['nama'];
+					$jabatan2 = $t2['nama_jabatan'];
+					$unit2 = $t2['nama_unit'];
+					$nama_kompetensi = $t3['nama_kompetensi'];
+					$indikator_terendah = $t3['indikator_terendah'];
+					$indikator_tertinggi = $t3['indikator_tertinggi'];
+					$bobot = $t3['bobot'];
+					$peringkat = $t3['peringkat'];
+					$nilai = $t3['nilai'];
+					$periode = $t3['tahun'];
+					$kelompok_jabatan = $t4['nama_kelompok'];
+					$tanggal1 = $t3['tanggal_input'];
+					$tanggal2 = $t3['tanggal_verifikasi'];
+					// Akhiran Ambil Data
+
+					$queryI = "INSERT INTO data_kompetensi_verifikasi VALUES ('', '$id_kompetensi', '$nama_kompetensi', '$indikator_terendah', '$indikator_tertinggi', '$bobot', '$peringkat', '$nilai', '$periode', '$kelompok_jabatan', '$id_anggota', '$nama1', '$jabatan1', '$unit1', '$id_verifikator', '$nama2', '$jabatan2', '$unit2', '$tanggal1', '$tanggal2')";
+					$input = $this->connection->prepare($queryI);
+					if($input->execute())
+						return 1;
+					else 
+						return 2;
+				}
+			}
 			else 
+			{	
 				return 2;
+			}
 		}
 		// Akhiran Fungsi Verifikasi
 

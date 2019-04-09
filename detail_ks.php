@@ -338,7 +338,7 @@
                                                             }
                                                         ?>
                                                         </td>
-                                                        <td align="center"><input type="checkbox" name="verifikasi" id="verifikasi" class="form-control" data-verifikator="<?php echo $id_anggotaV; ?>" data-id="<?php echo $data['id_kompetensi_individu']; ?>" <?php echo ($db->cek_verif_kompetensi($data['id_kompetensi_individu']) == 1)?('checked'):(''); ?>></td>
+                                                        <td align="center"><input type="checkbox" name="verifikasi" id="verifikasi" class="form-control" data-id_anggota="<?php echo $id_anggotaD; ?>" data-verifikator="<?php echo $id_anggotaV; ?>" data-id="<?php echo $data['id_kompetensi_individu']; ?>" <?php echo ($db->cek_verif_kompetensi($data['id_kompetensi_individu']) == 1)?('checked'):(''); ?>></td>
                                                     </tr>
                                             <?php
                                                 }
@@ -413,6 +413,7 @@
                     var v = ($(this).is(':checked'))?'1':'0';
                     var paramId = $(this).data('id');
                     var verifikator = $(this).data('verifikator');
+                    var id_anggota = $(this).data('id_anggota');
                     var id1 = 'realisasi';
                     var id2 = 'keterangan';
                     $.ajax({
@@ -422,7 +423,9 @@
                             'id' : paramId,
                             'value' : v,
                             'jenis' : 'verif_kompetensi',
-                            'verifikator' : verifikator
+                            'verifikator' : verifikator,
+                            'id_anggota' : id_anggota,
+
                         },
                         success:function(html){
                             if(html == 1)
