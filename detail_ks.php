@@ -371,10 +371,10 @@
                     <form method="POST" action="#" id="inputan">
                         <div class="modal-body card-box">
                             <?php
-                                if($db->hitung_catatan($id_anggotaD, $id_jabatanD, $id_unitD, $idA) == 0)
+                                if($db->hitung_catatan2($id_anggotaD, $id_jabatanD, $id_unitD, $idA) == 0)
                                     echo '<textarea name="catatan" cols="30" rows="10" class="form-control" placeholder="Silahkan Masukkan Catatan Untuk Data KPI yang Ada"></textarea>';
                                 else
-                                    echo '<textarea name="catatan" cols="30" rows="10" class="form-control">'.$db->tampil_catatan($id_anggotaD, $id_jabatanD, $id_unitD, $idA).'</textarea>';
+                                    echo '<textarea name="catatan" cols="30" rows="10" class="form-control">'.$db->tampil_catatan2($id_anggotaD, $id_jabatanD, $id_unitD, $idA).'</textarea>';
                             ?>
                             <div class="m-t-20"> 
                                 <a href="#" class="btn btn-default" data-dismiss="modal">Close</a>
