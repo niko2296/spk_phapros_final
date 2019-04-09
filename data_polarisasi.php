@@ -193,7 +193,7 @@
 
                         <?php
                             if(isset($_POST['tombolSimpan'])){
-                                $eksekusi = $db->input_polarisasi($_POST['nama_polarisasi'], $_POST['periode']);
+                                $eksekusi = $db->input_polarisasi($_POST['nama_polarisasi'], $_POST['periode'], $_POST['rumus']);
                                 if($eksekusi == 2)
                                 {
                                     echo '<div class="alert alert-danger">Data Gagal Disimpan</div>';
@@ -267,6 +267,28 @@
                                                     }        
                                                 ?>           
                                             </select>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-12">
+										<div class="form-group">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <label>Rumus</label>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <label class="btn btn-default">
+                                                        <input class="form-control cek" type="radio" name="rumus" value="1"> <img src="assets/rumus/perkalian.JPG" width="200">
+                                                    </label>
+                                                    <label class="btn btn-default">
+                                                        <input class="form-control cek" type="radio" name="rumus" value="2"> <img src="assets/rumus/pengurangan.JPG" width="200">
+                                                    </label>
+                                                    <label class="btn btn-default">
+                                                        <input class="form-control cek" type="radio" name="rumus" value="3"> <img src="assets/rumus/realisasi.JPG" width="200">
+                                                    </label>
+                                                </div>
+                                            </div>
 										</div>
 									</div>
 								</div>

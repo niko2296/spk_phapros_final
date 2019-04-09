@@ -200,7 +200,7 @@
 					<div class="row">
                         <?php
                             if(isset($_POST['tombolEdit'])){
-                                $eksekusi = $db->edit_polarisasi($_POST['id_polarisasi_edit'], $_POST['nama_polarisasi_edit'], $_POST['periode_edit'], $id_periode);
+                                $eksekusi = $db->edit_polarisasi($_POST['id_polarisasi_edit'], $_POST['nama_polarisasi_edit'], $_POST['periode_edit'], $id_periode, $_POST['rumus']);
                                 if($eksekusi == 2 || $eksekusi == 3)
                                 {
                                     echo '<div class="alert alert-danger">Data Gagal Disimpan</div>';
@@ -238,6 +238,7 @@
 									<thead>
 										<tr>
 											<th>Nama Polarisasi</th>
+                                            <th>Rumus</th>
                                             <th>Aturan Polarisasi</th>
 											<th class="text-right">Actions</th>
 										</tr>
@@ -259,6 +260,15 @@
                                                         if($data['id_polarisasi'] == $data1['id_polarisasi'])
                                                             $jmlP = $jmlP+1;   
                                                     }
+
+                                                    $rumus = 'Belum Terdapat Rumus';
+                                                    if($data['rumus'] == 1)
+                                                        $rumus = 'Pembagian';
+                                                    else if($data['rumus'] == 2)
+                                                        $rumus == 'Pengurangan';
+                                                    else if($data['rumus'] == 3)
+                                                        $rumus == 'Berdasarkan Realisasi';
+                                                    echo "<td>".$rumus."</td>";
                                                 ?>
                                                 <td><a href="aturan_polarisasi.php?id_polarisasi=<?php echo $data['id_polarisasi']; ?>">tambah</a> (jml : <?php echo $jmlP; ?> aturan)</td>
                                                 <td class="text-right">
@@ -313,9 +323,31 @@
                                                                                                 $s = 'selected="selected"';
                                                                                             echo '<option value="'.$tampilP['id_periode'].'" '.$s.'>'.$tampilP['tahun'].'</option>';
                                                                                         }
-                                                                                    }        
+                                                                                    }   
                                                                                 ?>           
                                                                             </select>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-md-12">
+                                                                        <div class="form-group">
+                                                                            <div class="row">
+                                                                                <div class="col-md-12">
+                                                                                    <label>Rumus</label>
+                                                                                </div>
+                                                                                <div class="col-md-12">
+                                                                                    <label class="btn btn-default">
+                                                                                        <input class="form-control cek" type="radio" name="rumus" value="1" <?php echo ($data['rumus'] == 1)?('checked'):(''); ?>> <img src="assets/rumus/perkalian.JPG" width="200">
+                                                                                    </label>
+                                                                                    <label class="btn btn-default">
+                                                                                        <input class="form-control cek" type="radio" name="rumus" value="2" <?php echo ($data['rumus'] == 2)?('checked'):(''); ?>> <img src="assets/rumus/pengurangan.JPG" width="200">
+                                                                                    </label>
+                                                                                    <label class="btn btn-default">
+                                                                                        <input class="form-control cek" type="radio" name="rumus" value="3" <?php echo ($data['rumus'] == 3)?('checked'):(''); ?>> <img src="assets/rumus/realisasi.JPG" width="200">
+                                                                                    </label>
+                                                                                </div>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>

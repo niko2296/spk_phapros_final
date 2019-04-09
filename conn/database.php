@@ -541,9 +541,9 @@
 				return 2;
 		}
 
-		function input_polarisasi($nama_polarisasi = null, $periode = null){
+		function input_polarisasi($nama_polarisasi = null, $periode = null, $rumus = null){
 			$tgl = date('Y-m-d');
-			$query = "INSERT INTO mst_polarisasi VALUES ('', '$nama_polarisasi', '$periode', '$tgl')";
+			$query = "INSERT INTO mst_polarisasi VALUES ('', '$nama_polarisasi', '$periode', '$rumus','$tgl')";
 			$input = $this->connection->prepare($query);
 			if($input->execute())
 				return 1;
@@ -895,12 +895,12 @@
 			}
 		}
 
-		function edit_polarisasi($id_polarisasi = null, $nama_polarisasi = null, $periode = null, $periode_asli = null)
+		function edit_polarisasi($id_polarisasi = null, $nama_polarisasi = null, $periode = null, $periode_asli = null, $rumus = null)
 		{
 			if($id_polarisasi != null)
 			{
 				$tanggal = date('Y-m-d');
-				$query = "UPDATE mst_polarisasi SET nama_polarisasi = '$nama_polarisasi', tanggal_input = '$tanggal', id_periode = '$periode' WHERE id_polarisasi = '$id_polarisasi'";
+				$query = "UPDATE mst_polarisasi SET nama_polarisasi = '$nama_polarisasi', tanggal_input = '$tanggal', id_periode = '$periode', rumus = '$rumus' WHERE id_polarisasi = '$id_polarisasi'";
 				$edit = $this->connection->prepare($query);
 				if($edit->execute())
 					header("location:detail_polarisasi.php?id_periode=$periode_asli");
@@ -1926,12 +1926,13 @@
 				while($tampil = $query->fetch_array())
 				{
 					$nama_polarisasi = $tampil['nama_polarisasi'];
+					$rumus = $tampil['rumus'];
 				}
-				$query1 = "INSERT INTO mst_polarisasi VALUES ('', '$nama_polarisasi', '$id_periode', '$tanggal')";
+				$query1 = "INSERT INTO mst_polarisasi VALUES ('', '$nama_polarisasi', '$id_periode', '$rumus','$tanggal')";
 				$input1 = $this->connection->prepare($query1);
 				if($input1->execute())
 				{
-					$query = $this->connection->query("SELECT * FROM mst_polarisasi WHERE nama_polarisasi = '$nama_polarisasi' AND id_periode = '$id_periode'");
+					$query = $this->connection->query("SELECT * FROM mst_polarisasi WHERE nama_polarisasi = '$nama_polarisasi' AND id_periode = '$id_periode' AND id_polarisasi != '$id_polarisasi'");
 					while($tampil = $query->fetch_array())
 						$id_polarisasi_baru = $tampil['id_polarisasi'];
 					$query = $this->connection->query("SELECT * FROM aturan_polarisasi WHERE id_polarisasi = '$id_polarisasi'");
@@ -1965,13 +1966,14 @@
 				while($tampil = $query->fetch_array())
 				{
 					$nama_polarisasi = $tampil['nama_polarisasi'];
+					$rumus = $tampil['rumus'];
 					$id_polarisasi_asli = $tampil['id_polarisasi'];
 
-					$queryInput1 = "INSERT INTO mst_polarisasi VALUES ('', '$nama_polarisasi', '$id_periode', '$tanggal')";
+					$queryInput1 = "INSERT INTO mst_polarisasi VALUES ('', '$nama_polarisasi', '$id_periode', '$rumus', '$tanggal')";
 					$input1 = $this->connection->prepare($queryInput1);
 					if($input1->execute())
 					{
-						$query2 = $this->connection->query("SELECT * FROM mst_polarisasi WHERE nama_polarisasi = '$nama_polarisasi' AND id_periode = '$id_periode'");
+						$query2 = $this->connection->query("SELECT * FROM mst_polarisasi WHERE nama_polarisasi = '$nama_polarisasi' AND id_periode = '$id_periode' AND id_polarisasi != '$id_polarisasi_asli'");
 						while($tampil2 = $query2->fetch_array())
 							$id_polarisasi_baru = $tampil2['id_polarisasi'];
 						$query3 = $this->connection->query("SELECT * FROM aturan_polarisasi WHERE id_polarisasi = '$id_polarisasi_asli'");
