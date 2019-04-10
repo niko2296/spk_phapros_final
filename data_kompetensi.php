@@ -122,26 +122,29 @@
                                     <li class=""> 
                                         <a href="aturan_penilai.php"><i class="la la-key"></i> <span>Aturan Penilai</span></a>
                                     </li>
+                                    <li class=""> 
+                                        <a href="aturan_matriks.php"><i class="la la-th"></i> <span>Perhitungan Matriks</span></a>
+                                    </li>
                             <?php
                                 }
                                 if($m3 == 1 || $_SESSION['aksus'] == TRUE)
                                 {
                             ?>
-                            <li class="submenu">
-								<a href="#"><i class="la la-calendar"></i> <span> Aturan Waktu</span> <span class="menu-arrow"></span></a>
-								<ul style="display: none;">
-									<li><a href="waktu_input.php">Waktu Input</a></li>
-                                    <li><a href="waktu_verifikasi.php">Waktu Verifikasi</a></li>
-                                </ul>
-							</li>
+                                    <li class="submenu">
+                                        <a href="#"><i class="la la-calendar"></i> <span> Aturan Waktu</span> <span class="menu-arrow"></span></a>
+                                        <ul style="display: none;">
+                                            <li><a href="waktu_input.php">Waktu Input</a></li>
+                                            <li><a href="waktu_verifikasi.php">Waktu Verifikasi</a></li>
+                                        </ul>
+                                    </li>
                             <?php
                                 }
                                 if($m4 == 1 || $_SESSION['aksus'] == TRUE)
                                 {
                             ?>
-                            <li class=""> 
-								<a href="akses_menu.php"><i class="la la-cog"></i> <span>Akses Menu</span></a>
-							</li>
+                                    <li class=""> 
+                                        <a href="akses_menu.php"><i class="la la-cog"></i> <span>Akses Menu</span></a>
+                                    </li>
                             <?php
                                 }
                             ?>
@@ -152,14 +155,14 @@
                                         if($m5 == 1 || $_SESSION['aksus'] == TRUE)
                                         {
                                     ?>
-									<li><a href="data_kpi.php">Data KPI Individu</a></li>
-                                    <li><a href="copy_kpi.php">Copy Data KPI Individu</a></li>
+                                            <li><a href="data_kpi.php">Data KPI Individu</a></li>
+                                            <li><a href="copy_kpi.php">Copy Data KPI Individu</a></li>
                                     <?php 
                                         }
                                         if($m6 == 1 || $_SESSION['aksus'] == TRUE)
                                         {
                                     ?>
-                                    <li><a href="data_kpi_verifikasi.php">Data KPI Sub Ordinat</a></li>
+                                            <li><a href="data_kpi_verifikasi.php">Data KPI Sub Ordinat</a></li>
                                     <?php
                                         }
                                         if($m7 == 1 || $_SESSION['aksus'] == TRUE)

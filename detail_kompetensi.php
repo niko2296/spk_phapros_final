@@ -124,6 +124,9 @@
                                     <li class=""> 
                                         <a href="aturan_penilai.php"><i class="la la-key"></i> <span>Aturan Penilai</span></a>
                                     </li>
+                                    <li class=""> 
+                                        <a href="aturan_matriks.php"><i class="la la-th"></i> <span>Perhitungan Matriks</span></a>
+                                    </li>
                             <?php
                                 }
                                 if($m3 == 1 || $_SESSION['aksus'] == TRUE)
