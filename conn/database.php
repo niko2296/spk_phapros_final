@@ -379,6 +379,27 @@
 				$hasil[] = $tampil2;
 			return $hasil;
 		}
+
+		function tampil_persentase($id_periode = null, $id_persentase = null)
+		{
+			if($id_periode != null)
+			{
+				if($id_persentase != null)
+					$query = $this->connection->query("SELECT n.*, p.tahun FROM persentase_nilai n LEFT JOIN mst_periode p ON n.id_periode = p.id_periode WHERE n.id_periode = '$id_periode' AND n.id_persentase = '$id_persentase'");
+				else 
+					$query = $this->connection->query("SELECT n.*, p.tahun FROM persentase_nilai n LEFT JOIN mst_periode p ON n.id_periode = p.id_periode WHERE n.id_periode = '$id_periode'");
+			}
+			else {
+				if($id_persentase != null)
+					$query = $this->connection->query("SELECT n.*, p.tahun FROM persentase_nilai n LEFT JOIN mst_periode p ON n.id_periode = p.id_periode WHERE n.id_persentase = '$id_persentase'");
+				else 
+					$query = $this->connection->query("SELECT n.*, p.tahun FROM persentase_nilai n LEFT JOIN mst_periode p ON n.id_periode = p.id_periode");
+			}
+
+			while($tampil = $query->fetch_array())
+				$hasil[] = $tampil;
+			return $hasil;
+		}
 		//Akhiran Fungsi Tampil
 
 		//Fungsi Input
@@ -737,6 +758,26 @@
 					return 1;
 			}
 		}
+
+		function input_persentase($persentase_kpi = null, $persentase_kompetensi = null, $id_periode = null)
+		{
+			$qC = $this->connection->query("SELECT * FROM persentase_nilai WHERE id_periode = '$id_periode'");
+			$cc = 0;
+			while($tC = $qC->fetch_array())
+				$cc = $cc + 1;
+			if($cc == 0)
+			{
+				$query = "INSERT INTO persentase_nilai VALUES ('', '$persentase_kpi', '$persentase_kompetensi', '$id_periode')";
+				$input = $this->connection->prepare($query);
+				if($input->execute())
+					return 1;
+				else
+					return 2;
+			}
+			else{
+				return 3;
+			}
+		}
 		//Akhiran Fungsi Input
 
 		//Fungsi Edit
@@ -1019,6 +1060,16 @@
 				return 1;
 			}
 		}
+
+		function edit_persentase($id_persentase = null, $persentase_kpi = null, $persentase_kompetensi = null, $id_periode = null)
+		{
+			$query = "UPDATE persentase_nilai SET persentase_kpi = '$persentase_kpi', persentase_kompetensi = '$persentase_kompetensi', id_periode = '$id_periode' WHERE id_persentase = '$id_persentase'";
+			$edit = $this->connection->prepare($query);
+			if($edit->execute())
+				return 1;
+			else 
+				return 2;
+		}
 		//Akhiran Fungsi Edit
 
 		//Fungsi Hapus
@@ -1260,6 +1311,16 @@
 			$hapus = $this->connection->prepare($query);
 			if($hapus->execute())
 				header("location:data_kelompok.php");
+			else 
+				return 2;
+		}
+
+		function hapus_persentase($id_persentase = null)
+		{
+			$query = "DELETE FROM persentase_nilai WHERE id_persentase = '$id_persentase'";
+			$hapus = $this->connection->prepare($query);
+			if($hapus->execute())
+				return 1;
 			else 
 				return 2;
 		}

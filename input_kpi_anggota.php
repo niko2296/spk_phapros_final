@@ -14,6 +14,7 @@
 	$id_jabatanD = $_GET['id_jabatan'];
 	$id_unitD = $_GET['id_unit'];
 
+	$idA = 'kosong';
 	foreach($db->tampil_periode() as $tP)
 	{
 		if($tP['status'] == 1)

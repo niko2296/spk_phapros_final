@@ -9,6 +9,7 @@
         header("location:login.php");
     $nama = $_SESSION['nama'];
     $jabatan = $_SESSION['id_jabatan'];
+    $idA = 'kosong';
 
     foreach($db->tampil_periode() as $tP)
     {

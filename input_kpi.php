@@ -11,6 +11,7 @@
 	$jabatan = $_SESSION['id_jabatan'];
 	$id_anggotaD = $_SESSION['id_anggota'];
 	$id_unitD = $_SESSION['id_unit'];
+	$idA = 'kosong';
 
 	foreach($db->tampil_periode() as $tP)
 	{
