@@ -1791,16 +1791,25 @@
 			if($jenis == 1 || $jenis == '1')
 			{
 				$query1 = $this->connection->query("SELECT * FROM mst_satuan WHERE id_satuan = '$id_satuan'");
-				while($tampil1 = $query1->fetch_array())
-				{
-					$nama_satuan = $tampil1['nama_satuan'];
-					$jenis_polarisasi = $tampil1['jenis_polarisasi'];
+				$tampil1 = $query1->fetch_array();
+				$nama_satuan = $tampil1['nama_satuan'];
+				$jenis_polarisasi = $tampil1['jenis_polarisasi'];
 
+				$qc = $this->connection->query("SELECT * FROM mst_satuan WHERE nama_satuan = '$nama_satuan' AND jenis_polarisasi = '$jenis_polarisasi' AND id_periode = '$id_periode'");
+				$cc = 0;
+				while($tc = $qc->fetch_array())
+					$cc = $cc + 1;
+
+				if($cc == 0)
+				{
 					foreach(unserialize($jenis_polarisasi) as $key => $value)
 					{
 						$query2 = $this->connection->query("SELECT * FROM mst_polarisasi WHERE id_polarisasi = '$value'");
 						while($tampil2 = $query2->fetch_array())
+						{
 							$nama_polarisasi = $tampil2['nama_polarisasi'];
+							$rumus = $tampil2['rumus'];
+						}
 						$cek = 0;
 						$query3 = $this->connection->query("SELECT * FROM mst_polarisasi WHERE nama_polarisasi = '$nama_polarisasi' AND id_periode = '$id_periode'");
 						while($tampil3 = $query3->fetch_array())
@@ -1811,7 +1820,7 @@
 
 						if($cek == 0)
 						{
-							$queryInput2 = "INSERT INTO mst_polarisasi VALUES ('', '$nama_polarisasi', '$id_periode', '$tanggal')";
+							$queryInput2 = "INSERT INTO mst_polarisasi VALUES ('', '$nama_polarisasi', '$id_periode', '$rumus', '$tanggal')";
 							$input2 = $this->connection->prepare($queryInput2);
 							if($input2->execute())
 							{
@@ -1843,17 +1852,26 @@
 						$k[] = 1;
 					else 
 						$k[] = 0;
-				}
 
-				if(in_array(0, $k))
-					return 2;
-				else 
-					header('location:data_satuan.php');
+					if(in_array(0, $k))
+						return 2;
+					else 
+						header('location:data_satuan.php');
+				}
+				else{
+					echo '
+						<script>
+							alert("Sudah Terdapat Satuan Tersebut Pada Periode Tujuan");
+							window.location = "data_satuan.php";
+						</script>
+					';
+				}
 				
 			}
 			else if($jenis == 2 || $jenis == '2')
 			{
 				$a = 0;
+				$k = [];
 				$query1 = $this->connection->query("SELECT * FROM mst_satuan WHERE id_periode = '$id_satuan'");
 				while($tampil1 = $query1->fetch_array())
 				{
@@ -1861,59 +1879,80 @@
 					$nama_satuan = $tampil1['nama_satuan'];
 					$jenis_polarisasi = $tampil1['jenis_polarisasi'];
 
-					foreach(unserialize($jenis_polarisasi) as $key => $value)
+					$cc = 0;
+					$qC = $this->connection->query("SELECT * FROM mst_satuan WHERE nama_satuan = '$nama_satuan' AND id_periode = '$id_periode'");
+					while($tC = $qC->fetch_array())
+						$cc = $cc + 1;
+					if($cc == 0)
 					{
-						$query2 = $this->connection->query("SELECT * FROM mst_polarisasi WHERE id_polarisasi = '$value'");
-						while($tampil2 = $query2->fetch_array())
-							$nama_polarisasi = $tampil2['nama_polarisasi'];
-						$cek = 0;
-						$query3 = $this->connection->query("SELECT * FROM mst_polarisasi WHERE nama_polarisasi = '$nama_polarisasi' AND id_periode = '$id_periode'");
-						while($tampil3 = $query3->fetch_array())
+						foreach(unserialize($jenis_polarisasi) as $key => $value)
 						{
-							$idP = $tampil3['id_polarisasi'];
-							$cek = $cek+1;
-						}
-
-						if($cek == 0)
-						{
-							$queryInput2 = "INSERT INTO mst_polarisasi VALUES ('', '$nama_polarisasi', '$id_periode', '$tanggal')";
-							$input2 = $this->connection->prepare($queryInput2);
-							if($input2->execute())
+							$query2 = $this->connection->query("SELECT * FROM mst_polarisasi WHERE id_polarisasi = '$value'");
+							while($tampil2 = $query2->fetch_array())
 							{
-								$query3 = $this->connection->query("SELECT * FROM mst_polarisasi WHERE nama_polarisasi = '$nama_polarisasi' AND id_periode = '$id_periode'");
-								while($tampil3 = $query3->fetch_array())
-									$id_polarisasi_baru = $tampil3['id_polarisasi'];
-								$query4 = $this->connection->query("SELECT * FROM aturan_polarisasi WHERE id_polarisasi = '$value'");
-								while($tampil4 = $query4->fetch_array())
-								{
-									$bmi = $tampil4['bmi'];
-									$bma = $tampil4['bma'];
-									$poin = $tampil4['poin'];
+								$rumus = $tampil2['rumus'];
+								$nama_polarisasi = $tampil2['nama_polarisasi'];
+							}
+							$cek = 0;
+							$query3 = $this->connection->query("SELECT * FROM mst_polarisasi WHERE nama_polarisasi = '$nama_polarisasi' AND id_periode = '$id_periode'");
+							while($tampil3 = $query3->fetch_array())
+							{
+								$idP = $tampil3['id_polarisasi'];
+								$cek = $cek+1;
+							}
 
-									$queryInput3 = "INSERT INTO aturan_polarisasi VALUES ('', '$id_polarisasi_baru', '$bmi', '$bma', '$poin', '$tanggal')";
-									$input3 = $this->connection->prepare($queryInput3);
-									$input3->execute();
+							if($cek == 0)
+							{
+								$queryInput2 = "INSERT INTO mst_polarisasi VALUES ('', '$nama_polarisasi', '$id_periode', '$rumus', '$tanggal')";
+								$input2 = $this->connection->prepare($queryInput2);
+								if($input2->execute())
+								{
+									$query3 = $this->connection->query("SELECT * FROM mst_polarisasi WHERE nama_polarisasi = '$nama_polarisasi' AND id_periode = '$id_periode'");
+									while($tampil3 = $query3->fetch_array())
+										$id_polarisasi_baru = $tampil3['id_polarisasi'];
+									$query4 = $this->connection->query("SELECT * FROM aturan_polarisasi WHERE id_polarisasi = '$value'");
+									while($tampil4 = $query4->fetch_array())
+									{
+										$bmi = $tampil4['bmi'];
+										$bma = $tampil4['bma'];
+										$poin = $tampil4['poin'];
+
+										$queryInput3 = "INSERT INTO aturan_polarisasi VALUES ('', '$id_polarisasi_baru', '$bmi', '$bma', '$poin', '$tanggal')";
+										$input3 = $this->connection->prepare($queryInput3);
+										$input3->execute();
+									}
+									$jp[$a][] = $id_polarisasi_baru;
 								}
-								$jp[$a][] = $id_polarisasi_baru;
+							}
+							else {
+								$jp[$a][] = $idP;
 							}
 						}
-						else {
-							$jp[$a][] = $idP;
-						}
+						$jP2 = serialize($jp[$a]);
+						$queryInput1 = "INSERT INTO mst_satuan VALUES ('', '$nama_satuan', '$jP2', '$id_periode', '$tanggal')";
+						$input1 = $this->connection->prepare($queryInput1);
+						if($input1->execute())
+							$k[] = 1;
+						else 
+							$k[] = 0;
 					}
-					$jP2 = serialize($jp[$a]);
-					$queryInput1 = "INSERT INTO mst_satuan VALUES ('', '$nama_satuan', '$jP2', '$id_periode', '$tanggal')";
-					$input1 = $this->connection->prepare($queryInput1);
-					if($input1->execute())
-						$k[] = 1;
-					else 
-						$k[] = 0;
 				}
 
-				if(in_array(0, $k))
-					return 2;
-				else 
-					header('location:data_satuan.php');
+				if(count($k) != 0)
+				{
+					if(in_array(0, $k))
+						return 2;
+					else 
+						header('location:data_satuan.php');
+				}
+				else {
+					echo '
+						<script>
+							alert("Semua Data Satuan Sama Dengan Tahun Tujuan");
+							window.location = "data_satuan.php";
+						</script>
+					';
+				}
 			}
 		}
 
@@ -1923,40 +1962,53 @@
 			if($jenis == 1 || $jenis == '1')
 			{
 				$query = $this->connection->query("SELECT * FROM mst_polarisasi WHERE id_polarisasi = '$id_polarisasi'");
-				while($tampil = $query->fetch_array())
+				$tampil = $query->fetch_array();
+				$nama_polarisasi = $tampil['nama_polarisasi'];
+				$rumus = $tampil['rumus'];
+				$cc = 0;
+				$qC = $this->connection->query("SELECT * FROM mst_polarisasi WHERE nama_polarisasi = '$nama_polarisasi' AND rumus = '$rumus' AND id_periode = '$id_periode'");
+				while($tCek = $qC->fetch_array())
+					$cc = $cc + 1;
+				if($cc == 0)
 				{
-					$nama_polarisasi = $tampil['nama_polarisasi'];
-					$rumus = $tampil['rumus'];
-				}
-				$query1 = "INSERT INTO mst_polarisasi VALUES ('', '$nama_polarisasi', '$id_periode', '$rumus','$tanggal')";
-				$input1 = $this->connection->prepare($query1);
-				if($input1->execute())
-				{
-					$query = $this->connection->query("SELECT * FROM mst_polarisasi WHERE nama_polarisasi = '$nama_polarisasi' AND id_periode = '$id_periode' AND id_polarisasi != '$id_polarisasi'");
-					while($tampil = $query->fetch_array())
-						$id_polarisasi_baru = $tampil['id_polarisasi'];
-					$query = $this->connection->query("SELECT * FROM aturan_polarisasi WHERE id_polarisasi = '$id_polarisasi'");
-					while($tampil = $query->fetch_array())
+					$query1 = "INSERT INTO mst_polarisasi VALUES ('', '$nama_polarisasi', '$id_periode', '$rumus','$tanggal')";
+					$input1 = $this->connection->prepare($query1);
+					if($input1->execute())
 					{
-						$bmi  = $tampil['bmi'];
-						$bma  = $tampil['bma'];
-						$poin = $tampil['poin'];
-						
-						$query2 = "INSERT INTO aturan_polarisasi VALUES ('', '$id_polarisasi_baru', '$bmi', '$bma', '$poin', '$tanggal')";
-						$input2 = $this->connection->prepare($query2);
-						if($input2->execute())
-							$k[] = 1;
-						else 
-							$k[] = 0;
-					}
+						$query = $this->connection->query("SELECT * FROM mst_polarisasi WHERE nama_polarisasi = '$nama_polarisasi' AND id_periode = '$id_periode'");
+						while($tampil = $query->fetch_array())
+							$id_polarisasi_baru = $tampil['id_polarisasi'];
+						$query = $this->connection->query("SELECT * FROM aturan_polarisasi WHERE id_polarisasi = '$id_polarisasi'");
+						while($tampil = $query->fetch_array())
+						{
+							$bmi  = $tampil['bmi'];
+							$bma  = $tampil['bma'];
+							$poin = $tampil['poin'];
+							
+							$query2 = "INSERT INTO aturan_polarisasi VALUES ('', '$id_polarisasi_baru', '$bmi', '$bma', '$poin', '$tanggal')";
+							$input2 = $this->connection->prepare($query2);
+							if($input2->execute())
+								$k[] = 1;
+							else 
+								$k[] = 0;
+						}
 
-					if(in_array(0, $k))
+						if(in_array(0, $k))
+							return 2;
+						else 
+							header('location:data_polarisasi.php');
+					}
+					else{
 						return 2;
-					else 
-						header('location:data_polarisasi.php');
+					}
 				}
 				else{
-					return 2;
+					echo '
+						<script>
+							alert("Sudah Terdapat Polarisasi Tersebut");
+							window.location = "data_polarisasi.php";
+						</script>
+					';
 				}
 			}
 			else if($jenis == 2 || $jenis == '2')
@@ -1968,28 +2020,37 @@
 					$nama_polarisasi = $tampil['nama_polarisasi'];
 					$rumus = $tampil['rumus'];
 					$id_polarisasi_asli = $tampil['id_polarisasi'];
-
-					$queryInput1 = "INSERT INTO mst_polarisasi VALUES ('', '$nama_polarisasi', '$id_periode', '$rumus', '$tanggal')";
-					$input1 = $this->connection->prepare($queryInput1);
-					if($input1->execute())
+					$cc = 0;
+					$qC = $this->connection->query("SELECT * FROM mst_polarisasi WHERE nama_polarisasi = '$nama_polarisasi' AND rumus = '$rumus' AND id_periode = '$id_periode'");
+					while($tCek = $qC->fetch_array())
+						$cc = $cc + 1;
+					if($cc == 0)
 					{
-						$query2 = $this->connection->query("SELECT * FROM mst_polarisasi WHERE nama_polarisasi = '$nama_polarisasi' AND id_periode = '$id_periode' AND id_polarisasi != '$id_polarisasi_asli'");
-						while($tampil2 = $query2->fetch_array())
-							$id_polarisasi_baru = $tampil2['id_polarisasi'];
-						$query3 = $this->connection->query("SELECT * FROM aturan_polarisasi WHERE id_polarisasi = '$id_polarisasi_asli'");
-						while($tampil3 = $query3->fetch_array())
+						$queryInput1 = "INSERT INTO mst_polarisasi VALUES ('', '$nama_polarisasi', '$id_periode', '$rumus', '$tanggal')";
+						$input1 = $this->connection->prepare($queryInput1);
+						if($input1->execute())
 						{
-							$bmi = $tampil3['bmi'];
-							$bma = $tampil3['bma'];
-							$poin = $tampil3['poin'];
+							$query2 = $this->connection->query("SELECT * FROM mst_polarisasi WHERE nama_polarisasi = '$nama_polarisasi' AND id_periode = '$id_periode'");
+							while($tampil2 = $query2->fetch_array())
+								$id_polarisasi_baru = $tampil2['id_polarisasi'];
+							$query3 = $this->connection->query("SELECT * FROM aturan_polarisasi WHERE id_polarisasi = '$id_polarisasi_asli'");
+							while($tampil3 = $query3->fetch_array())
+							{
+								$bmi = $tampil3['bmi'];
+								$bma = $tampil3['bma'];
+								$poin = $tampil3['poin'];
 
-							$queryInput2 = "INSERT INTO aturan_polarisasi VALUES ('', '$id_polarisasi_baru', '$bmi', '$bma', '$poin', '$tanggal')";
-							$input2 = $this->connection->prepare($queryInput2);
-							if($input2->execute())
-								$k[] = 1;
-							else 
-								$k[] = 0;
+								$queryInput2 = "INSERT INTO aturan_polarisasi VALUES ('', '$id_polarisasi_baru', '$bmi', '$bma', '$poin', '$tanggal')";
+								$input2 = $this->connection->prepare($queryInput2);
+								if($input2->execute())
+									$k[] = 1;
+								else 
+									$k[] = 0;
+							}
 						}
+					}
+					else {
+						$k[] = 1;
 					}
 				}
 
