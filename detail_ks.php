@@ -129,6 +129,7 @@
                                             <li><a href="data_kompetensi.php">Kompetensi</a></li>
                                             <li><a href="data_peringkat.php">Peringkat Kompetensi</a></li>
                                             <li><a href="persentase_nilai.php">Persentase Nilai</a></li>
+                                            <li><a href="kriteria_nilai.php">Kriteria Nilai</a></li>
                                         </ul>
                                     </li>
                             <?php
