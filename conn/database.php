@@ -32,8 +32,11 @@
 			return $hasil;
 		}
 		
-		function tampil_unit(){
-			$query = $this->connection->query('SELECT * FROM mst_unit');
+		function tampil_unit($id_unit = null){
+			if($id_unit == null)
+				$query = $this->connection->query('SELECT * FROM mst_unit');
+			else 
+				$query = $this->connection->query("SELECT * FROM mst_unit WHERE id_unit = '$id_unit'");
 			while($tampil = $query->fetch_array())
 				$hasil[] = $tampil;
 			return $hasil;
@@ -398,6 +401,18 @@
 
 			while($tampil = $query->fetch_array())
 				$hasil[] = $tampil;
+			return $hasil;
+		}
+
+		function tampil_aturan_matriks($id_matriks = null)
+		{
+			if($id_matriks == null)
+				$query1 = $this->connection->query("SELECT * FROM aturan_matriks");
+			else 
+				$query1 = $this->connection->query("SELECT * FROM aturan_matriks WHERE id_matriks = '$id_matriks'");
+			
+			while($tampil1 = $query1->fetch_array())
+				$hasil[] = $tampil1;
 			return $hasil;
 		}
 		//Akhiran Fungsi Tampil
@@ -778,6 +793,17 @@
 				return 3;
 			}
 		}
+
+		function input_aturan_matriks($id_jabatan = [], $id_unit = null){
+			$arrJabatan = serialize($id_jabatan);
+			$tanggal = date('Y-m-d');
+			$query = "INSERT INTO aturan_matriks VALUES ('', '$arrJabatan', '$id_unit', '$tanggal')";
+			$input = $this->connection->prepare($query);
+			if($input->execute())
+				return 1;
+			else 
+				return 2;
+		}
 		//Akhiran Fungsi Input
 
 		//Fungsi Edit
@@ -1070,6 +1096,17 @@
 			else 
 				return 2;
 		}
+
+		function edit_matriks($id_matriks = null, $id_jabatan = [], $id_unit = null)
+		{
+			$arrJabatan = serialize($id_jabatan);
+			$query = "UPDATE aturan_matriks SET id_jabatan = '$arrJabatan', id_unit = '$id_unit' WHERE id_matriks = '$id_matriks'";
+			$edit = $this->connection->prepare($query);
+			if($edit->execute())
+				return 1;
+			else 
+				return 2;
+		}
 		//Akhiran Fungsi Edit
 
 		//Fungsi Hapus
@@ -1318,6 +1355,16 @@
 		function hapus_persentase($id_persentase = null)
 		{
 			$query = "DELETE FROM persentase_nilai WHERE id_persentase = '$id_persentase'";
+			$hapus = $this->connection->prepare($query);
+			if($hapus->execute())
+				return 1;
+			else 
+				return 2;
+		}
+
+		function hapus_matriks($id_matriks = null)
+		{
+			$query = "DELETE FROM aturan_matriks WHERE id_matriks = '$id_matriks'";
 			$hapus = $this->connection->prepare($query);
 			if($hapus->execute())
 				return 1;

@@ -21,8 +21,7 @@
         <link rel="stylesheet" type="text/css" href="assets/css/bootstrap.min.css">
         <link rel="stylesheet" type="text/css" href="assets/css/font-awesome.min.css">
         <link rel="stylesheet" type="text/css" href="assets/css/line-awesome.min.css">
-		<!-- <link rel="stylesheet" type="text/css" href="assets/css/dataTables.bootstrap.min.css"> -->
-        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.18/datatables.min.css"/>
+		<link rel="stylesheet" type="text/css" href="assets/css/dataTables.bootstrap.min.css">
 		<link rel="stylesheet" type="text/css" href="assets/css/select2.min.css">
 		<link rel="stylesheet" type="text/css" href="assets/css/bootstrap-datetimepicker.min.css">
         <link rel="stylesheet" type="text/css" href="assets/css/style.css">
@@ -49,8 +48,8 @@
 						<a href="" class="dropdown-toggle user-link" data-toggle="dropdown" title="Admin">
 							<!-- <span class="user-img"><img class="img-circle" src="assets/img/user.jpg" width="40" alt="Admin"> -->
 							<span>
-                                <?php echo $nama; ?>
-                            </span>
+								<?php echo $nama; ?>
+							</span>
 							<i class="caret"></i>
 						</a>
 						<ul class="dropdown-menu">
@@ -65,12 +64,6 @@
 					</li>
 				</ul>
             </div>
-            <?php
-                if(isset($_POST['tombolHapus'])){
-                    $id_aturan_hapus = $_POST['id_aturan_hapus'];
-                    $eksekusi = $db->hapus_aturan($id_aturan_hapus);
-                }
-            ?>
             <div class="sidebar" id="sidebar">
                 <div class="sidebar-inner slimscroll">
 					<div id="sidebar-menu" class="sidebar-menu">
@@ -125,10 +118,10 @@
                                 if($m2 == 1 || $_SESSION['aksus'] == TRUE)
                                 {
                             ?>
-                                    <li class="active"> 
+                                    <li class=""> 
                                         <a href="aturan_penilai.php"><i class="la la-key"></i> <span>Aturan Penilai</span></a>
                                     </li>
-                                    <li class=""> 
+                                    <li class="active"> 
                                         <a href="aturan_matriks.php"><i class="la la-th"></i> <span>Perhitungan Matriks</span></a>
                                     </li>
                             <?php
@@ -189,146 +182,142 @@
 					</div>
                 </div>
             </div>
+
+            <?php
+                if(isset($_POST['tombolSimpan']))
+                {
+                    $id_jabatan = $_POST['id_jabatan'];
+                    $id_unit = $_POST['id_unit'];
+
+                    $eksekusi = $db->input_aturan_matriks($id_jabatan, $id_unit);
+                    if($eksekusi == 1)
+                    {
+                        echo '
+                            <script>
+                                alert("Data Berhasil Disimpan");
+                                window.location = "aturan_matriks.php";
+                            </script>
+                        ';
+                    }
+                    else{
+                        echo '
+                            <script>
+                                alert("Data Gagal Disimpan");
+                                window.location = "aturan_matriks.php";
+                            </script>
+                        ';
+                    }
+                }
+            ?>
+
             <div class="page-wrapper">
                 <div class="content container-fluid">
 					<div class="row">
 						<div class="col-xs-8">
-							<h4 class="page-title">Aturan Penilai</h4>
+							<h4 class="page-title">Input Perhitungan Matriks</h4>
 						</div>
 						<div class="col-xs-4 text-right m-b-30">
-							<a href="input_aturan_penilai.php" class="btn btn-primary rounded pull-right"><i class="fa fa-plus"></i> Tambah Aturan Penilai</a>
+							<!-- <a href="#" class="btn btn-primary rounded pull-right" data-toggle="modal" data-target="#add_ticket"><i class="fa fa-plus"></i> Tambah Data KPI Individu</a> -->
 						</div>
 					</div>
-					<div class="row">
-						<div class="col-md-12">
-							<div class="table-responsive">
-								<table class="table table-striped custom-table m-b-0 display" id="tabel">
-									<thead>
-										<tr>
-											<th>Jabatan Penilai</th>
-                                            <th>Unit Penilai</th>
-                                            <th>Jabatan Dinilai</th>
-                                            <th>Unit Dinilai</th>
-											<th class="text-right">Actions</th>
-										</tr>
-									</thead>
-									<tbody>
-                                    <?php
-                                        $no = 0;
-                                        error_reporting(0);
-                                        foreach($db->tampil_aturan(1, null, null) as $data)
-                                        {
-                                            $no = $no+1;
-                                    ?>
-                                            <tr>
-                                                <td>
+                    <!-- Form Kedua -->
+                    <div class="row">
+                        <div class="col-md-10 col-md-offset-1">
+                            <form action="#" method="POST" id="penilai_input">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label>Jabatan Matriks</label>
+                                            <select name="id_jabatan[]" id="id_jabatan" class="form-control cek" multiple="multiple">
+                                                <option value="">Silahkan Pilih Jabatan</option>
                                                 <?php
                                                     foreach($db->tampil_jabatan() as $tampil)
                                                     {
-                                                        if($data['id_jabatan_penilai'] == $tampil['id_jabatan'])
-                                                            echo $tampil['nama_jabatan'];
+                                                ?>
+                                                        <option value="<?php echo $tampil['id_jabatan']?>"><?php echo $tampil['nama_jabatan']; ?></option>
+                                                <?php
                                                     }
                                                 ?>
-                                                </td>
-                                                <td>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label>Departemen/Unit Matriks</label>
+                                            <select name="id_unit" id="id_unit" class="form-control cek">
+                                                <option value="">Silahkan Pilih Unit</option>
                                                 <?php
                                                     foreach($db->tampil_unit() as $tampil)
                                                     {
-                                                        if($data['id_unit_penilai'] == $tampil['id_unit'])
-                                                            echo $tampil['nama_unit'];
-                                                    }
                                                 ?>
-                                                </td>
-                                                <td>
+                                                        <option value="<?php echo $tampil['id_unit']?>"><?php echo $tampil['nama_unit']; ?></option>
                                                 <?php
-                                                    $dinilai = [];
-                                                    $kd = [];
-                                                    foreach($db->tampil_aturan(2, $data['id_jabatan_penilai'], $data['id_unit_penilai']) as $tampil)
-                                                    {
-                                                        $dinilai[] = $tampil['id_jabatan_dinilai'];
-                                                    }
-                                                    foreach($db->tampil_jabatan() as $tampil)
-                                                    {
-                                                        if(in_array($tampil['id_jabatan'], $dinilai))
-                                                        {
-                                                           $kd[] = $tampil['nama_jabatan'];
-                                                        }
-                                                    }
-                                                    echo implode(', ', $kd);
-                                                ?>
-                                                </td>
-                                                <td>
-                                                <?php
-                                                    foreach($db->tampil_unit() as $tampil)
-                                                    {
-                                                        if($data['id_unit_dinilai'] == $tampil['id_unit'])
-                                                            echo $tampil['nama_unit'];
                                                     }
                                                 ?>
-                                                </td>
-                                                <td class="text-right">
-                                                    <div class="dropdown">
-                                                        <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
-                                                        <ul class="dropdown-menu pull-right">
-                                                            <li><a href="edit_aturan_penilai.php?idjp=<?php echo $data['id_jabatan_penilai']."&&idup=".$data['id_unit_penilai']; ?>" title="Edit"><i class="fa fa-pencil m-r-5"></i> Edit</a></li>
-                                                            <li><a href="#" title="Delete" data-toggle="modal" data-target="#delete_ticket<?php echo $data['id_aturan']; ?>"><i class="fa fa-trash-o m-r-5"></i> Delete</a></li>
-                                                        </ul>
-                                                    </div>
-                                                </td>
-                                            </tr>
-
-                                            <!-- Modal Hapus -->
-                                            <div id="delete_ticket<?php echo $data['id_aturan']; ?>" class="modal custom-modal fade" role="dialog">
-                                                <div class="modal-dialog">
-                                                    <div class="modal-content modal-md">
-                                                        <div class="modal-header">
-                                                            <h4 class="modal-title">Hapus Aturan</h4>
-                                                        </div>
-                                                        <form method="POST" action="#">
-                                                            <div class="modal-body card-box">
-                                                                <p>Yakin Untuk Menghapus Aturan ?</p>
-                                                                <input type="hidden" name="id_aturan_hapus" value="<?php echo $data['id_aturan']; ?>">
-                                                                <div class="m-t-20"> <a href="#" class="btn btn-default" data-dismiss="modal">Close</a>
-                                                                    <button type="submit" name="tombolHapus" class="btn btn-danger">Delete</button>
-                                                                </div>
-                                                            </div>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <!-- Akhiran Modal Hapus -->
-                                    <?php
-                                        }
-                                    ?>
-									</tbody>
-								</table>
-							</div>
-						</div>
-					</div>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="m-t-20 text-center">
+                                    <button class="btn btn-primary" type="submit" name="tombolSimpan">Simpan Data Perhitungan Matriks</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <!-- Akhiran Form Kedua -->
                 </div>
             </div>
         </div>
 		<div class="sidebar-overlay" data-reff="#sidebar"></div>
         <script type="text/javascript" src="assets/js/jquery-3.2.1.min.js"></script>
         <script type="text/javascript" src="assets/js/bootstrap.min.js"></script>
-		<!-- <script type="text/javascript" src="assets/js/jquery.dataTables.min.js"></script>
-		<script type="text/javascript" src="assets/js/dataTables.bootstrap.min.js"></script> -->
-        <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
-        <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.18/datatables.min.js"></script>
+		<script type="text/javascript" src="assets/js/jquery.dataTables.min.js"></script>
+		<script type="text/javascript" src="assets/js/dataTables.bootstrap.min.js"></script>
 		<script type="text/javascript" src="assets/js/jquery.slimscroll.js"></script>
 		<script type="text/javascript" src="assets/js/select2.min.js"></script>
 		<script type="text/javascript" src="assets/js/moment.min.js"></script>
 		<script type="text/javascript" src="assets/js/bootstrap-datetimepicker.min.js"></script>
 		<script type="text/javascript" src="assets/js/app.js"></script>
 
-        <script type="text/javascript">
-            $(document).ready(function(){
-                $('#tabel').DataTable({
-                    ordering : false,
-                    searching : true
+		<script>
+            $(document).ready(function () {
+                $('#id_jabatan').select2({
+                    placeholder: "Please Select"
+                });
+                $('#id_unit').select2({
+                    placeholder: "Please Select"
+                });
+
+                $("#penilai_input").on("submit", function(e){
+                    var inputan = $("#penilai_input").find(".cek");
+                    var v = '';
+                    var k = [];
+                    var p = 0;
+                    $.each(inputan, function(i){
+                        v = $(this).val();
+                        if(v == '')
+                        {
+                            k[p] = 1;
+                        }
+                        else{
+                            k[p] = 0;
+                        }
+                        v = '';
+                        p = p+1;
+                    });
+                    
+                    for(var c=0; c < p; c++)
+                    {
+                        if(k[c] == 1)
+                        {
+                            e.preventDefault();
+                            alert('Masih Terdapat yg Kosong');
+                            break;
+                        }
+                    }
                 });
             });
-        </script> 
+        </script>
     </body>
 </html>
 <?php

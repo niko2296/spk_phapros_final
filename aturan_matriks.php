@@ -67,8 +67,25 @@
             </div>
             <?php
                 if(isset($_POST['tombolHapus'])){
-                    $id_aturan_hapus = $_POST['id_aturan_hapus'];
-                    $eksekusi = $db->hapus_aturan($id_aturan_hapus);
+                    $id_matriks_hapus = $_POST['id_matriks_hapus'];
+                    $eksekusi = $db->hapus_matriks($id_matriks_hapus);
+                    if($eksekusi == 1)
+                    {
+                        echo '
+                            <script>
+                                alert("Data Berhasil Dihapus");
+                                window.location = "aturan_matriks.php";
+                            </script>
+                        ';
+                    }
+                    else {
+                        echo '
+                            <script>
+                                alert("Data Gagal Dihapus");
+                                window.location = "aturan_matriks.php";
+                            </script>
+                        ';
+                    }
                 }
             ?>
             <div class="sidebar" id="sidebar">
@@ -125,10 +142,10 @@
                                 if($m2 == 1 || $_SESSION['aksus'] == TRUE)
                                 {
                             ?>
-                                    <li class="active"> 
+                                    <li class=""> 
                                         <a href="aturan_penilai.php"><i class="la la-key"></i> <span>Aturan Penilai</span></a>
                                     </li>
-                                    <li class=""> 
+                                    <li class="active"> 
                                         <a href="aturan_matriks.php"><i class="la la-th"></i> <span>Perhitungan Matriks</span></a>
                                     </li>
                             <?php
@@ -193,10 +210,10 @@
                 <div class="content container-fluid">
 					<div class="row">
 						<div class="col-xs-8">
-							<h4 class="page-title">Aturan Penilai</h4>
+							<h4 class="page-title">Perhitungan Matriks</h4>
 						</div>
 						<div class="col-xs-4 text-right m-b-30">
-							<a href="input_aturan_penilai.php" class="btn btn-primary rounded pull-right"><i class="fa fa-plus"></i> Tambah Aturan Penilai</a>
+							<a href="input_aturan_matriks.php" class="btn btn-primary rounded pull-right"><i class="fa fa-plus"></i> Tambah Perhitungan Matriks</a>
 						</div>
 					</div>
 					<div class="row">
@@ -205,80 +222,45 @@
 								<table class="table table-striped custom-table m-b-0 display" id="tabel">
 									<thead>
 										<tr>
-											<th>Jabatan Penilai</th>
-                                            <th>Unit Penilai</th>
-                                            <th>Jabatan Dinilai</th>
-                                            <th>Unit Dinilai</th>
+											<th>Jabatan Matriks</th>
+                                            <th>Departemen/Unit Matriks</th>
 											<th class="text-right">Actions</th>
 										</tr>
 									</thead>
 									<tbody>
                                     <?php
-                                        $no = 0;
                                         error_reporting(0);
-                                        foreach($db->tampil_aturan(1, null, null) as $data)
+                                        foreach($db->tampil_aturan_matriks() as $data)
                                         {
-                                            $no = $no+1;
+                                            $arrJabatan = $data['id_jabatan'];
+                                            $jabatan = [];
+                                            foreach(unserialize($arrJabatan) as $key => $value)
+                                            {
+                                                foreach($db->tampil_jabatan($value) as $tJ)
+                                                    $jabatan[] = $tJ['nama_jabatan'];
+                                            }
                                     ?>
                                             <tr>
+                                                <td><?php echo implode(', ', $jabatan); ?></td>
                                                 <td>
                                                 <?php
-                                                    foreach($db->tampil_jabatan() as $tampil)
-                                                    {
-                                                        if($data['id_jabatan_penilai'] == $tampil['id_jabatan'])
-                                                            echo $tampil['nama_jabatan'];
-                                                    }
-                                                ?>
-                                                </td>
-                                                <td>
-                                                <?php
-                                                    foreach($db->tampil_unit() as $tampil)
-                                                    {
-                                                        if($data['id_unit_penilai'] == $tampil['id_unit'])
+                                                    foreach($db->tampil_unit($data['id_unit_penilai']) as $tampil)
                                                             echo $tampil['nama_unit'];
-                                                    }
-                                                ?>
-                                                </td>
-                                                <td>
-                                                <?php
-                                                    $dinilai = [];
-                                                    $kd = [];
-                                                    foreach($db->tampil_aturan(2, $data['id_jabatan_penilai'], $data['id_unit_penilai']) as $tampil)
-                                                    {
-                                                        $dinilai[] = $tampil['id_jabatan_dinilai'];
-                                                    }
-                                                    foreach($db->tampil_jabatan() as $tampil)
-                                                    {
-                                                        if(in_array($tampil['id_jabatan'], $dinilai))
-                                                        {
-                                                           $kd[] = $tampil['nama_jabatan'];
-                                                        }
-                                                    }
-                                                    echo implode(', ', $kd);
-                                                ?>
-                                                </td>
-                                                <td>
-                                                <?php
-                                                    foreach($db->tampil_unit() as $tampil)
-                                                    {
-                                                        if($data['id_unit_dinilai'] == $tampil['id_unit'])
-                                                            echo $tampil['nama_unit'];
-                                                    }
                                                 ?>
                                                 </td>
                                                 <td class="text-right">
                                                     <div class="dropdown">
                                                         <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
                                                         <ul class="dropdown-menu pull-right">
-                                                            <li><a href="edit_aturan_penilai.php?idjp=<?php echo $data['id_jabatan_penilai']."&&idup=".$data['id_unit_penilai']; ?>" title="Edit"><i class="fa fa-pencil m-r-5"></i> Edit</a></li>
-                                                            <li><a href="#" title="Delete" data-toggle="modal" data-target="#delete_ticket<?php echo $data['id_aturan']; ?>"><i class="fa fa-trash-o m-r-5"></i> Delete</a></li>
+                                                            <li><a href="edit_aturan_matriks.php?id_matriks=<?php echo $data['id_matriks']; ?>" title="Edit"><i class="fa fa-pencil m-r-5"></i> Edit</a></li>
+                                                            <li><a href="#" title="Delete" data-toggle="modal" data-target="#delete_ticket<?php echo $data['id_matriks']; ?>"><i class="fa fa-trash-o m-r-5"></i> Delete</a></li>
                                                         </ul>
                                                     </div>
                                                 </td>
                                             </tr>
 
                                             <!-- Modal Hapus -->
-                                            <div id="delete_ticket<?php echo $data['id_aturan']; ?>" class="modal custom-modal fade" role="dialog">
+                                            <div id="delete_ticket<?php echo $data['id_matriks']; ?>" class="modal custom-modal fade" role="dialog">
                                                 <div class="modal-dialog">
                                                     <div class="modal-content modal-md">
                                                         <div class="modal-header">
@@ -286,8 +268,8 @@
                                                         </div>
                                                         <form method="POST" action="#">
                                                             <div class="modal-body card-box">
-                                                                <p>Yakin Untuk Menghapus Aturan ?</p>
-                                                                <input type="hidden" name="id_aturan_hapus" value="<?php echo $data['id_aturan']; ?>">
+                                                                <p>Yakin Untuk Menghapus Perhitungan Matriks ?</p>
+                                                                <input type="hidden" name="id_matriks_hapus" value="<?php echo $data['id_matriks']; ?>">
                                                                 <div class="m-t-20"> <a href="#" class="btn btn-default" data-dismiss="modal">Close</a>
                                                                     <button type="submit" name="tombolHapus" class="btn btn-danger">Delete</button>
                                                                 </div>
