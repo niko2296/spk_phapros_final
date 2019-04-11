@@ -196,6 +196,9 @@
                                     <li><a href="kompetensi_individu.php">Data Kompetensi Individu</a></li>
 									<li><a href="kompetensi_sub.php">Data Kompetensi Sub Ordinat</a></li>
                                 </ul>
+                            </li>
+                            <li class=""> 
+								<a href="hasil_akhir.php"><i class="la la-edit"></i> <span>Hasil Akhir</span></a>
 							</li>
 						</ul>
 					</div>
