@@ -188,7 +188,7 @@
                 <div class="content container-fluid">
 					<div class="row">
 						<div class="col-xs-12">
-							<h4 class="page-title">Detail Satuan (<b>Periode 
+							<h4 class="page-title">Detail Kriteria Nilai (<b>Periode 
                                 <?php
                                     foreach($db->tampil_periode($_GET['id_periode']) as $dataP)
                                     {
@@ -205,34 +205,89 @@
 
                         <?php
                             if(isset($_POST['tombolEdit'])){
-                                $eksekusi = $db->edit_satuan($_POST['id_satuan_edit'], $_POST['nama_satuan_edit'], $_POST['jenis_polarisasi_edit'], $_POST['periode_edit'], $_GET['id_periode']);
+                                $eksekusi = $db->edit_kriteria($_POST['id_kriteria_edit'], $_POST['bmin_edit'], $_POST['bmax_edit'], $_POST['kriteria_nilai_edit'], $_POST['keterangan_edit']);
                                 if($eksekusi == 2 || $eksekusi == 3)
                                 {
                                     echo '<div class="alert alert-danger">Data Gagal Disimpan</div>';
+                                }
+                                else if($eksekusi == 1)
+                                {
+                                    echo '
+                                        <script>
+                                            alert("Data Berhasil Disimpan");
+                                            window.location = "detail_kriteria.php?id_periode='.$_GET['id_periode'].'";
+                                        </script>
+                                    ';
                                 }
                             }
                             else if(isset($_POST['tombolHapus']))
                             {
-                                $eksekusi = $db->hapus_satuan($_POST['id_satuan_hapus'], $_GET['id_periode']);
+                                $eksekusi = $db->hapus_kriteria($_POST['id_kriteria_hapus']);
                                 if($eksekusi == 2 || $eksekusi == 3)
                                 {
                                     echo '<div class="alert alert-danger">Data Gagal Disimpan</div>';
+                                }
+                                else if($eksekusi == 1)
+                                {
+                                    echo '
+                                        <script>
+                                            alert("Data Berhasil Dihapus");
+                                            window.location = "detail_kriteria.php?id_periode='.$_GET['id_periode'].'";
+                                        </script>
+                                    ';
                                 }
                             }
                             else if(isset($_POST['tombolCopySatuan']))
                             {
-                                $eksekusi = $db->copy_satuan(1, $_POST['id_copy'], $_POST['periode']);
+                                $eksekusi = $db->copy_kriteria(1, $_POST['id_copy'], $_POST['periode']);
                                 if($eksekusi == 2 || $eksekusi == 3)
                                 {
-                                    echo '<div class="alert alert-danger">Data Gagal Disimpan</div>';
+                                    echo '
+                                        <script>
+                                            alert("Data Gagal Di-copy");
+                                            window.location = "kriteria_nilai.php";
+                                        </script>
+                                    ';
+                                }
+                                else if($eksekusi == 1)
+                                {
+                                    echo '
+                                        <script>
+                                            alert("Data Berhasil Di-copy");
+                                            window.location = "kriteria_nilai.php";
+                                        </script>
+                                    ';
                                 }
                             }
                             else if(isset($_POST['tombolCopyAll']))
                             {
-                                $eksekusi = $db->copy_satuan(2, $_POST['id_copy'], $_POST['periode']);
-                                if($eksekusi == 2 || $eksekusi == 3)
+                                $eksekusi = $db->copy_kriteria(2, $_POST['id_copy'], $_POST['periode']);
+                                if($eksekusi == 2)
                                 {
-                                    echo '<div class="alert alert-danger">Data Gagal Disimpan</div>';
+                                    echo '
+                                        <script>
+                                            alert("Terdapat Data yang Gagal Di-copy");
+                                            window.location = "kriteria_nilai.php";
+                                        </script>
+                                    ';
+                                }
+                                else if($eksekusi == 1)
+                                {
+                                    echo '
+                                        <script>
+                                            alert("Data Berhasil Di-copy");
+                                            window.location = "kriteria_nilai.php";
+                                        </script>
+                                    ';
+                                }
+                                else if($eksekusi == 3)
+                                {
+                                    echo '
+                                        <script>
+                                            alert("Data Kriteria Nilai Sudah Sama Dengan Tahun Tujuan");
+                                            window.location = "kriteria_nilai.php";
+                                        </script>
+                                    ';
                                 }
                             }
                         ?>
@@ -242,8 +297,10 @@
                                 <table class="table table-striped custom-table m-b-0 display" id="tabel">
 									<thead>
 										<tr>
-											<th>Nama Satuan</th>
-											<th>Jenis Polarisasi</th>
+											<th>Batas Minimum</th>
+											<th>Batas Maksimum</th>
+											<th>Kriteria Nilai</th>
+											<th>Keterangan</th>
 											<th class="text-right">Actions</th>
 										</tr>
 									</thead>
@@ -251,37 +308,26 @@
                                     <?php
                                         $no = 0;
                                         error_reporting(0);
-                                        foreach($db->tampil_satuan($_GET['id_periode']) as $data)
+                                        foreach($db->tampil_kriteria($_GET['id_periode']) as $data)
                                         {
                                             $no = $no+1;
                                     ?>
                                             <tr>
-                                                <td><?php echo $data['nama_satuan']; ?></td>
-                                                <td>
-                                                    <?php
-                                                        foreach(unserialize($data['jenis_polarisasi']) as $key => $value){
-                                                            $cekData[$data['id_satuan']][] = $value;
-                                                            foreach($db->tampil_polarisasi() as $tampil)
-                                                            {
-                                                                if($value == $tampil['id_polarisasi'])
-                                                                    $ket[$data['id_satuan']][] = $tampil['nama_polarisasi'];
-                                                            }
-                                                        }
-
-                                                        echo implode(', ', $ket[$data['id_satuan']]);
-                                                    ?>
-                                                </td>
+                                                <td><?php echo $data['batas_minimum']; ?></td>
+                                                <td><?php echo $data['batas_maksimum']; ?></td>
+                                                <td><?php echo $data['kriteria_nilai']; ?></td>
+                                                <td><?php echo $data['keterangan']; ?></td>
                                                 <td class="text-right">
                                                     <div class="dropdown">
                                                         <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
                                                         <ul class="dropdown-menu pull-right">
-                                                            <li><a href="#" title="Edit" data-toggle="modal" data-target="#copy<?php echo $data['id_satuan']; ?>"><i class="fa fa-copy m-r-5"></i> Copy</a></li>
+                                                            <li><a href="#" title="Edit" data-toggle="modal" data-target="#copy<?php echo $data['id_kriteria']; ?>"><i class="fa fa-copy m-r-5"></i> Copy</a></li>
                                                             <?php
                                                                 if($sP == 1)
                                                                 {
                                                             ?>
-                                                                    <li><a href="#" title="Edit" data-toggle="modal" data-target="#edit_ticket<?php echo $data['id_satuan']; ?>"><i class="fa fa-pencil m-r-5"></i> Edit</a></li>
-                                                                    <li><a href="#" title="Delete" data-toggle="modal" data-target="#delete_ticket<?php echo $data['id_satuan']; ?>"><i class="fa fa-trash-o m-r-5"></i> Delete</a></li>
+                                                                    <li><a href="#" title="Edit" data-toggle="modal" data-target="#edit_ticket<?php echo $data['id_kriteria']; ?>"><i class="fa fa-pencil m-r-5"></i> Edit</a></li>
+                                                                    <li><a href="#" title="Delete" data-toggle="modal" data-target="#delete_ticket<?php echo $data['id_kriteria']; ?>"><i class="fa fa-trash-o m-r-5"></i> Delete</a></li>
                                                             <?php
                                                                 }
                                                             ?>
@@ -291,76 +337,46 @@
                                             </tr>
 
                                             <!-- Modal Edit -->
-                                            <div id="edit_ticket<?php echo $data['id_satuan']; ?>" class="modal custom-modal fade" role="dialog">
+                                            <div id="edit_ticket<?php echo $data['id_kriteria']; ?>" class="modal custom-modal fade" role="dialog">
                                                 <div class="modal-dialog">
                                                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                                                     <div class="modal-content modal-lg">
                                                         <div class="modal-header">
-                                                            <h4 class="modal-title">Edit Data Satuan</h4>
+                                                            <h4 class="modal-title">Edit Data Kriteria Nilai</h4>
                                                         </div>
                                                         <div class="modal-body">
                                                             <form method="POST" action="#">
                                                                 <div class="row">
                                                                     <div class="col-md-6">
-                                                                        <div class="row">
-                                                                            <div class="col-md-12">
-                                                                                <div class="form-group">
-                                                                                    <label>Nama Satuan</label>
-                                                                                    <input class="form-control" type="hidden" name="id_satuan_edit" value="<?php echo $data['id_satuan']; ?>">
-                                                                                    <input class="form-control" type="text" name="nama_satuan_edit" value="<?php echo $data['nama_satuan']; ?>">
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="row">
-                                                                            <div class="col-md-12">
-                                                                                <div class="form-group">
-                                                                                    <label>Periode</label>
-                                                                                    <select name="periode_edit" class="form-control">
-                                                                                        <?php
-                                                                                            foreach($db->tampil_periode(null) as $tampilP)
-                                                                                            {
-                                                                                                $s = '';
-                                                                                                if($tampilP['status'] == 1)
-                                                                                                {
-                                                                                                    if($tampilP['id_periode'] == $data['id_periode'])
-                                                                                                        $s = 'selected="selected"';
-                                                                                                    echo '<option value="'.$tampilP['id_periode'].'" '.$s.'>'.$tampilP['tahun'].'</option>';
-                                                                                                }
-                                                                                            }        
-                                                                                        ?>           
-                                                                                    </select>
-                                                                                </div>
-                                                                            </div>
+                                                                        <div class="form-group">
+                                                                            <label>Batas Minimum</label>
+                                                                            <input class="form-control" type="hidden" name="id_kriteria_edit" value="<?php echo $data['id_kriteria']; ?>">
+                                                                            <input class="form-control" type="text" name="bmin_edit" value="<?php echo $data['batas_minimum']; ?>">
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-6">
                                                                         <div class="form-group">
-                                                                            <div class="row">
-                                                                                <div class="col-md-12">
-                                                                                    <label>Aktif Pada Polarisasi</label>
-                                                                                </div>
-                                                                                <div class="col-md-12">
-                                                                                    <?php 
-                                                                                        $c = '';
-                                                                                        foreach($db->tampil_polarisasi() as $tampil)
-                                                                                        {
-                                                                                            if(in_array($tampil['id_polarisasi'], $cekData[$data['id_satuan']]))
-                                                                                                $c = 'checked';
-                                                                                    ?>
-                                                                                            <label class="btn btn-default">
-                                                                                                <input class="form-control" type="checkbox" name="jenis_polarisasi_edit[]" value="<?php echo $tampil['id_polarisasi']; ?>" <?php echo $c; ?>> <?php echo $tampil['nama_polarisasi']; ?>
-                                                                                            </label>
-                                                                                    <?php
-                                                                                            $c = '';
-                                                                                        }
-                                                                                    ?>
-                                                                                </div>	
-                                                                            </div>
+                                                                            <label>Batas Maksimum</label>
+                                                                            <input class="form-control" type="text" name="bmax_edit" value="<?php echo $data['batas_maksimum']; ?>">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group">
+                                                                            <label>Kriteria Nilai</label>
+                                                                            <input class="form-control" type="text" name="kriteria_nilai_edit" value="<?php echo $data['kriteria_nilai']; ?>">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group">
+                                                                            <label>Keterangan</label>
+                                                                            <textarea class="form-control" name="keterangan_edit" cols="30" rows="0"><?php echo $data['keterangan']; ?></textarea>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                                 <div class="m-t-20 text-center">
-                                                                    <button class="btn btn-primary" type="submit" name="tombolEdit">Edit Data Satuan</button>
+                                                                    <button class="btn btn-primary" type="submit" name="tombolEdit">Edit Data Kriteria Nilai</button>
                                                                 </div>
                                                             </form>
                                                         </div>
@@ -370,16 +386,16 @@
                                             <!-- Akhiran Modal Edit -->
 
                                             <!-- Modal Hapus -->
-                                            <div id="delete_ticket<?php echo $data['id_satuan']; ?>" class="modal custom-modal fade" role="dialog">
+                                            <div id="delete_ticket<?php echo $data['id_kriteria']; ?>" class="modal custom-modal fade" role="dialog">
                                                 <div class="modal-dialog">
                                                     <div class="modal-content modal-md">
                                                         <div class="modal-header">
-                                                            <h4 class="modal-title">Hapus Satuan</h4>
+                                                            <h4 class="modal-title">Hapus Data Kriteria Nilai</h4>
                                                         </div>
                                                         <form method="POST" action="#">
                                                             <div class="modal-body card-box">
-                                                                <p>Yakin Untuk Menghapus Satuan <?php echo $data['nama_satuan']; ?> ?</p>
-                                                                <input type="hidden" name="id_satuan_hapus" value="<?php echo $data['id_satuan']; ?>">
+                                                                <p>Yakin Untuk Menghapus Kriteria Nilai <b><?php echo $data['kriteria_nilai']; ?></b> ?</p>
+                                                                <input type="hidden" name="id_kriteria_hapus" value="<?php echo $data['id_kriteria']; ?>">
                                                                 <div class="m-t-20"> <a href="#" class="btn btn-default" data-dismiss="modal">Close</a>
                                                                     <button type="submit" name="tombolHapus" class="btn btn-danger">Delete</button>
                                                                 </div>
@@ -391,7 +407,7 @@
                                             <!-- Akhiran Modal Hapus -->
 
                                             <!-- Modal Copy -->
-                                            <div id="copy<?php echo $data['id_satuan']; ?>" class="modal custom-modal fade" role="dialog">
+                                            <div id="copy<?php echo $data['id_kriteria']; ?>" class="modal custom-modal fade" role="dialog">
                                                 <div class="modal-dialog">
                                                     <div class="modal-content modal-md">
                                                         <div class="modal-header">
@@ -399,9 +415,8 @@
                                                         </div>
                                                         <form method="POST" action="#">
                                                             <div class="modal-body card-box">
-                                                                <p class="label label-danger">Otomatis Meng-<i>copy</i> Beserta Polarisasi dan Aturan Polarisasinya</p>
-                                                                <p>Yakin Untuk Mengcopy Satuan <?php echo $data['nama_satuan']." dari Periode ".$tP; ?> ?</p>
-                                                                <input type="hidden" name="id_copy" value="<?php echo $data['id_satuan']; ?>">
+                                                                <p>Yakin Untuk Mengcopy Kriteria Nilai <b><?php echo $data['kriteria_nilai']."</b> dari Periode ".$tP; ?> ?</p>
+                                                                <input type="hidden" name="id_copy" value="<?php echo $data['id_kriteria']; ?>">
                                                                 <select name="periode" class="form-control">
                                                                     <option value="">Silahkan Pilih Periode</option>
                                                                     <?php
@@ -431,7 +446,7 @@
 							</div>
 						</div>
                         <div class="col-md-12" align="right">
-                            <a href="data_satuan.php" title="Kembali">
+                            <a href="kriteria_nilai.php" title="Kembali">
                                 <button class="btn btn-primary" type="submit" name="">Kembali</button>
                             </a>
                             <a href="#" title="CopyAll" data-toggle="modal" data-target="#copyAll">
@@ -444,12 +459,11 @@
                             <div class="modal-dialog">
                                 <div class="modal-content modal-md">
                                     <div class="modal-header">
-                                        <h4 class="modal-title">Copy Polarisasi</h4>
+                                        <h4 class="modal-title">Copy Kriteria Nilai</h4>
                                     </div>
                                     <form method="POST" action="#">
                                         <div class="modal-body card-box">
-                                        <p class="label label-danger">Otomatis Meng-<i>copy</i> Beserta Polarisasi dan Aturan Polarisasinya</p>
-                                            <p>Yakin Untuk Meng-<i>copy</i> Polarisasi <?php echo "Pada Periode ".$tP; ?> ?</p>
+                                            <p>Yakin Untuk Meng-<i>copy</i> Kriteria Nilai <?php echo "Pada Periode ".$tP; ?> ?</p>
                                             <input type="hidden" name="id_copy" value="<?php echo $_GET['id_periode']; ?>">
                                             <select name="periode" class="form-control">
                                                 <option value="">Silahkan Pilih Periode</option>

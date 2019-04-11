@@ -415,6 +415,18 @@
 				$hasil[] = $tampil1;
 			return $hasil;
 		}
+
+		function tampil_kriteria($id_periode = null)
+		{
+			if($id_periode == null)
+				$query = $this->connection->query("SELECT * FROM kriteria_nilai");
+			else
+				$query = $this->connection->query("SELECT * FROM kriteria_nilai WHERE id_periode = '$id_periode'");
+			
+			while($tampil = $query->fetch_array())
+				$hasil[] = $tampil;
+			return $hasil;
+		}
 		//Akhiran Fungsi Tampil
 
 		//Fungsi Input
@@ -804,6 +816,25 @@
 			else 
 				return 2;
 		}
+
+		function input_kriteria($bmin = [], $bmax = [], $kriteria_nilai = [], $keterangan = [], $id_periode = null)
+		{
+			$k = [];
+			for($i=0; $i<count($bmin); $i++)
+			{
+				$query = "INSERT INTO kriteria_nilai VALUES ('', '$bmin[$i]', '$bmax[$i]', '$kriteria_nilai[$i]', '$keterangan[$i]', '$id_periode')";
+				$input = $this->connection->prepare($query);
+				if($input->execute())
+					$k[] = 1;
+				else 
+					$k[] = 0;
+			}
+
+			if(in_array(0, $k))
+				return 2;
+			else 
+				return 1;
+		}
 		//Akhiran Fungsi Input
 
 		//Fungsi Edit
@@ -1107,6 +1138,16 @@
 			else 
 				return 2;
 		}
+
+		function edit_kriteria($id_kriteria = null, $bmin = null, $bmax = null, $kriteria_nilai = null, $keterangan = null)
+		{
+			$query = "UPDATE kriteria_nilai SET batas_minimum = '$bmin', batas_maksimum = '$bmax', kriteria_nilai = '$kriteria_nilai', keterangan = '$keterangan' WHERE id_kriteria = '$id_kriteria'";
+			$edit = $this->connection->prepare($query);
+			if($edit->execute())
+				return 1;
+			else 
+				return 2;
+		}
 		//Akhiran Fungsi Edit
 
 		//Fungsi Hapus
@@ -1369,6 +1410,16 @@
 			if($hapus->execute())
 				return 1;
 			else 
+				return 2;
+		}
+
+		function hapus_kriteria($id_kriteria = null)
+		{
+			$query = "DELETE FROM kriteria_nilai WHERE id_kriteria = '$id_kriteria'";
+			$hapus = $this->connection->prepare($query);
+			if($hapus->execute())
+				return 1;
+			else
 				return 2;
 		}
 		//Akhiran Fungsi Hapus
@@ -1890,6 +1941,15 @@
 				$jml = $jml+1;
 			return $jml;
 		}
+
+		function hitung_kriteria($id_periode = null)
+		{
+			$query = $this->connection->query("SELECT * FROM kriteria_nilai WHERE id_periode = '$id_periode'");
+			$jml = 0;
+			while($t = $query->fetch_array())
+				$jml = $jml+1;
+			return $jml;
+		}
 		// Akhiran Menghitung Data
 
 		// Fungsi Copy Data
@@ -2249,6 +2309,75 @@
 					return 2;
 				else 
 					header("location:data_peringkat.php");
+			}
+		}
+
+		function copy_kriteria($jenis = null, $id_kriteria = null, $id_periode = null)
+		{
+			if($jenis == 1)
+			{
+				$query = $this->connection->query("SELECT * FROM kriteria_nilai WHERE id_kriteria = '$id_kriteria'");
+				$tampil = $query->fetch_array();
+				$bmin = $tampil['batas_minimum'];
+				$bmax = $tampil['batas_maksimum'];
+				$kriteria_nilai = $tampil['kriteria_nilai'];
+				$keterangan = $tampil['keterangan'];
+
+				$qC = $this->connection->query("SELECT * FROM kriteria_nilai WHERE batas_minimum = '$bmin' AND batas_maksimum = '$bmax' AND kriteria_nilai = '$kriteria_nilai' AND keterangan = '$keterangan' AND id_periode = '$id_periode'");
+				$cc = 0;
+				while($tc = $qC->fetch_array())
+					$cc = $cc+1;
+
+				if($cc == 0)
+				{
+					$queryI = "INSERT INTO kriteria_nilai VALUES ('', '$bmin', '$bmax', '$kriteria_nilai', '$keterangan', '$id_periode')";
+					$input = $this->connection->prepare($queryI);
+					if($input->execute())
+						return 1;
+					else 
+						return 2;
+				}
+				else {
+					return 3;
+				}
+			}
+			else if($jenis == 2)
+			{
+				$k = [];
+				$query = $this->connection->query("SELECT * FROM kriteria_nilai WHERE id_periode = '$id_kriteria'");
+				while($tampil = $query->fetch_array())
+				{
+					$bmin = $tampil['batas_minimum'];
+					$bmax = $tampil['batas_maksimum'];
+					$kriteria_nilai = $tampil['kriteria_nilai'];
+					$keterangan = $tampil['keterangan'];
+
+					$qC = $this->connection->query("SELECT * FROM kriteria_nilai WHERE batas_minimum = '$bmin' AND batas_maksimum = '$bmax' AND kriteria_nilai = '$kriteria_nilai' AND keterangan = '$keterangan' AND id_periode = '$id_periode'");
+					$cc = 0;
+					while($tc = $qC->fetch_array())
+						$cc = $cc+1;
+
+					if($cc == 0)
+					{
+						$queryI = "INSERT INTO kriteria_nilai VALUES ('', '$bmin', '$bmax', '$kriteria_nilai', '$keterangan', '$id_periode')";
+						$input = $this->connection->prepare($queryI);
+						if($input->execute())
+							$k[] = 1;
+						else 
+							$k[] = 0;
+					}
+				}
+
+				if(count($k) != 0)
+				{
+					if(in_array(0, $k))
+						return 2;
+					else 
+						return 1;
+				}
+				else {
+					return 3;
+				}
 			}
 		}
 		// Akhiran Fungsi Copy Data
