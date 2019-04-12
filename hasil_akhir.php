@@ -9,6 +9,17 @@
 		header("location:login.php");
     $nama = $_SESSION['nama'];
     $jabatan = $_SESSION['id_jabatan'];
+    $id_anggota = $_SESSION['id_anggota'];
+    $idA = 'kosong';
+
+    foreach($db->tampil_periode() as $tampilP)
+    {
+        if($tampilP['status'] == 1)
+        {
+            $tA = $tampilP['tahun'];
+            $idA = $tampilP['id_periode'];
+        }
+    }
 ?>
 
 <!DOCTYPE html>
@@ -101,7 +112,8 @@
 											<li><a href="data_golongan.php">Golongan</a></li>
                                             <li><a href="data_jabatan.php">Jabatan</a></li>
 											<li><a href="data_kelompok.php">Kelompok Jabatan</a></li>
-                                            <li><a href="data_unit.php">Departemen/Unit</a></li>
+                                            <li><a href="data_departemen.php">Departemen</a></li>
+                                            <li><a href="data_unit.php">Unit</a></li>
                                             <li><a href="data_anggota.php">Pegawai</a></li>
                                             <li><a href="data_user.php">User</a></li>
                                             <li><a href="data_periode.php">Periode</a></li>
@@ -194,44 +206,93 @@
                         </div>
                     </div>
                     <div class="row">
-						<div class="col-md-6">
+						<div class="col-md-12">
 							<div class="panel panel-table">
 								<div class="panel-heading" align="center">
 									<h3 class="panel-title"><b>Data Pegawai</b></h3>
 								</div>
 								<div class="panel-body" style="padding:0.5%;">
+                                    <?php
+                                        foreach($db->tampil_anggota($id_anggota) as $tampil)
+                                        {
+                                            $nik_pegawai = $tampil['nik'];
+                                            $nama_pegawai = $tampil['nama'];
+                                            $jk_pegawai = $tampil['jenis_kelamin'];
+                                            $golongan_pegawai = $tampil['nama_golongan'];
+                                            $jabatan_pegawai = $tampil['nama_jabatan'];
+                                            $unit_pegawai = $tampil['nama_unit'];
+                                        }
+                                    ?>
 									<div class="table-responsive">	
 										<table class="table table-striped custom-table m-b-0">
-											<tr>
-                                                <td><b>NIK</b></td>
-                                                <td><b>:</b></td>
-                                                <td></td>
-                                            </tr>
-                                            <tr>
-                                                <td><b>Nama Pegawai</b></td>
-                                                <td><b>:</b></td>
-                                                <td></td>
-                                            </tr>
-                                            <tr>
-                                                <td><b>Jenis Kelamin</b></td>
-                                                <td><b>:</b></td>
-                                                <td></td>
-                                            </tr>
-                                            <tr>
-                                                <td><b>Golongan</b></td>
-                                                <td><b>:</b></td>
-                                                <td></td>
-                                            </tr>
-                                            <tr>
-                                                <td><b>Jabatan</b></td>
-                                                <td><b>:</b></td>
-                                                <td></td>
-                                            </tr>
-                                            <tr>
-                                                <td><b>Departemen/Unit</b></td>
-                                                <td><b>:</b></td>
-                                                <td></td>
-                                            </tr>
+                                            <thead>
+                                                <tr>
+                                                    <th><b>NIK</b></th>
+                                                    <th><b>Nama Pegawai</b></th>
+                                                    <th><b>Golongan</b></th>
+                                                    <th><b>Jabatan</b></th>
+                                                    <th><b>Unit</b></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td><?php echo $nik_pegawai; ?></td>
+                                                    <td><?php echo $nama_pegawai; ?></td>
+                                                    <td><?php echo $golongan_pegawai; ?></td>
+                                                    <td><?php echo $jabatan_pegawai; ?></td>
+                                                    <td><?php echo $unit_pegawai; ?></td>
+                                                </tr>
+                                            </tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+                    </div>
+                    <div class="row">
+						<div class="col-md-6">
+							<div class="panel panel-table">
+								<div class="panel-heading" align="center">
+									<h3 class="panel-title"><b>Data Penilai KPI</b></h3>
+								</div>
+								<div class="panel-body" style="padding:0.5%;">
+									<div class="table-responsive">	
+										<table class="table table-striped custom-table m-b-0">
+                                            <thead>
+                                                <tr>
+                                                    <th><b>NIK</b></th>
+                                                    <th><b>Nama Penilai</b></th>
+                                                    <th><b>Golongan</b></th>
+                                                    <th><b>Jabatan</b></th>
+                                                    <th><b>Unit</b></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php
+                                                    $c = 0;
+                                                    foreach($db->tampil_penilai_kpi($id_anggota, $idA) as $tampil)
+                                                    {
+                                                        foreach($db->tampil_anggota($tampil['id_verifikator']) as $tampil2)
+                                                            echo '<tr>
+                                                                        <td>'.$tampil2['nik'].'</td>
+                                                                        <td>'.$tampil2['nama'].'</td>
+                                                                        <td>'.$tampil2['nama_golongan'].'</td>
+                                                                        <td>'.$tampil2['nama_jabatan'].'</td>
+                                                                        <td>'.$tampil2['nama_unit'].'</td>
+                                                                    </tr>';
+                                                        $c = $c+1;
+                                                    }
+
+                                                    if($c == 0)
+                                                    {
+                                                        echo '
+                                                            <tr>
+                                                                <td colspan="5" align="center">Data Kosong</td>
+                                                            </tr>
+                                                        ';
+                                                    }
+                                                ?>
+                                            </tbody>
 										</table>
 									</div>
 								</div>
@@ -240,41 +301,46 @@
 						<div class="col-md-6">
 							<div class="panel panel-table">
 								<div class="panel-heading" align="center">
-									<h3 class="panel-title"><b>Data Penilai</b></h3>
+									<h3 class="panel-title"><b>Data Penilai Kompetensi</b></h3>
 								</div>
 								<div class="panel-body" style="padding:0.5%;">
 									<div class="table-responsive">	
 										<table class="table table-striped custom-table m-b-0">
-											<tr>
-                                                <td><b>NIK</b></td>
-                                                <td><b>:</b></td>
-                                                <td></td>
-                                            </tr>
-                                            <tr>
-                                                <td><b>Nama Penilai</b></td>
-                                                <td><b>:</b></td>
-                                                <td></td>
-                                            </tr>
-                                            <tr>
-                                                <td><b>Jenis Kelamin</b></td>
-                                                <td><b>:</b></td>
-                                                <td></td>
-                                            </tr>
-                                            <tr>
-                                                <td><b>Golongan</b></td>
-                                                <td><b>:</b></td>
-                                                <td></td>
-                                            </tr>
-                                            <tr>
-                                                <td><b>Jabatan</b></td>
-                                                <td><b>:</b></td>
-                                                <td></td>
-                                            </tr>
-                                            <tr>
-                                                <td><b>Departemen/Unit</b></td>
-                                                <td><b>:</b></td>
-                                                <td></td>
-                                            </tr>
+                                            <thead>
+                                                <tr>
+                                                    <th><b>NIK</b></th>
+                                                    <th><b>Nama Penilai</b></th>
+                                                    <th><b>Golongan</b></th>
+                                                    <th><b>Jabatan</b></th>
+                                                    <th><b>Unit</b></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php
+                                                    $c = 0;
+                                                    foreach($db->tampil_penilai_kompetensi($id_anggota, $idA) as $tampil)
+                                                    {
+                                                        foreach($db->tampil_anggota($tampil['id_verifikator']) as $tampil2)
+                                                            echo '<tr>
+                                                                        <td>'.$tampil2['nik'].'</td>
+                                                                        <td>'.$tampil2['nama'].'</td>
+                                                                        <td>'.$tampil2['nama_golongan'].'</td>
+                                                                        <td>'.$tampil2['nama_jabatan'].'</td>
+                                                                        <td>'.$tampil2['nama_unit'].'</td>
+                                                                    </tr>';
+                                                        $c = $c+1;
+                                                    }
+
+                                                    if($c == 0)
+                                                    {
+                                                        echo '
+                                                            <tr>
+                                                                <td colspan="5" align="center">Data Kosong</td>
+                                                            </tr>
+                                                        ';
+                                                    }
+                                                ?>
+                                            </tbody>
 										</table>
 									</div>
 								</div>
@@ -305,6 +371,9 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
+                                                <tr>
+                                                    <td colspan="10" align="center"><b>Jabatan : Makan - Unit : Minum</b></td>
+                                                </tr>
                                                 <tr>
                                                     <td>1</td>
                                                     <td>2</td>

@@ -116,7 +116,8 @@
                                             <li><a href="data_golongan.php">Golongan</a></li>
                                             <li><a href="data_jabatan.php">Jabatan</a></li>
                                             <li><a href="data_kelompok.php">Kelompok Jabatan</a></li>
-                                            <li><a href="data_unit.php">Departemen/Unit</a></li>
+                                            <li><a href="data_departemen.php">Departemen</a></li>
+                                            <li><a href="data_unit.php">Unit</a></li>
                                             <li><a href="data_anggota.php">Pegawai</a></li>
                                             <li><a href="data_user.php">User</a></li>
                                             <li><a href="data_periode.php">Periode</a></li>
@@ -249,7 +250,7 @@
                             <center><div style="background-color:red; width:20%; color:white; padding:5px; display:none; margin-bottom:2%;" id="notifikasi2">Data Batal Diverifikasi</div></center>
 						</div>
 					</div>
-					<div class="row">
+					<div class="row" style="border:1px solid black;color:black; background-color:white; padding:1%;">
 						<div class="col-md-12">
                             <?php
                                 $ket = '';

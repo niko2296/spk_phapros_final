@@ -103,7 +103,8 @@
                                             <li><a href="data_golongan.php">Golongan</a></li>
                                             <li><a href="data_jabatan.php">Jabatan</a></li>
                                             <li><a href="data_kelompok.php">Kelompok Jabatan</a></li>
-                                            <li><a href="data_unit.php">Departemen/Unit</a></li>
+                                            <li><a href="data_departemen.php">Departemen</a></li>
+                                            <li><a href="data_unit.php">Unit</a></li>
                                             <li><a href="data_anggota.php">Pegawai</a></li>
                                             <li><a href="data_user.php">User</a></li>
                                             <li><a href="data_periode.php">Periode</a></li>
@@ -191,10 +192,10 @@
                 <div class="content container-fluid">
 					<div class="row">
 						<div class="col-xs-8">
-							<h4 class="page-title">Master Departemen/Unit</h4>
+							<h4 class="page-title">Master Unit</h4>
 						</div>
 						<div class="col-xs-4 text-right m-b-30">
-							<a href="#" class="btn btn-primary rounded pull-right" data-toggle="modal" data-target="#add_ticket"><i class="fa fa-plus"></i> Tambah Departemen/Unit</a>
+							<a href="#" class="btn btn-primary rounded pull-right" data-toggle="modal" data-target="#add_ticket"><i class="fa fa-plus"></i> Tambah Unit</a>
 						</div>
 					</div>
 					<div class="row">
@@ -229,7 +230,7 @@
 								<table class="table table-striped custom-table m-b-0 display" id="tabel">
 									<thead>
 										<tr>
-											<th>Nama Departemen/Unit</th>
+											<th>Nama Unit</th>
 											<th class="text-right">Actions</th>
 										</tr>
 									</thead>
@@ -260,7 +261,7 @@
                                                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                                                     <div class="modal-content modal-lg">
                                                         <div class="modal-header">
-                                                            <h4 class="modal-title">Edit Data Departemen/Unit</h4>
+                                                            <h4 class="modal-title">Edit Data Unit</h4>
                                                         </div>
                                                         <div class="modal-body">
                                                             <form method="POST" action="#">
@@ -274,7 +275,7 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="m-t-20 text-center">
-                                                                    <button class="btn btn-primary" type="submit" name="tombolEdit">Edit Data Departemen/Unit</button>
+                                                                    <button class="btn btn-primary" type="submit" name="tombolEdit">Edit Data Unit</button>
                                                                 </div>
                                                             </form>
                                                         </div>
@@ -288,11 +289,11 @@
                                                 <div class="modal-dialog">
                                                     <div class="modal-content modal-md">
                                                         <div class="modal-header">
-                                                            <h4 class="modal-title">Hapus Departemen/Unit</h4>
+                                                            <h4 class="modal-title">Hapus Unit</h4>
                                                         </div>
                                                         <form method="POST" action="#">
                                                             <div class="modal-body card-box">
-                                                                <p>Yakin Untuk Menghapus Departemen/Unit <?php echo $data['nama_unit']; ?> ?</p>
+                                                                <p>Yakin Untuk Menghapus Unit <?php echo $data['nama_unit']; ?> ?</p>
                                                                 <input type="hidden" name="id_unit_hapus" value="<?php echo $data['id_unit']; ?>">
                                                                 <div class="m-t-20"> <a href="#" class="btn btn-default" data-dismiss="modal">Close</a>
                                                                     <button type="submit" name="tombolHapus" class="btn btn-danger">Delete</button>
@@ -318,20 +319,20 @@
 					<button type="button" class="close" data-dismiss="modal">&times;</button>
 					<div class="modal-content modal-lg">
 						<div class="modal-header">
-							<h4 class="modal-title">Tambah Data Departemen/Unit</h4>
+							<h4 class="modal-title">Tambah Data Unit</h4>
 						</div>
 						<div class="modal-body">
 							<form method="POST" action="#" id="unit_input">
 								<div class="row">
 									<div class="col-md-6">
 										<div class="form-group">
-											<label>Nama Departemen/Unit</label>
+											<label>Nama Unit</label>
 											<input class="form-control cek" type="text" name="nama_unit">
 										</div>
 									</div>
 								</div>
 								<div class="m-t-20 text-center">
-									<button class="btn btn-primary" type="submit" name="tombolSimpan">Simpan Data Departemen/Unit</button>
+									<button class="btn btn-primary" type="submit" name="tombolSimpan">Simpan Data Unit</button>
 								</div>
 							</form>
 						</div>

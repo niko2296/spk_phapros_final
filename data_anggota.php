@@ -103,7 +103,8 @@
                                             <li><a href="data_golongan.php">Golongan</a></li>
                                             <li><a href="data_jabatan.php">Jabatan</a></li>
                                             <li><a href="data_kelompok.php">Kelompok Jabatan</a></li>
-                                            <li><a href="data_unit.php">Departemen/Unit</a></li>
+                                            <li><a href="data_departemen.php">Departemen</a></li>
+                                            <li><a href="data_unit.php">Unit</a></li>
                                             <li><a href="data_anggota.php">Pegawai</a></li>
                                             <li><a href="data_user.php">User</a></li>
                                             <li><a href="data_periode.php">Periode</a></li>
@@ -430,7 +431,7 @@
                                                                         <div class="form-group">
                                                                             <label>Unit</label>
                                                                             <select name="unit_edit" id="unit_edit" class="form-control">
-                                                                                <option value="">Silahkan Pilih Departemen/Unit</option>
+                                                                                <option value="">Silahkan Pilih Unit</option>
                                                                                 <?php
                                                                                     foreach($db->tampil_unit() as $data2)
                                                                                     {
@@ -604,7 +605,7 @@
                                     <div class="form-group">
                                         <label>Unit</label>
                                         <select name="unit" id="unit" class="form-control cek">
-                                            <option value="">Silahkan Pilih Departemen/Unit</option>
+                                            <option value="">Silahkan Pilih Unit</option>
                                             <?php
                                                 foreach($db->tampil_unit() as $data)
                                                 {

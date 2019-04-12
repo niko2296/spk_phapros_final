@@ -9,6 +9,7 @@
         header("location:login.php");
     $nama = $_SESSION['nama'];
     $jabatan = $_SESSION['id_jabatan'];
+    $id_anggotaV = $_SESSION['id_anggota'];
     $idA = 'kosong';
     foreach($db->tampil_periode() as $tPer)
     {
@@ -115,7 +116,8 @@
                                             <li><a href="data_golongan.php">Golongan</a></li>
                                             <li><a href="data_jabatan.php">Jabatan</a></li>
                                             <li><a href="data_kelompok.php">Kelompok Jabatan</a></li>
-                                            <li><a href="data_unit.php">Departemen/Unit</a></li>
+                                            <li><a href="data_departemen.php">Departemen</a></li>
+                                            <li><a href="data_unit.php">Unit</a></li>
                                             <li><a href="data_anggota.php">Pegawai</a></li>
                                             <li><a href="data_user.php">User</a></li>
                                             <li><a href="data_periode.php">Periode</a></li>
@@ -214,7 +216,7 @@
                             <?php
                                 if(isset($_POST['tombolSimpanRealisasi']))
                                 {
-                                    $input = $db->input_realisasi($_POST['id_kpi'], $_POST['realisasi'], $_POST['keterangan']);
+                                    $input = $db->input_realisasi($_POST['id_kpi'], $id_anggotaD, $id_jabatanD, $id_unitD, $idA, $_POST['realisasi'], $_POST['keterangan']);
                                     if($input == 2)
                                     {
                                         echo '
@@ -277,7 +279,7 @@
                                                     <input type="text" id="realisasi<?php echo $data['id_kpi']; ?>" name="realisasi[]" class="form-control" value="<?php echo ($db->hitung_realisasi($data['id_kpi']) > 0)?($db->tampil_realisasi(1, $data['id_kpi'])):('0'); ?>" <?php echo ($db->cek_verif_realisasi($data['id_kpi']) == 1)?('readonly="readonly"'):(''); ?>>
                                                 </td>
                                                 <td><textarea id="keterangan<?php echo $data['id_kpi']; ?>" name="keterangan[]" cols="10" rows="1" class="form-control" placeholder="Isikan Keterangan" <?php echo ($db->cek_verif_realisasi($data['id_kpi']) == 1)?('readonly="readonly"'):(''); ?>><?php echo ($db->hitung_realisasi($data['id_kpi']) > 0)?($db->tampil_realisasi(2, $data['id_kpi'])):(''); ?></textarea></td>
-                                                <td class="text-center"><input type="checkbox" name="verifikasi1" id="verifikasi1" data-id="<?php echo $data['id_kpi']; ?>" class="form-control" <?php echo ($db->cek_verif_realisasi($data['id_kpi']) == 1)?('checked'):(''); ?>></td>
+                                                <td class="text-center"><input type="checkbox" name="verifikasi1" id="verifikasi1" data-id="<?php echo $data['id_kpi']; ?>" data-id_verifikator="<?php echo $id_anggotaV; ?>" class="form-control" <?php echo ($db->cek_verif_realisasi($data['id_kpi']) == 1)?('checked'):(''); ?>></td>
                                             </tr>
                                     <?php
                                             }
@@ -321,6 +323,7 @@
                 $('.table').on('change','#verifikasi1',function(e){
                     var v = ($(this).is(':checked'))?'1':'0';
                     var paramId = $(this).data('id');
+                    var id_verifikator = $(this).data('id_verifikator');
                     var id1 = 'realisasi';
                     var id2 = 'keterangan';
                     $.ajax({
@@ -329,7 +332,8 @@
                         data:{
                             'id' : paramId,
                             'value' : v,
-                            'jenis' : 'verif_realisasi'
+                            'jenis' : 'verif_realisasi',
+                            'id_verifikator' : id_verifikator
                         },
                         success:function(html){
                             if(html == 1)

@@ -115,7 +115,8 @@
                                             <li><a href="data_golongan.php">Golongan</a></li>
                                             <li><a href="data_jabatan.php">Jabatan</a></li>
                                             <li><a href="data_kelompok.php">Kelompok Jabatan</a></li>
-                                            <li><a href="data_unit.php">Departemen/Unit</a></li>
+                                            <li><a href="data_departemen.php">Departemen</a></li>
+                                            <li><a href="data_unit.php">Unit</a></li>
                                             <li><a href="data_anggota.php">Pegawai</a></li>
                                             <li><a href="data_user.php">User</a></li>
                                             <li><a href="data_periode.php">Periode</a></li>
@@ -279,6 +280,7 @@
                                             <th>Indikator Terendah</th>
                                             <th>Indikator Tertinggi</th>
                                             <th>Peringkat</th>
+                                            <th>Status</th>
 											<th class="text-right">Actions</th>
 										</tr>
 									</thead>
@@ -295,6 +297,7 @@
                                                 <td><?php echo $data['indikator_terendah']; ?></td>
                                                 <td><?php echo $data['indikator_tertinggi']; ?></td>
                                                 <td><?php echo $data['peringkat']; ?></td>
+                                                <td><?php echo ($data['status'] == 1)?('Sudah Diverifikasi'):('Belum Diverifikasi'); ?></td>
                                                 <td class="text-right">
                                                     <div class="dropdown">
                                                         <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>

@@ -208,6 +208,7 @@
 		}
 
 		function tampil_periode($id_periode = null){
+			$hasil = [];
 			if($id_periode == null)
 				$query = $this->connection->query("SELECT * FROM mst_periode");
 			else 
@@ -423,6 +424,44 @@
 			else
 				$query = $this->connection->query("SELECT * FROM kriteria_nilai WHERE id_periode = '$id_periode'");
 			
+			while($tampil = $query->fetch_array())
+				$hasil[] = $tampil;
+			return $hasil;
+		}
+
+		function tampil_penilai_kpi($id_anggota = null, $id_periode = null)
+		{
+			$query = $this->connection->query("SELECT * FROM data_realisasi_kpi WHERE id_anggota = '$id_anggota' AND id_periode = '$id_periode'");
+			$c = [];
+			while($tampil = $query->fetch_array())
+			{
+				if(!in_array($tampil['id_verifikator'], $c))
+				{
+					$c[] = $tampil['id_verifikator'];
+					$hasil[] = $tampil;
+				}
+			}
+			return $hasil;
+		}
+
+		function tampil_penilai_kompetensi($id_anggota = null, $id_periode = null)
+		{
+			$query = $this->connection->query("SELECT * FROM data_kompetensi_individu WHERE id_anggota = '$id_anggota' AND id_periode = '$id_periode' AND status = '1'");
+			$c = [];
+			while($tampil = $query->fetch_array())
+			{
+				if(!in_array($tampil['id_verifikator'], $c))
+				{
+					$c[] = $tampil['id_verifikator'];
+					$hasil[] = $tampil;
+				}
+			}
+			return $hasil;
+		}
+
+		function tampil_laporan_kpi($id_anggota = null, $id_periode = null)
+		{
+			$query = $this->connection->query("SELECT * FROM data_realisasi_kpi WHERE id_anggota = '$id_anggota' AND id_periode = '$id_periode' AND status = '1' GROUP BY id_jabatan, id_unit ORDER BY tanggal_input ASC");
 			while($tampil = $query->fetch_array())
 				$hasil[] = $tampil;
 			return $hasil;
@@ -680,7 +719,7 @@
 				return 2;
 		}
 
-		function input_realisasi($id_kpi = [], $realisasi = [], $keterangan = [])
+		function input_realisasi($id_kpi = [], $id_anggota = null, $id_jabatan = null, $id_unit = null, $id_periode = null, $realisasi = [], $keterangan = [])
 		{
 			$tanggal = date('Y-m-d');
 			$jml = count($id_kpi);
@@ -695,7 +734,7 @@
 						$c = $c+1;
 					if($c == 0)
 					{
-						$query = "INSERT INTO data_realisasi_kpi VALUES ('', '$id_kpi[$a]', '$realisasi[$a]', '$keterangan[$a]', '0', '$tanggal', '0', '0000-00-00')";
+						$query = "INSERT INTO data_realisasi_kpi VALUES ('', '$id_kpi[$a]', '$id_anggota', '$id_jabatan', '$id_unit', $id_periode, '$realisasi[$a]', '$keterangan[$a]', '0', '$tanggal', '0', '0000-00-00')";
 						$input = $this->connection->prepare($query);
 						if($input->execute())
 							$k[] = 1;
@@ -1516,6 +1555,24 @@
 				$jml = $jml+1;
 			return $jml;
 		}
+
+		function cek_penilai($id_jabatan = null, $id_unit = null)
+		{
+			$query = $this->connection->query("SELECT * FROM aturan_penilai WHERE id_jabatan_dinilai = '$id_jabatan' AND id_unit_dinilai = '$id_unit'");
+			$jml = 0;
+			while($tampil = $query->fetch_array())
+				$jml = $jm+1;
+			return $jml;
+		}
+
+		function cek_periode($tahun = null)
+		{
+			$query = $this->connection->query("SELECT * FROM mst_periode WHERE tahun = '$tahun'");
+			$id_periode = 0;
+			while($tampil = $query->fetch_array())
+				$id_periode = $tampil['id_periode'];
+			return $id_periode;
+		}
 		//Akhiran Fungsi Cek Login
 
 		// Fungsi Verifikasi
@@ -1711,9 +1768,16 @@
 			}
 		}
 
-		function verif_realisasi($id_kpi = null, $status = null)
+		function verif_realisasi($id_kpi = null, $status = null, $id_verifikator = null)
 		{
-			$query = "UPDATE data_realisasi_kpi SET status = '$status' WHERE id_kpi = '$id_kpi'";
+			$tanggal = date('Y-m-d');
+			if($status == 0)
+			{
+				$id_verifikator = 0;
+				$tanggal = '0000-00-00';
+			}
+
+			$query = "UPDATE data_realisasi_kpi SET status = '$status', id_verifikator = '$id_verifikator', tanggal_verif = '$tanggal' WHERE id_kpi = '$id_kpi'";
 			$edit = $this->connection->prepare($query);
 			if($edit->execute())
 				return 1;

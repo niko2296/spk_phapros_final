@@ -102,7 +102,8 @@
                                             <li><a href="data_golongan.php">Golongan</a></li>
                                             <li><a href="data_jabatan.php">Jabatan</a></li>
                                             <li><a href="data_kelompok.php">Kelompok Jabatan</a></li>
-                                            <li><a href="data_unit.php">Departemen/Unit</a></li>
+                                            <li><a href="data_departemen.php">Departemen</a></li>
+                                            <li><a href="data_unit.php">Unit</a></li>
                                             <li><a href="data_anggota.php">Pegawai</a></li>
                                             <li><a href="data_user.php">User</a></li>
                                             <li><a href="data_periode.php">Periode</a></li>
@@ -224,7 +225,7 @@
 								</div>
 							</div>
 							<br>
-								<div class="row">
+								<div class="row" style="border:1px solid black;color:black; background-color:white; padding:0.5%;">
 									<div class="col-md-12">
 										<div class="table-responsive">
 											<table class="table table-striped custom-table m-b-0" id="tabel">
@@ -241,52 +242,53 @@
 											</thead>
 							';
                             $i = 0;
-							$tahun_kpi = $_POST['tahun_kpi'];
-                            foreach($db->tampil_kpi() as $tampil)
-                            {
-                                if($tampil['tahun'] == $tahun_kpi)
-                                {
-                                    $i = $i + 1;
-                                    $id1 = "kpi_c".$tampil['id_kpi'];
-                                    $id2 = "deskripsi_c".$tampil['id_kpi'];
-                                    $id3 = "bobot_c".$tampil['id_kpi'];
-                                    $id4 = "sasaran_c".$tampil['id_kpi'];
-                                    $id5 = "satuan_c".$tampil['id_kpi'];
-                                    $id6 = "sifat_c".$tampil['id_kpi'];
-                                    $id7 = "id_sifat_c".$tampil['id_kpi'];
+                            $tahun_kpi = $_POST['tahun_kpi'];
+                            $id_periodeC = $db->cek_periode($tahun_kpi);
+                            if($id_periodeC == 0)
+                                $id_periodeC = 'kosong';
 
-                                    $value = $tampil['sifat_kpi'];
-                                    foreach($db->tampil_polarisasi() as $tampilP)
-                                    {
-                                        if($tampilP['id_polarisasi'] == $value)
-                                            $ket = $tampilP['nama_polarisasi'];
-                                    }
-					?>
-                                    <tbody>
-                                        <tr>
-                                            <td><input type="text" id="<?php echo $id1; ?>" value="<?php echo $tampil['kpi']; ?>" readonly="readonly" class="form-control"></td>
-                                            <td><textarea class="form-control" id="<?php echo $id2; ?>" readonly="readonly"><?php echo $tampil['deskripsi']; ?></textarea></td>
-                                            <td><input type="text" id="<?php echo $id3; ?>" value="<?php echo $tampil['bobot']; ?>" readonly="readonly" class="form-control"></td>
-                                            <td><input type="text" id="<?php echo $id4; ?>" value="<?php echo $tampil['sasaran']; ?>" readonly="readonly" class="form-control"></td>
-                                            <td>
-                                                <input type="hidden" id="<?php echo $id5; ?>" value="<?php echo $tampil['satuan']; ?>" readonly="readonly" class="form-control">
-                                                <?php
-                                                    $nama_satuan = '';
-                                                    foreach($db->tampil_satuan() as $tampilS)
-                                                    {
-                                                        if($tampilS['id_satuan'] == $tampil['satuan'])
-                                                            $nama_satuan = $tampilS['nama_satuan'];
-                                                    }
-                                                    echo '<input type="text" value="'.$nama_satuan.'" readonly="readonly" class="form-control">';
-                                                ?>
-                                            </td>
-                                            <td><input type="text" id="<?php echo $id6; ?>" value="<?php echo $ket; ?>" readonly="readonly" class="form-control">
-                                            <input type="hidden" id="<?php echo $id7; ?>" value="<?php echo $tampil['sifat_kpi']; ?>" readonly="readonly" class="form-control"></td>
-                                            <td><button class="btn btn-success" onclick="fungsi3(<?php echo $tampil['id_kpi']; ?>)">Copy</button></td>
-                                        </tr>
-                                    </tbody>
-					<?php
+                            foreach($db->tampil_kpi($id_periodeC) as $tampil)
+                            {
+                                $i = $i + 1;
+                                $id1 = "kpi_c".$tampil['id_kpi'];
+                                $id2 = "deskripsi_c".$tampil['id_kpi'];
+                                $id3 = "bobot_c".$tampil['id_kpi'];
+                                $id4 = "sasaran_c".$tampil['id_kpi'];
+                                $id5 = "satuan_c".$tampil['id_kpi'];
+                                $id6 = "sifat_c".$tampil['id_kpi'];
+                                $id7 = "id_sifat_c".$tampil['id_kpi'];
+
+                                $value = $tampil['sifat_kpi'];
+                                foreach($db->tampil_polarisasi() as $tampilP)
+                                {
+                                    if($tampilP['id_polarisasi'] == $value)
+                                        $ket = $tampilP['nama_polarisasi'];
                                 }
+					?>
+                                <tbody>
+                                    <tr>
+                                        <td><input type="text" id="<?php echo $id1; ?>" value="<?php echo $tampil['kpi']; ?>" readonly="readonly" class="form-control"></td>
+                                        <td><textarea class="form-control" id="<?php echo $id2; ?>" readonly="readonly"><?php echo $tampil['deskripsi']; ?></textarea></td>
+                                        <td><input type="text" id="<?php echo $id3; ?>" value="<?php echo $tampil['bobot']; ?>" readonly="readonly" class="form-control"></td>
+                                        <td><input type="text" id="<?php echo $id4; ?>" value="<?php echo $tampil['sasaran']; ?>" readonly="readonly" class="form-control"></td>
+                                        <td>
+                                            <input type="hidden" id="<?php echo $id5; ?>" value="<?php echo $tampil['satuan']; ?>" readonly="readonly" class="form-control">
+                                            <?php
+                                                $nama_satuan = '';
+                                                foreach($db->tampil_satuan() as $tampilS)
+                                                {
+                                                    if($tampilS['id_satuan'] == $tampil['satuan'])
+                                                        $nama_satuan = $tampilS['nama_satuan'];
+                                                }
+                                                echo '<input type="text" value="'.$nama_satuan.'" readonly="readonly" class="form-control">';
+                                            ?>
+                                        </td>
+                                        <td><input type="text" id="<?php echo $id6; ?>" value="<?php echo $ket; ?>" readonly="readonly" class="form-control">
+                                        <input type="hidden" id="<?php echo $id7; ?>" value="<?php echo $tampil['sifat_kpi']; ?>" readonly="readonly" class="form-control"></td>
+                                        <td><button class="btn btn-success" onclick="fungsi3(<?php echo $tampil['id_kpi']; ?>)">Copy</button></td>
+                                    </tr>
+                                </tbody>
+					<?php
 							}
 							echo '
 										</table>
@@ -298,7 +300,7 @@
 					?>
                     
                     <!-- Tabel Tampil  -->
-                    <div style="margin-top:8%; display:none" id="tampil2">
+                    <div style="border:1px solid black;color:black; background-color:white; padding:1%; margin-top:3%; display:none" id="tampil2">
                     <form action="simpan_kpi.php" method="POST">
                     <div class="row">
                         <div class="col-md-4">

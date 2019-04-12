@@ -110,11 +110,11 @@
             </td>
         </tr>
         <tr>
-            <td>Departemen/Unit</td>
+            <td>Unit</td>
             <td>:</td>
             <td>
                 <select name="unit" id="unit">
-                    <option value="">Silahkan Pilih Departemen/Unit</option>
+                    <option value="">Silahkan Pilih Unit</option>
                     <?php
                         foreach($db->tampil_unit() as $data)
                         {

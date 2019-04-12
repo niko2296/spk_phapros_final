@@ -57,7 +57,7 @@
     }
     else if($_GET['jenis'] == 'verif_realisasi')
     {
-        $eksekusi = $db->verif_realisasi($_GET['id'], $_GET['value']);
+        $eksekusi = $db->verif_realisasi($_GET['id'], $_GET['value'], $_GET['id_verifikator']);
         if($eksekusi == 1)
         {
             if($_GET['value'] == 1)

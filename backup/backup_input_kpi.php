@@ -75,7 +75,7 @@
 								<ul style="display: none;">
 									<li><a href="data_golongan.php">Golongan</a></li>
 									<li><a href="data_jabatan.php">Jabatan</a></li>
-									<li><a href="data_unit.php">Departemen/Unit</a></li>
+									<li><a href="data_unit.php">Unit</a></li>
 									<li><a href="data_anggota.php">Pegawai</a></li>
 									<li><a href="data_satuan.php">Satuan</a></li>
 								</ul>
