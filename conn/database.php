@@ -14,9 +14,9 @@
 		
 		function tampil_anggota($id_anggota = null){
 			if($id_anggota == null)
-				$query = $this->connection->query("SELECT ang.*, gol.nama_golongan, jab.nama_jabatan, uni.nama_unit FROM mst_anggota as ang LEFT JOIN mst_golongan as gol ON ang.id_golongan = gol.id_golongan LEFT JOIN mst_jabatan as jab ON ang.id_jabatan = jab.id_jabatan LEFT JOIN mst_unit as uni ON ang.id_unit = uni.id_unit");
+				$query = $this->connection->query("SELECT ang.*, gol.nama_golongan, jab.nama_jabatan, uni.nama_unit, d.nama_departemen FROM mst_anggota as ang LEFT JOIN mst_golongan as gol ON ang.id_golongan = gol.id_golongan LEFT JOIN mst_jabatan as jab ON ang.id_jabatan = jab.id_jabatan LEFT JOIN mst_unit as uni ON ang.id_unit = uni.id_unit LEFT JOIN mst_departemen d ON ang.id_departemen = d.id_departemen");
 			else
-				$query = $this->connection->query("SELECT ang.*, gol.nama_golongan, jab.nama_jabatan, uni.nama_unit FROM mst_anggota as ang LEFT JOIN mst_golongan as gol ON ang.id_golongan = gol.id_golongan LEFT JOIN mst_jabatan as jab ON ang.id_jabatan = jab.id_jabatan LEFT JOIN mst_unit as uni ON ang.id_unit = uni.id_unit WHERE id_anggota = '$id_anggota'");
+				$query = $this->connection->query("SELECT ang.*, gol.nama_golongan, jab.nama_jabatan, uni.nama_unit, d.nama_departemen FROM mst_anggota as ang LEFT JOIN mst_golongan as gol ON ang.id_golongan = gol.id_golongan LEFT JOIN mst_jabatan as jab ON ang.id_jabatan = jab.id_jabatan LEFT JOIN mst_unit as uni ON ang.id_unit = uni.id_unit LEFT JOIN mst_departemen d ON ang.id_departemen = d.id_departemen WHERE id_anggota = '$id_anggota'");
 			while($tampil = $query->fetch_array())
 				$hasil[] = $tampil;
 			return $hasil;
@@ -466,6 +466,18 @@
 				$hasil[] = $tampil;
 			return $hasil;
 		}
+
+		function tampil_departemen($id_departemen = null)
+		{
+			$hasil = [];
+			if($id_departemen == null)
+				$query = $this->connection->query("SELECT * FROM mst_departemen");
+			else 
+				$query = $this->connection->query("SELECT * FROM mst_departemen WHERE id_departemen = '$id_departemen'");
+			while($tampil = $query->fetch_array())
+				$hasil[] = $tampil;
+			return $hasil;
+		}
 		//Akhiran Fungsi Tampil
 
 		//Fungsi Input
@@ -499,9 +511,9 @@
 				return 2;
 		}
 		
-		function input_anggota($nik = null, $nama_anggota = null, $jenis_kelamin = null, $tempat_lahir = null, $tanggal_lahir = null, $status = null, $nomor_hp = null, $email = null, $golongan = null, $jabatan = null, $unit = null, $alamat = null){
+		function input_anggota($nik = null, $nama_anggota = null, $jenis_kelamin = null, $tempat_lahir = null, $tanggal_lahir = null, $status = null, $nomor_hp = null, $email = null, $golongan = null, $jabatan = null, $departemen = null, $unit = null, $alamat = null){
 			$tanggal = date('Y-m-d');
-			$query = "INSERT INTO mst_anggota VALUES ('', '$nik', '$nama_anggota', '$jenis_kelamin', '$tempat_lahir', '$tanggal_lahir', '$status', '$nomor_hp', '$email','$golongan', '$jabatan', '$unit', '$alamat', '$tanggal')";
+			$query = "INSERT INTO mst_anggota VALUES ('', '$nik', '$nama_anggota', '$jenis_kelamin', '$tempat_lahir', '$tanggal_lahir', '$status', '$nomor_hp', '$email','$golongan', '$jabatan', '$departemen','$unit', '$alamat', '$tanggal')";
 			$input = $this->connection->prepare($query);
 			if($input->execute())
 			{
@@ -874,6 +886,17 @@
 			else 
 				return 1;
 		}
+
+		function input_departemen($nama_departemen = null)
+		{
+			$tanggal = date('Y-m-d');
+			$query = "INSERT mst_departemen VALUES ('', '$nama_departemen', '$tanggal')";
+			$input = $this->connection->prepare($query);
+			if($input->execute())
+				return 1;
+			else 
+				return 2;
+		}
 		//Akhiran Fungsi Input
 
 		//Fungsi Edit
@@ -944,12 +967,12 @@
 				return 3;
 			}
 		}
-		function edit_anggota($id_anggota = null, $nik_asli = null, $nik = null, $nama_anggota = null, $jenis_kelamin = null, $tempat_lahir = null, $tanggal_lahir = null, $status = null, $nomor_hp = null, $email = null, $golongan = null, $jabatan = null, $unit = null, $alamat = null)
+		function edit_anggota($id_anggota = null, $nik_asli = null, $nik = null, $nama_anggota = null, $jenis_kelamin = null, $tempat_lahir = null, $tanggal_lahir = null, $status = null, $nomor_hp = null, $email = null, $golongan = null, $jabatan = null, $departemen = null, $unit = null, $alamat = null)
 		{
 			if($id_anggota != null)
 			{
 				$tanggal = date('Y-m-d');
-				$query = "UPDATE mst_anggota SET nik = '$nik', nama = '$nama_anggota', jenis_kelamin = '$jenis_kelamin', tempat_lahir = '$tempat_lahir', tanggal_lahir = '$tanggal_lahir', status = '$status', nomor_hp = '$nomor_hp', email = '$email', id_golongan = '$golongan', id_jabatan = '$jabatan', id_unit = '$unit', alamat = '$alamat' WHERE id_anggota = '$id_anggota'";
+				$query = "UPDATE mst_anggota SET nik = '$nik', nama = '$nama_anggota', jenis_kelamin = '$jenis_kelamin', tempat_lahir = '$tempat_lahir', tanggal_lahir = '$tanggal_lahir', status = '$status', nomor_hp = '$nomor_hp', email = '$email', id_golongan = '$golongan', id_jabatan = '$jabatan', id_departemen = '$id_departemen', id_unit = '$unit', alamat = '$alamat' WHERE id_anggota = '$id_anggota'";
 				$edit = $this->connection->prepare($query);
 				if($edit->execute())
 				{
@@ -1186,6 +1209,22 @@
 				return 1;
 			else 
 				return 2;
+		}
+
+		function edit_departemen($id_departemen = null, $nama_departemen = null)
+		{
+			if($id_departemen != null)
+			{
+				$query = "UPDATE mst_departemen SET nama_departemen = '$nama_departemen' WHERE id_departemen = '$id_departemen'";
+				$edit = $this->connection->prepare($query);
+				if($edit->execute())
+					return 1;
+				else 
+					return 2;
+			}
+			else{
+				return 3;
+			}
 		}
 		//Akhiran Fungsi Edit
 
@@ -1460,6 +1499,22 @@
 				return 1;
 			else
 				return 2;
+		}
+
+		function hapus_departemen($id_departemen = null)
+		{
+			if($id_departemen != null)
+			{
+				$query = "DELETE FROM mst_departemen WHERE id_departemen = '$id_departemen'";
+				$hapus = $this->connection->prepare($query);
+				if($hapus->execute())
+					return 1;
+				else 
+					return 2;
+			}
+			else {
+				return 3;
+			}
 		}
 		//Akhiran Fungsi Hapus
 

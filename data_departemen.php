@@ -192,35 +192,61 @@
                 <div class="content container-fluid">
 					<div class="row">
 						<div class="col-xs-8">
-							<h4 class="page-title">Master Unit</h4>
+							<h4 class="page-title">Master Departemen</h4>
 						</div>
 						<div class="col-xs-4 text-right m-b-30">
-							<a href="#" class="btn btn-primary rounded pull-right" data-toggle="modal" data-target="#add_ticket"><i class="fa fa-plus"></i> Tambah Unit</a>
+							<a href="#" class="btn btn-primary rounded pull-right" data-toggle="modal" data-target="#add_ticket"><i class="fa fa-plus"></i> Tambah Departemen</a>
 						</div>
 					</div>
 					<div class="row">
 
                         <?php
                             if(isset($_POST['tombolSimpan'])){
-                                $eksekusi = $db->input_unit($_POST['nama_unit']);
+                                $eksekusi = $db->input_departemen($_POST['nama_departemen']);
                                 if($eksekusi == 2)
                                 {
                                     echo '<div class="alert alert-danger">Data Gagal Disimpan</div>';
                                 }
+                                else if($eksekusi == 1)
+                                {
+                                    echo '
+                                        <script>
+                                            alert("Data Berhasil Disimpan");
+                                            window.location = "data_departemen.php";
+                                        </script>
+                                    ';
+                                }
                             }
                             else if(isset($_POST['tombolEdit'])){
-                                $eksekusi = $db->edit_unit($_POST['id_unit_edit'], $_POST['nama_unit_edit']);
+                                $eksekusi = $db->edit_departemen($_POST['id_departemen_edit'], $_POST['nama_departemen_edit']);
                                 if($eksekusi == 2 || $eksekusi == 3)
                                 {
                                     echo '<div class="alert alert-danger">Data Gagal Disimpan</div>';
                                 }
+                                else if($eksekusi == 1)
+                                {
+                                    echo '
+                                        <script>
+                                            alert("Data Berhasil Diedit");
+                                            window.location = "data_departemen.php";
+                                        </script>
+                                    ';
+                                }
                             }
                             else if(isset($_POST['tombolHapus']))
                             {
-                                $eksekusi = $db->hapus_unit($_POST['id_unit_hapus']);
+                                $eksekusi = $db->hapus_departemen($_POST['id_departemen_hapus']);
                                 if($eksekusi == 2 || $eksekusi == 3)
                                 {
                                     echo '<div class="alert alert-danger">Data Gagal Disimpan</div>';
+                                }
+                                else {
+                                    echo '
+                                        <script>
+                                            alert("Data Berhasil Dihapus");
+                                            window.location = "data_departemen.php";
+                                        </script>
+                                    ';
                                 }
                             }
                         ?>
@@ -230,7 +256,7 @@
 								<table class="table table-striped custom-table m-b-0 display" id="tabel">
 									<thead>
 										<tr>
-											<th>Nama Unit</th>
+											<th>Nama Departemen</th>
 											<th class="text-right">Actions</th>
 										</tr>
 									</thead>
@@ -238,30 +264,30 @@
                                     <?php
                                         $no = 0;
                                         error_reporting(0);
-                                        foreach($db->tampil_unit() as $data)
+                                        foreach($db->tampil_departemen() as $data)
                                         {
                                             $no = $no+1;
                                     ?>
                                             <tr>
-                                                <td><?php echo $data['nama_unit']; ?></td>
+                                                <td><?php echo $data['nama_departemen']; ?></td>
                                                 <td class="text-right">
                                                     <div class="dropdown">
                                                         <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
                                                         <ul class="dropdown-menu pull-right">
-                                                            <li><a href="#" title="Edit" data-toggle="modal" data-target="#edit_ticket<?php echo $data['id_unit']; ?>"><i class="fa fa-pencil m-r-5"></i> Edit</a></li>
-                                                            <li><a href="#" title="Delete" data-toggle="modal" data-target="#delete_ticket<?php echo $data['id_unit']; ?>"><i class="fa fa-trash-o m-r-5"></i> Delete</a></li>
+                                                            <li><a href="#" title="Edit" data-toggle="modal" data-target="#edit_ticket<?php echo $data['id_departemen']; ?>"><i class="fa fa-pencil m-r-5"></i> Edit</a></li>
+                                                            <li><a href="#" title="Delete" data-toggle="modal" data-target="#delete_ticket<?php echo $data['id_departemen']; ?>"><i class="fa fa-trash-o m-r-5"></i> Delete</a></li>
                                                         </ul>
                                                     </div>
                                                 </td>
                                             </tr>
 
                                             <!-- Modal Edit -->
-                                            <div id="edit_ticket<?php echo $data['id_unit']; ?>" class="modal custom-modal fade" role="dialog">
+                                            <div id="edit_ticket<?php echo $data['id_departemen']; ?>" class="modal custom-modal fade" role="dialog">
                                                 <div class="modal-dialog">
                                                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                                                     <div class="modal-content modal-lg">
                                                         <div class="modal-header">
-                                                            <h4 class="modal-title">Edit Data Unit</h4>
+                                                            <h4 class="modal-title">Edit Data Departemen</h4>
                                                         </div>
                                                         <div class="modal-body">
                                                             <form method="POST" action="#">
@@ -269,13 +295,13 @@
                                                                     <div class="col-md-6">
                                                                         <div class="form-group">
                                                                             <label>Nama Golongan</label>
-                                                                            <input class="form-control" type="hidden" name="id_unit_edit" value="<?php echo $data['id_unit']; ?>">
-                                                                            <input class="form-control" type="text" name="nama_unit_edit" value="<?php echo $data['nama_unit']; ?>">
+                                                                            <input class="form-control" type="hidden" name="id_departemen_edit" value="<?php echo $data['id_departemen']; ?>">
+                                                                            <input class="form-control" type="text" name="nama_departemen_edit" value="<?php echo $data['nama_departemen']; ?>">
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                                 <div class="m-t-20 text-center">
-                                                                    <button class="btn btn-primary" type="submit" name="tombolEdit">Edit Data Unit</button>
+                                                                    <button class="btn btn-primary" type="submit" name="tombolEdit">Edit Data Departemen</button>
                                                                 </div>
                                                             </form>
                                                         </div>
@@ -285,16 +311,16 @@
                                             <!-- Akhiran Modal Edit -->
 
                                             <!-- Modal Hapus -->
-                                            <div id="delete_ticket<?php echo $data['id_unit']; ?>" class="modal custom-modal fade" role="dialog">
+                                            <div id="delete_ticket<?php echo $data['id_departemen']; ?>" class="modal custom-modal fade" role="dialog">
                                                 <div class="modal-dialog">
                                                     <div class="modal-content modal-md">
                                                         <div class="modal-header">
-                                                            <h4 class="modal-title">Hapus Unit</h4>
+                                                            <h4 class="modal-title">Hapus Departemen</h4>
                                                         </div>
                                                         <form method="POST" action="#">
                                                             <div class="modal-body card-box">
-                                                                <p>Yakin Untuk Menghapus Unit <?php echo $data['nama_unit']; ?> ?</p>
-                                                                <input type="hidden" name="id_unit_hapus" value="<?php echo $data['id_unit']; ?>">
+                                                                <p>Yakin Untuk Menghapus Departemen <b><?php echo $data['nama_departemen']; ?></b> ?</p>
+                                                                <input type="hidden" name="id_departemen_hapus" value="<?php echo $data['id_departemen']; ?>">
                                                                 <div class="m-t-20"> <a href="#" class="btn btn-default" data-dismiss="modal">Close</a>
                                                                     <button type="submit" name="tombolHapus" class="btn btn-danger">Delete</button>
                                                                 </div>
@@ -319,20 +345,20 @@
 					<button type="button" class="close" data-dismiss="modal">&times;</button>
 					<div class="modal-content modal-lg">
 						<div class="modal-header">
-							<h4 class="modal-title">Tambah Data Unit</h4>
+							<h4 class="modal-title">Tambah Data Departemen</h4>
 						</div>
 						<div class="modal-body">
 							<form method="POST" action="#" id="unit_input">
 								<div class="row">
 									<div class="col-md-6">
 										<div class="form-group">
-											<label>Nama Unit</label>
-											<input class="form-control cek" type="text" name="nama_unit">
+											<label>Nama Departemen</label>
+											<input class="form-control cek" type="text" name="nama_departemen">
 										</div>
 									</div>
 								</div>
 								<div class="m-t-20 text-center">
-									<button class="btn btn-primary" type="submit" name="tombolSimpan">Simpan Data Unit</button>
+									<button class="btn btn-primary" type="submit" name="tombolSimpan">Simpan Data Departemen</button>
 								</div>
 							</form>
 						</div>

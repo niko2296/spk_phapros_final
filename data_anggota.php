@@ -214,9 +214,10 @@
                                 $email = $_POST['email'];
                                 $golongan = $_POST['golongan'];
                                 $jabatan = $_POST['jabatan'];
+                                $departemen = $_POST['departemen'];
                                 $unit = $_POST['unit'];
                                 $alamat = $_POST['alamat'];
-                                $eksekusi = $db->input_anggota($nik, $nama_anggota, $jenis_kelamin, $tempat_lahir, $tanggal_lahir, $status, $nomor_hp, $email, $golongan, $jabatan, $unit, $alamat);
+                                $eksekusi = $db->input_anggota($nik, $nama_anggota, $jenis_kelamin, $tempat_lahir, $tanggal_lahir, $status, $nomor_hp, $email, $golongan, $jabatan, $departemen, $unit, $alamat);
                                 if($eksekusi == 2)
                                 {
                                     echo '<div class="alert alert-danger">Data Gagal Disimpan</div>';
@@ -240,9 +241,10 @@
                                 $email = $_POST['email_edit'];
                                 $golongan = $_POST['golongan_edit'];
                                 $jabatan = $_POST['jabatan_edit'];
+                                $departemen = $_POST['departemen_edit'];
                                 $unit = $_POST['unit_edit'];
                                 $alamat = $_POST['alamat_edit'];
-                                $eksekusi = $db->edit_anggota($id_anggota, $nik_asli, $nik, $nama_anggota, $jenis_kelamin, $tempat_lahir, $tanggal_lahir, $status, $nomor_hp, $email, $golongan, $jabatan, $unit, $alamat);
+                                $eksekusi = $db->edit_anggota($id_anggota, $nik_asli, $nik, $nama_anggota, $jenis_kelamin, $tempat_lahir, $tanggal_lahir, $status, $nomor_hp, $email, $golongan, $jabatan, $departemen, $unit, $alamat);
                                 if($eksekusi == 2 || $eksekusi == 3)
                                 {
                                     echo '<div class="alert alert-danger">Data Gagal Disimpan</div>';
@@ -258,7 +260,7 @@
                             }
                         ?>
 
-						<div class="col-md-12">
+						<div class="col-md-12" style="border:1px solid black;color:black; background-color:white; padding:1%;">
 							<div class="table-responsive">
 								<table class="table table-striped custom-table m-b-0 display" id="tabel">
 									<thead>
@@ -273,6 +275,7 @@
                                             <th>Email</th>
                                             <th>Golongan</th>
                                             <th>Jabatan</th>
+                                            <th>Departemen</th>
                                             <th>Unit</th>
                                             <th>Alamat</th>
 											<th class="text-right">Actions</th>
@@ -297,6 +300,7 @@
                                                 <td><?php echo $data['email']; ?></td>
                                                 <td><?php echo $data['nama_golongan']; ?></td>
                                                 <td><?php echo $data['nama_jabatan']; ?></td>
+                                                <td><?php echo $data['nama_departemen']; ?></td>
                                                 <td><?php echo $data['nama_unit']; ?></td>
                                                 <td><?php echo $data['alamat']; ?></td>
                                                 <td class="text-right">
@@ -339,26 +343,26 @@
                                                                 <div class="row">
                                                                     <div class="col-md-6">
                                                                         <div class="form-group">
-                                                                            <label>Jenis Kelamin</label>
-                                                                            <select name="jenis_kelamin_edit" id="jenis_kelamin_edit" class="form-control">
-                                                                                <option value="">Silahkan Pilih Jenis Kelamin</option>
-                                                                                <option value="1" <?php echo ($data['jenis_kelamin'] == 1)?'selected="selected"':''; ?>>Pria</option>
-                                                                                <option value="2" <?php echo ($data['jenis_kelamin'] == 2)?'selected="selected"':''; ?>>Wanita</option>
-                                                                            </select>
+                                                                            <label>Tempat Lahir</label>
+                                                                            <input type="text" name="tempat_lahir_edit" id="tempat_lahir_edit" class="form-control" value="<?php echo $data['tempat_lahir']; ?>">
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-6">
                                                                         <div class="form-group">
-                                                                            <label>Tempat Lahir</label>
-                                                                            <input type="text" name="tempat_lahir_edit" id="tempat_lahir_edit" class="form-control" value="<?php echo $data['tempat_lahir']; ?>">
+                                                                            <label>Tanggal Lahir</label>
+                                                                            <div class="cal-icon"><input class="form-control datetimepicker" type="text" name="tanggal_lahir_edit" id="tanggal_lahir_edit" value="<?php echo date('d/m/Y', strtotime($data['tanggal_lahir'])); ?>"></div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                                 <div class="row">
                                                                     <div class="col-md-6">
                                                                         <div class="form-group">
-                                                                            <label>Tanggal Lahir</label>
-                                                                            <div class="cal-icon"><input class="form-control datetimepicker" type="text" name="tanggal_lahir_edit" id="tanggal_lahir_edit" value="<?php echo date('d/m/Y', strtotime($data['tanggal_lahir'])); ?>"></div>
+                                                                            <label>Jenis Kelamin</label>
+                                                                            <select name="jenis_kelamin_edit" id="jenis_kelamin_edit" class="form-control">
+                                                                                <option value="">Silahkan Pilih Jenis Kelamin</option>
+                                                                                <option value="1" <?php echo ($data['jenis_kelamin'] == 1)?'selected="selected"':''; ?>>Pria</option>
+                                                                                <option value="2" <?php echo ($data['jenis_kelamin'] == 2)?'selected="selected"':''; ?>>Wanita</option>
+                                                                            </select>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-6">
@@ -429,6 +433,25 @@
                                                                 <div class="row">
                                                                     <div class="col-md-6">
                                                                         <div class="form-group">
+                                                                            <label>Departemen</label>
+                                                                            <select name="departemen_edit" id="departemen_edit" class="form-control">
+                                                                                <option value="">Silahkan Pilih Unit</option>
+                                                                                <?php
+                                                                                    foreach($db->tampil_departemen() as $data2)
+                                                                                    {
+                                                                                        if($data['id_departemen'] == $data2['id_departemen'])
+                                                                                            $s = 'selected = "selected"';
+                                                                                ?>
+                                                                                        <option value="<?php echo $data2['id_departemen']; ?>" <?php echo $s; ?>><?php echo $data2['nama_departemen']; ?></option>
+                                                                                <?php
+                                                                                        $s = '';
+                                                                                    }
+                                                                                ?>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group">
                                                                             <label>Unit</label>
                                                                             <select name="unit_edit" id="unit_edit" class="form-control">
                                                                                 <option value="">Silahkan Pilih Unit</option>
@@ -446,7 +469,9 @@
                                                                             </select>
                                                                         </div>
                                                                     </div>
-                                                                    <div class="col-md-6">
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-md-12">
                                                                         <div class="form-group">
                                                                             <label>Alamat</label>
                                                                             <textarea name="alamat_edit" id="alamat_edit" cols="30" rows="10" class="form-control"><?php echo $data['alamat']; ?></textarea>
@@ -519,26 +544,26 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Jenis Kelamin</label>
-                                        <select name="jenis_kelamin" id="jenis_kelamin" class="form-control cek">
-                                            <option value="">Silahkan Pilih Jenis Kelamin</option>
-                                            <option value="1">Pria</option>
-                                            <option value="2">Wanita</option>
-                                        </select>
+                                        <label>Tempat Lahir</label>
+                                        <input type="text" name="tempat_lahir" id="tempat_lahir" class="form-control cek">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Tempat Lahir</label>
-                                        <input type="text" name="tempat_lahir" id="tempat_lahir" class="form-control cek">
+                                        <label>Tanggal Lahir</label>
+                                        <div class="cal-icon"><input class="form-control datetimepicker cek" type="text" name="tanggal_lahir" id="tanggal_lahir" placeholder="dd/mm/yyyy"></div>
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Tanggal Lahir</label>
-                                        <div class="cal-icon"><input class="form-control datetimepicker cek" type="text" name="tanggal_lahir" id="tanggal_lahir" placeholder="dd/mm/yyyy"></div>
+                                        <label>Jenis Kelamin</label>
+                                        <select name="jenis_kelamin" id="jenis_kelamin" class="form-control cek">
+                                            <option value="">Silahkan Pilih Jenis Kelamin</option>
+                                            <option value="1">Pria</option>
+                                            <option value="2">Wanita</option>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -603,6 +628,22 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
+                                        <label>Departemen</label>
+                                        <select name="departemen" id="departemen" class="form-control cek">
+                                            <option value="">Silahkan Pilih Departemen</option>
+                                            <?php
+                                                foreach($db->tampil_departemen() as $data)
+                                                {
+                                            ?>
+                                                    <option value="<?php echo $data['id_departemen']; ?>"><?php echo $data['nama_departemen']; ?></option>
+                                            <?php
+                                                }
+                                            ?>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
                                         <label>Unit</label>
                                         <select name="unit" id="unit" class="form-control cek">
                                             <option value="">Silahkan Pilih Unit</option>
@@ -617,7 +658,9 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
                                     <div class="form-group">
                                         <label>Alamat</label>
                                         <textarea name="alamat" id="alamat" cols="30" rows="10" class="form-control cek"></textarea>

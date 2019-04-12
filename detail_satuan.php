@@ -205,42 +205,44 @@
                             </h4>
 						</div>
 					</div>
-					<div class="row">
-
-                        <?php
-                            if(isset($_POST['tombolEdit'])){
-                                $eksekusi = $db->edit_satuan($_POST['id_satuan_edit'], $_POST['nama_satuan_edit'], $_POST['jenis_polarisasi_edit'], $_POST['periode_edit'], $_GET['id_periode']);
-                                if($eksekusi == 2 || $eksekusi == 3)
-                                {
-                                    echo '<div class="alert alert-danger">Data Gagal Disimpan</div>';
+                    <div class="row">
+                        <div class="col-md-12">
+                            <?php
+                                if(isset($_POST['tombolEdit'])){
+                                    $eksekusi = $db->edit_satuan($_POST['id_satuan_edit'], $_POST['nama_satuan_edit'], $_POST['jenis_polarisasi_edit'], $_POST['periode_edit'], $_GET['id_periode']);
+                                    if($eksekusi == 2 || $eksekusi == 3)
+                                    {
+                                        echo '<div class="alert alert-danger">Data Gagal Disimpan</div>';
+                                    }
                                 }
-                            }
-                            else if(isset($_POST['tombolHapus']))
-                            {
-                                $eksekusi = $db->hapus_satuan($_POST['id_satuan_hapus'], $_GET['id_periode']);
-                                if($eksekusi == 2 || $eksekusi == 3)
+                                else if(isset($_POST['tombolHapus']))
                                 {
-                                    echo '<div class="alert alert-danger">Data Gagal Disimpan</div>';
+                                    $eksekusi = $db->hapus_satuan($_POST['id_satuan_hapus'], $_GET['id_periode']);
+                                    if($eksekusi == 2 || $eksekusi == 3)
+                                    {
+                                        echo '<div class="alert alert-danger">Data Gagal Disimpan</div>';
+                                    }
                                 }
-                            }
-                            else if(isset($_POST['tombolCopySatuan']))
-                            {
-                                $eksekusi = $db->copy_satuan(1, $_POST['id_copy'], $_POST['periode']);
-                                if($eksekusi == 2 || $eksekusi == 3)
+                                else if(isset($_POST['tombolCopySatuan']))
                                 {
-                                    echo '<div class="alert alert-danger">Data Gagal Disimpan</div>';
+                                    $eksekusi = $db->copy_satuan(1, $_POST['id_copy'], $_POST['periode']);
+                                    if($eksekusi == 2 || $eksekusi == 3)
+                                    {
+                                        echo '<div class="alert alert-danger">Data Gagal Disimpan</div>';
+                                    }
                                 }
-                            }
-                            else if(isset($_POST['tombolCopyAll']))
-                            {
-                                $eksekusi = $db->copy_satuan(2, $_POST['id_copy'], $_POST['periode']);
-                                if($eksekusi == 2 || $eksekusi == 3)
+                                else if(isset($_POST['tombolCopyAll']))
                                 {
-                                    echo '<div class="alert alert-danger">Data Gagal Disimpan</div>';
+                                    $eksekusi = $db->copy_satuan(2, $_POST['id_copy'], $_POST['periode']);
+                                    if($eksekusi == 2 || $eksekusi == 3)
+                                    {
+                                        echo '<div class="alert alert-danger">Data Gagal Disimpan</div>';
+                                    }
                                 }
-                            }
-                        ?>
-
+                            ?>
+                        </div>
+                    </div>
+					<div class="row" style="border:1px solid black;color:black; background-color:white; padding:1%;">
 						<div class="col-md-12">
 							<div class="table-responsive">
                                 <table class="table table-striped custom-table m-b-0 display" id="tabel">

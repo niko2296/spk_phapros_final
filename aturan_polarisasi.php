@@ -230,7 +230,7 @@
                         </div>
                     </div>
 
-                    <div class="row">
+                    <div class="row" style="border:1px solid black;color:black; background-color:white; padding:1%;">
                         <div class="col-md-12">
                             <div class="table-responsive">
                                 <table class="table table-striped custom-table m-b-0" id="tabel">
@@ -361,7 +361,7 @@
 						if(isset($_POST['tombolKirim']))
 						{
 							echo '
-                            <form action="simpan_aturan_polarisasi.php" method="POST">
+                            <form action="simpan_aturan_polarisasi.php" method="POST" style="border:1px solid black;color:black; background-color:white; padding:1%;">
                             <input type="hidden" name="id_polarisasi" value="'.$id_polarisasi.'">
 							<br>
 								<div class="row">

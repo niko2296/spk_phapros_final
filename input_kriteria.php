@@ -232,7 +232,7 @@
                             $jml_kpi = $_POST['jml_kpi'];
 							$html = '
 							<br><br><br>
-							<form action="simpan_kriteria.php" method="POST" id="kpi_input">
+							<form action="simpan_kriteria.php" method="POST" id="kpi_input" style="border:1px solid black;color:black; background-color:white; padding:1%;">
 							<div class="row">
 								<div class="col-md-4">
 									<select name="id_periode" class="form-control cek">

@@ -198,7 +198,7 @@
 							<a href="input_kriteria.php" class="btn btn-primary rounded pull-right"><i class="fa fa-plus"></i> Tambah Kriteria Nilai</a>
 						</div>
 					</div>
-					<div class="row">
+					<div class="row" style="border:1px solid black;color:black; background-color:white; padding:1%;">
 						<div class="col-md-12">
 							<div class="table-responsive">
 								<table class="table table-striped custom-table m-b-0 display" id="tabel">
