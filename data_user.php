@@ -208,6 +208,7 @@
 											<th>Username</th>
                                             <th>Nama Pegawai</th>
                                             <th>Jabatan</th>
+                                            <th>Departemen</th>
                                             <th>Unit</th>
                                             <th>Aktif</th>
                                             <th>Akses Khusus</th>
@@ -226,6 +227,7 @@
                                                 <td><?php echo $data['username']; ?></td>
                                                 <td><?php echo $data['nama']; ?></td>
                                                 <td><?php echo $data['nama_jabatan']; ?></td>
+                                                <td><?php echo $data['nama_departemen']; ?></td>
                                                 <td><?php echo $data['nama_unit']; ?></td>
                                                 <td><center>
                                                 <?php
@@ -270,9 +272,9 @@
         <script type="text/javascript" src="assets/js/jquery-3.2.1.min.js"></script>
         <script type="text/javascript" src="assets/js/bootstrap.min.js"></script>
 		<!-- <script type="text/javascript" src="assets/js/jquery.dataTables.min.js"></script> -->
-        <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+        <script type="text/javascript" charset="utf8" src="assets/js/jquery.dataTables.js"></script>
 		<!-- <script type="text/javascript" src="assets/js/dataTables.bootstrap.min.js"></script> -->
-        <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.18/datatables.min.js"></script>
+        <script type="text/javascript" src="assets/js/datatables.min.js"></script>
 		<script type="text/javascript" src="assets/js/jquery.slimscroll.js"></script>
 		<script type="text/javascript" src="assets/js/select2.min.js"></script>
 		<script type="text/javascript" src="assets/js/moment.min.js"></script>

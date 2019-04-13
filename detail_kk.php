@@ -22,7 +22,7 @@
         <link rel="stylesheet" type="text/css" href="assets/css/font-awesome.min.css">
         <link rel="stylesheet" type="text/css" href="assets/css/line-awesome.min.css">
 		<!-- <link rel="stylesheet" type="text/css" href="assets/css/dataTables.bootstrap.min.css"> -->
-        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.18/datatables.min.css"/>
+        <link rel="stylesheet" type="text/css" href="assets/css/datatables.min.css"/>
 		<link rel="stylesheet" type="text/css" href="assets/css/select2.min.css">
 		<link rel="stylesheet" type="text/css" href="assets/css/bootstrap-datetimepicker.min.css">
         <link rel="stylesheet" type="text/css" href="assets/css/style.css">
@@ -209,30 +209,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <?php
-                                if(isset($_POST['tombolEdit'])){
-                                    $eksekusi = $db->edit_kompetensi($_POST['id_periode_edit'], $_POST['kelompok_edit'],$_POST['id_kompetensi_edit'], $_POST['nama_kompetensi_edit'], $_POST['indikator_terendah_edit'], $_POST['indikator_tertinggi_edit'], $_POST['bobot_edit']);
-                                    if($eksekusi == 2 || $eksekusi == 3)
-                                    {
-                                        echo '<div class="alert alert-danger">Data Gagal Disimpan</div>';
-                                    }
-                                }
-                                else if(isset($_POST['tombolHapus']))
-                                {
-                                    $eksekusi = $db->hapus_kompetensi($_POST['id_kompetensi_hapus'], $id_periode);
-                                    if($eksekusi == 2 || $eksekusi == 3)
-                                    {
-                                        echo '<div class="alert alert-danger">Data Gagal Dihapus</div>';
-                                    }
-                                }
-                                else if(isset($_POST['tombolCopy']))
-                                {
-                                    $eksekusi = $db->copy_kompetensi(1, $_POST['id_copy'], $_POST['periode']);
-                                    if($eksekusi == 2 || $eksekusi == 3)
-                                    {
-                                        echo '<div class="alert alert-danger">Data Gagal Disimpan</div>';
-                                    }
-                                }
-                                else if(isset($_POST['tombolCopyAll']))
+                                if(isset($_POST['tombolCopyAll']))
                                 {
                                     $eksekusi = $db->copy_kompetensi(2, $_POST['id_copy'], $_POST['periode']);
                                     if($eksekusi == 2 || $eksekusi == 3)
@@ -324,8 +301,8 @@
         <script type="text/javascript" src="assets/js/bootstrap.min.js"></script>
 		<!-- <script type="text/javascript" src="assets/js/jquery.dataTables.min.js"></script>
 		<script type="text/javascript" src="assets/js/dataTables.bootstrap.min.js"></script> -->
-        <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
-        <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.18/datatables.min.js"></script>
+        <script type="text/javascript" charset="utf8" src="assets/js/jquery.dataTables.js"></script>
+        <script type="text/javascript" src="assets/js/datatables.min.js"></script>
 		<script type="text/javascript" src="assets/js/jquery.slimscroll.js"></script>
 		<script type="text/javascript" src="assets/js/select2.min.js"></script>
 		<script type="text/javascript" src="assets/js/moment.min.js"></script>

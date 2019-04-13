@@ -32,7 +32,7 @@
         <link rel="stylesheet" type="text/css" href="assets/css/font-awesome.min.css">
         <link rel="stylesheet" type="text/css" href="assets/css/line-awesome.min.css">
 		<!-- <link rel="stylesheet" type="text/css" href="assets/css/dataTables.bootstrap.min.css"> -->
-        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.18/datatables.min.css"/>
+        <link rel="stylesheet" type="text/css" href="assets/css/datatables.min.css"/>
 		<link rel="stylesheet" type="text/css" href="assets/css/select2.min.css">
 		<link rel="stylesheet" type="text/css" href="assets/css/bootstrap-datetimepicker.min.css">
         <link rel="stylesheet" type="text/css" href="assets/css/style.css">
@@ -233,12 +233,6 @@
                         <div id="dk" class="tab-pane fade in active">
                             <!-- Tab Pertama -->
                             <div class="row">
-                                <?php
-                                    if(isset($_POST['tombolHapus']))
-                                    {
-                                        $db->hapus_kpi($_POST['id_kpi_hapus']);
-                                    }
-                                ?>
                                 <div class="col-md-12" style="border:1px solid black;color:black; background-color:white; padding:1%;">
                                     <div class="table-responsive">
                                         <table class="table table-striped custom-table m-b-0 display" id="tabel">
@@ -336,8 +330,8 @@
         <script type="text/javascript" src="assets/js/bootstrap.min.js"></script>
 		<!-- <script type="text/javascript" src="assets/js/jquery.dataTables.min.js"></script>
 		<script type="text/javascript" src="assets/js/dataTables.bootstrap.min.js"></script> -->
-        <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
-        <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.18/datatables.min.js"></script>
+        <script type="text/javascript" charset="utf8" src="assets/js/jquery.dataTables.js"></script>
+        <script type="text/javascript" src="assets/js/datatables.min.js"></script>
 		<script type="text/javascript" src="assets/js/jquery.slimscroll.js"></script>
 		<script type="text/javascript" src="assets/js/select2.min.js"></script>
 		<script type="text/javascript" src="assets/js/moment.min.js"></script>

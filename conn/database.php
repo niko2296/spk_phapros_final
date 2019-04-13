@@ -169,14 +169,14 @@
 		}
 
 		function tampil_user(){
-			$query = $this->connection->query("SELECT u.*, a.nama, j.nama_jabatan, un.nama_unit FROM user u JOIN mst_anggota a ON u.username = a.nik JOIN mst_jabatan j ON j.id_jabatan = a.id_jabatan JOIN mst_unit un ON un.id_unit = a.id_unit");
+			$query = $this->connection->query("SELECT u.*, a.nama, j.nama_jabatan, un.nama_unit, d.nama_departemen FROM user u LEFT JOIN mst_anggota a ON u.username = a.nik LEFT JOIN mst_jabatan j ON j.id_jabatan = a.id_jabatan LEFT JOIN mst_unit un ON un.id_unit = a.id_unit LEFT JOIN mst_departemen d ON a.id_departemen = d.id_departemen");
 			while($tampil = $query->fetch_array())
 				$hasil[] = $tampil;
 			return $hasil;
 		}
 
 		function tampil_user_detail($nik = null){
-			$query = $this->connection->query("SELECT a.*, g.nama_golongan, j.nama_jabatan, un.nama_unit, us.username, us.password, us.id_user FROM mst_anggota a JOIN mst_golongan g ON g.id_golongan = a.id_golongan JOIN mst_jabatan j ON j.id_jabatan = a.id_jabatan JOIN mst_unit un ON un.id_unit = a.id_unit JOIN user us ON us.username = a.nik WHERE a.nik = '$nik'");
+			$query = $this->connection->query("SELECT u.*, a.nama, j.nama_jabatan, un.nama_unit, d.nama_departemen FROM user u LEFT JOIN mst_anggota a ON u.username = a.nik LEFT JOIN mst_jabatan j ON j.id_jabatan = a.id_jabatan LEFT JOIN mst_unit un ON un.id_unit = a.id_unit LEFT JOIN mst_departemen d ON a.id_departemen = d.id_departemen WHERE a.nik = '$nik'");
 			while($tampil = $query->fetch_array())
 				$hasil[] = $tampil;
 			return $hasil;
@@ -972,7 +972,7 @@
 			if($id_anggota != null)
 			{
 				$tanggal = date('Y-m-d');
-				$query = "UPDATE mst_anggota SET nik = '$nik', nama = '$nama_anggota', jenis_kelamin = '$jenis_kelamin', tempat_lahir = '$tempat_lahir', tanggal_lahir = '$tanggal_lahir', status = '$status', nomor_hp = '$nomor_hp', email = '$email', id_golongan = '$golongan', id_jabatan = '$jabatan', id_departemen = '$id_departemen', id_unit = '$unit', alamat = '$alamat' WHERE id_anggota = '$id_anggota'";
+				$query = "UPDATE mst_anggota SET nik = '$nik', nama = '$nama_anggota', jenis_kelamin = '$jenis_kelamin', tempat_lahir = '$tempat_lahir', tanggal_lahir = '$tanggal_lahir', status = '$status', nomor_hp = '$nomor_hp', email = '$email', id_golongan = '$golongan', id_jabatan = '$jabatan', id_departemen = '$departemen', id_unit = '$unit', alamat = '$alamat' WHERE id_anggota = '$id_anggota'";
 				$edit = $this->connection->prepare($query);
 				if($edit->execute())
 				{
