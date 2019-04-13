@@ -207,9 +207,10 @@
                                 $status = $tampilK['status'];
                                 $nomor_hp = $tampilK['nomor_hp'];
                                 $email = $tampilK['email'];
-                                $id_golongan = $tampilK['id_golongan'];
-                                $id_jabatan = $tampilK['id_jabatan'];
-                                $id_unit = $tampilK['id_unit'];
+                                $nama_golongan = $tampilK['nama_golongan'];
+                                $nama_jabatan = $tampilK['nama_jabatan'];
+                                $nama_departemen = $tampilK['nama_departemen'];
+                                $nama_unit = $tampilK['nama_unit'];
                                 $alamat = $tampilK['alamat'];
                             }
                         }
@@ -228,18 +229,59 @@
                             $email = $_POST['email'];
                             $alamat = $_POST['alamat'];
                             $password_baru = $_POST['password_baru'];
+                            $konfirmasi_password_baru = $_POST['konfirmasi_password_baru'];
+                            $cc = 0;
 
-                            $eksekusi = $db->update_biodata($nik, $nama_anggota, $jenis_kelamin, $tempat_lahir, $tanggal_lahir, $status, $nomor_hp, $email, $alamat, $password_baru);
-                            if($eksekusi == 1)
+                            if($password_baru != '' && $konfirmasi_password_baru == '')
                             {
-                                header("location:data_kpi.php");
+                                echo '
+                                    <script>
+                                        alert("Silahkan Isikan Konfirmasi Password Baru");
+                                        window.location = "settings.php";
+                                    </script>
+                                ';
+                                $cc = $cc+1;
+                            }
+
+                            if($password_baru == '' && $konfirmasi_password_baru != '')
+                            {
+                                echo '
+                                    <script>
+                                        alert("Silahkan Isikan Password Baru");
+                                        window.location = "settings.php";
+                                    </script>
+                                ';
+                                $cc = $cc+1;
+                            }
+
+                            if($password_baru != '' && $konfirmasi_password_baru != '')
+                            {
+                                if($password_baru != $konfirmasi_password_baru)
+                                {
+                                    echo '
+                                        <script>
+                                            alert("Konfirmasi Password Baru Tidak Sama Dengan Password Baru");
+                                            window.location = "settings.php";
+                                        </script>
+                                    ';
+                                    $cc = $cc+1;
+                                }
+                            }
+
+                            if($cc == 0)
+                            {
+                                $eksekusi = $db->update_biodata($nik, $nama_anggota, $jenis_kelamin, $tempat_lahir, $tanggal_lahir, $status, $nomor_hp, $email, $alamat, $password_baru);
+                                if($eksekusi == 1)
+                                {
+                                    header("location:data_kpi.php");
+                                }
                             }
                         }
                     ?>
                     <!-- Form Kedua -->
                     <div class="row">
                         <div class="col-md-10 col-md-offset-1">
-                            <form action="#" method="POST">
+                            <form action="#" method="POST" id="form_biodata">
                                 <div class="row">
                                     <div class="col-sm-6">
                                         <div class="form-group">
@@ -257,26 +299,26 @@
                                 <div class="row">
                                     <div class="col-sm-6">
                                         <div class="form-group">
-                                            <label>Jenis Kelamin</label>
-                                            <select name="jenis_kelamin" id="jenis_kelamin" class="form-control">
-                                                <option value="">Pilih Jenis Kelamin</option>
-                                                <option value="1" <?php echo ($jenis_kelamin == 1)?'selected="selected"':'';?>>Pria</option>
-                                                <option value="2" <?php echo ($jenis_kelamin == 2)?'selected="selected"':'';?>>Wanita</option>
-                                            </select>
+                                            <label>Tempat Lahir</label>
+                                            <input type="text" value="<?php echo $tempat_lahir; ?>" class="form-control" name="tempat_lahir">
                                         </div>
                                     </div>
                                     <div class="col-sm-6">
                                         <div class="form-group">
-                                            <label>Tempat Lahir</label>
-                                            <input type="text" value="<?php echo $tempat_lahir; ?>" class="form-control" name="tempat_lahir">
+                                            <label>Tanggal Lahir</label>
+                                            <div class="cal-icon"><input class="form-control datetimepicker" type="text" name="tanggal_lahir" id="tanggal_lahir" value="<?php echo date('d/m/Y', strtotime($tanggal_lahir)); ?>"></div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-sm-6">
                                         <div class="form-group">
-                                            <label>Tanggal Lahir</label>
-                                            <div class="cal-icon"><input class="form-control datetimepicker" type="text" name="tanggal_lahir" id="tanggal_lahir" value="<?php echo date('d/m/Y', strtotime($tanggal_lahir)); ?>"></div>
+                                            <label>Jenis Kelamin</label>
+                                            <select name="jenis_kelamin" id="jenis_kelamin" class="form-control">
+                                                <option value="">Pilih Jenis Kelamin</option>
+                                                <option value="1" <?php echo ($jenis_kelamin == 1)?'selected="selected"':'';?>>Pria</option>
+                                                <option value="2" <?php echo ($jenis_kelamin == 2)?'selected="selected"':'';?>>Wanita</option>
+                                            </select>
                                         </div>
                                     </div>
                                     <div class="col-sm-6">
@@ -308,42 +350,32 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Golongan</label>
-                                                <?php
-                                                    foreach($db->tampil_golongan() as $data2)
-                                                    {
-                                                        if($id_golongan == $data2['id_golongan'])
-                                                            echo '<input type="text" class="form-control" disabled="disabled" value="'.$data2['nama_golongan'].'">';
-                                                    }
-                                                ?>
+                                            <input type="text" class="form-control" disabled="disabled" value="<?php echo $nama_golongan; ?>">
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Jabatan</label>
-                                            <?php
-                                                foreach($db->tampil_jabatan() as $data2)
-                                                {
-                                                    if($id_jabatan == $data2['id_jabatan'])
-                                                        echo '<input type="text" class="form-control" disabled="disabled" value="'.$data2['nama_jabatan'].'">';
-                                                } 
-                                            ?>
+                                            <input type="text" class="form-control" disabled="disabled" value="<?php echo $nama_jabatan; ?>">
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label>Unit</label>
-                                            <?php
-                                                foreach($db->tampil_unit() as $data2)
-                                                {
-                                                    if($id_unit == $data2['id_unit'])
-                                                        echo '<input type="text" class="form-control" disabled="disabled" value="'.$data2['nama_unit'].'">';
-                                                }
-                                            ?>
+                                            <label>Departemen</label>
+                                            <input type="text" class="form-control" disabled="disabled" value="<?php echo $nama_departemen; ?>">
                                         </div>
                                     </div>
                                     <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Unit</label>
+                                            <input type="text" class="form-control" disabled="disabled" value="<?php echo $nama_unit; ?>">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
                                         <div class="form-group">
                                             <label>Alamat</label>
                                             <textarea name="alamat" id="alamat" cols="30" rows="3" class="form-control"><?php echo $alamat; ?></textarea>
@@ -354,7 +386,13 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="">Password Baru</label>
-                                            <input type="text" name="password_baru" id="password_baru" class="form-control">
+                                            <input type="password" name="password_baru" id="password_baru" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="">Konfirmasi Password Baru</label>
+                                            <input type="password" name="konfirmasi_password_baru" id="konfirmasi_password_baru" class="form-control">
                                         </div>
                                     </div>
                                 </div>
@@ -381,55 +419,11 @@
 
         <script>
             $(document).ready(function () {
-                $(".select").select2({
+                $("select").select2({
                     placeholder: "Please Select"
                 });
             });
         </script>
-
-		<script>
-			$('#satuan1').on('change', function() 
-			{
-				var id = $(this).children(":selected").attr("value");
-				
-				$.ajax({
-				url: "get_satuan.php?id_satuan="+id,
-				type: "GET",
-				
-				success: function(data) {
-					
-					var result = JSON.parse(data);
-					$('#sifat_kpi1').html('');
-					$.each(result, function (index, value) {
-						var jenis_polarisasi = value;
-						var ket = null;
-						if(jenis_polarisasi == 1)
-							ket = "Polarisasi Positif";
-						else if(jenis_polarisasi == 2)
-							ket = "Polarisasi Negatif";
-						else if(jenis_polarisasi == 3)
-							ket = "Polarisasi Absolute Positif/Project";
-						else if(jenis_polarisasi == 4)
-							ket = "Polatisasi Absolute Negatif";
-						else if(jenis_polarisasi == 5)
-							ket = "Polarisasi Waktu";
-						else if(jenis_polarisasi == 6)
-							ket = "Polarisasi Akurasi";
-						else if(jenis_polarisasi == 7)
-							ket = "Polarisasi Survey";
-						else if(jenis_polarisasi == 8) 
-							ket = "Polarisasi Khusus";
-
-						$('#sifat_kpi1').append($('<option/>', { 
-							value: jenis_polarisasi,
-							text : ket 
-						}));
-					});
-					
-				}
-				});
-			});
-		</script>
     </body>
 </html>
 <?php

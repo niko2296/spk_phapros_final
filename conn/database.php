@@ -176,7 +176,7 @@
 		}
 
 		function tampil_user_detail($nik = null){
-			$query = $this->connection->query("SELECT u.*, a.nama, j.nama_jabatan, un.nama_unit, d.nama_departemen FROM user u LEFT JOIN mst_anggota a ON u.username = a.nik LEFT JOIN mst_jabatan j ON j.id_jabatan = a.id_jabatan LEFT JOIN mst_unit un ON un.id_unit = a.id_unit LEFT JOIN mst_departemen d ON a.id_departemen = d.id_departemen WHERE a.nik = '$nik'");
+			$query = $this->connection->query("SELECT u.*, a.nik, a.nama, a.jenis_kelamin, a.tempat_lahir, a.tanggal_lahir, a.status, a.nomor_hp, a.email, a.alamat, j.nama_jabatan, un.nama_unit, d.nama_departemen, g.nama_golongan FROM user u LEFT JOIN mst_anggota a ON u.username = a.nik LEFT JOIN mst_golongan g ON a.id_golongan = g.id_golongan LEFT JOIN mst_jabatan j ON j.id_jabatan = a.id_jabatan LEFT JOIN mst_unit un ON un.id_unit = a.id_unit LEFT JOIN mst_departemen d ON a.id_departemen = d.id_departemen WHERE a.nik = '$nik'");
 			while($tampil = $query->fetch_array())
 				$hasil[] = $tampil;
 			return $hasil;
