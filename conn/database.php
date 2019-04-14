@@ -139,14 +139,14 @@
 			return $hasil;
 		}
 
-		function tampil_aturan($jenis = null, $idjp = null, $idup = null){
+		function tampil_aturan($jenis = null, $idjp = null, $iddp = null, $idup = null, $iddd = null, $idud = null){
 			if($jenis == 1)
 			{
-				$query = $this->connection->query("SELECT * FROM aturan_penilai GROUP BY id_jabatan_penilai, id_unit_penilai");
+				$query = $this->connection->query("SELECT * FROM aturan_penilai GROUP BY id_jabatan_penilai, id_departemen_penilai, id_unit_penilai, id_departemen_dinilai, id_unit_dinilai");
 			}
 			else if($jenis == 2)
 			{
-				$query = $this->connection->query("SELECT * FROM aturan_penilai WHERE id_jabatan_penilai = '$idjp' AND id_unit_penilai = '$idup'");
+				$query = $this->connection->query("SELECT * FROM aturan_penilai WHERE id_jabatan_penilai = '$idjp' AND id_departemen_penilai = '$iddp' AND id_unit_penilai = '$idup' AND id_departemen_dinilai = '$iddd' AND id_unit_dinilai = '$idud'");
 			}
 
 			while($tampil = $query->fetch_array())
@@ -601,12 +601,12 @@
 			}
 		}
 
-		function input_aturan($jp = null, $up = null, $jd = [], $ud = null){
+		function input_aturan($jp = null, $dp = null, $up = null, $jd = [], $dd = null, $ud = null){
 			$jml = count($jd);
 			$k = [];
 			for($i=0; $i<$jml; $i++)
 			{
-				$query = "INSERT INTO aturan_penilai VALUES ('', '$jp', '$up', '$jd[$i]', '$ud')";
+				$query = "INSERT INTO aturan_penilai VALUES ('', '$jp', '$dp', '$up', '$jd[$i]', '$dd', '$ud')";
 				$input = $this->connection->prepare($query);
 				if($input->execute())
 					$k[] = 1;
@@ -1030,14 +1030,14 @@
 				return 2;
 		}
 
-		function edit_aturan($jp = null, $up = null, $jd = null, $ud = null, $jpA = null, $upA = null){
-			$query = "DELETE FROM aturan_penilai WHERE id_jabatan_penilai = '$jpA' AND id_unit_penilai = '$upA'";
+		function edit_aturan($idjp = null, $iddp = null, $idup = null, $iddd = null, $idud = null, $idjp2 = null, $iddp2 = null, $idup2 = null, $idjd = [], $iddd2 = null, $idud2 = null){
+			$query = "DELETE FROM aturan_penilai WHERE id_jabatan_penilai = '$idjp' AND id_departemen_penilai = '$iddp' AND id_unit_penilai = '$idup' AND id_departemen_dinilai = '$iddd' AND id_unit_dinilai = '$idud'";
 			$hapus = $this->connection->prepare($query);
 			if($hapus->execute())
 			{
-				for($a=0; $a<count($jd); $a++)
+				for($a=0; $a<count($idjd); $a++)
 				{
-					$query = "INSERT INTO aturan_penilai VALUES ('', '$jp', '$up', '$jd[$a]', '$ud')";
+					$query = "INSERT INTO aturan_penilai VALUES ('', '$idjp2', '$iddp2', '$idup2', '$idjd[$a]', '$iddd2', '$idud2')";
 					$edit = $this->connection->prepare($query);
 					if($edit->execute())
 						$k[] = 1;
@@ -1337,7 +1337,14 @@
 		{
 			if($id_aturan != null)
 			{
-				$query = "DELETE FROM aturan_penilai WHERE id_aturan = '$id_aturan'";
+				$qc = $this->connection->query("SELECT * FROM aturan_penilai WHERE id_aturan = '$id_aturan'");
+				$tc = $qc->fetch_array();
+				$idjp = $tc['id_jabatan_penilai'];
+				$iddp = $tc['id_departemen_penilai'];
+				$idup = $tc['id_unit_penilai'];
+				$iddd = $tc['id_departemen_dinilai'];
+				$idud = $tc['id_unit_dinilai'];
+				$query = "DELETE FROM aturan_penilai WHERE id_jabatan_penilai = '$idjp' AND id_departemen_penilai = '$iddp' AND id_unit_penilai = '$idup' AND id_departemen_dinilai = '$iddd' AND id_unit_dinilai = '$idud'";
 				$hapus = $this->connection->prepare($query);
 				if($hapus->execute())
 					header("location:aturan_penilai.php");

@@ -204,15 +204,17 @@
 							<a href="input_aturan_penilai.php" class="btn btn-primary rounded pull-right"><i class="fa fa-plus"></i> Tambah Aturan Penilai</a>
 						</div>
 					</div>
-					<div class="row">
+					<div class="row" style="border:1px solid black;color:black; background-color:white; padding:1%;">
 						<div class="col-md-12">
 							<div class="table-responsive">
 								<table class="table table-striped custom-table m-b-0 display" id="tabel">
 									<thead>
 										<tr>
 											<th>Jabatan Penilai</th>
+                                            <th>Departemen Penilai</th>
                                             <th>Unit Penilai</th>
                                             <th>Jabatan Dinilai</th>
+                                            <th>Departemen Dinilai</th>
                                             <th>Unit Dinilai</th>
 											<th class="text-right">Actions</th>
 										</tr>
@@ -228,27 +230,35 @@
                                             <tr>
                                                 <td>
                                                 <?php
-                                                    foreach($db->tampil_jabatan() as $tampil)
+                                                    foreach($db->tampil_jabatan($data['id_jabatan_penilai']) as $tampil)
                                                     {
-                                                        if($data['id_jabatan_penilai'] == $tampil['id_jabatan'])
                                                             echo $tampil['nama_jabatan'];
                                                     }
                                                 ?>
                                                 </td>
                                                 <td>
                                                 <?php
-                                                    foreach($db->tampil_unit() as $tampil)
+                                                    foreach($db->tampil_departemen($data['id_departemen_penilai']) as $tampil)
                                                     {
-                                                        if($data['id_unit_penilai'] == $tampil['id_unit'])
-                                                            echo $tampil['nama_unit'];
+                                                            echo $tampil['nama_departemen'];
                                                     }
+                                                ?>
+                                                </td>
+                                                <td>
+                                                <?php
+                                                    $up = '';
+                                                    foreach($db->tampil_unit($data['id_unit_penilai']) as $tampil)
+                                                    {
+                                                            $up = $tampil['nama_unit'];
+                                                    }
+                                                    echo ($up == '')?('-'):($up);
                                                 ?>
                                                 </td>
                                                 <td>
                                                 <?php
                                                     $dinilai = [];
                                                     $kd = [];
-                                                    foreach($db->tampil_aturan(2, $data['id_jabatan_penilai'], $data['id_unit_penilai']) as $tampil)
+                                                    foreach($db->tampil_aturan(2, $data['id_jabatan_penilai'], $data['id_departemen_penilai'], $data['id_unit_penilai'], $data['id_departemen_dinilai'], $data['id_unit_dinilai']) as $tampil)
                                                     {
                                                         $dinilai[] = $tampil['id_jabatan_dinilai'];
                                                     }
@@ -264,18 +274,27 @@
                                                 </td>
                                                 <td>
                                                 <?php
-                                                    foreach($db->tampil_unit() as $tampil)
+                                                    foreach($db->tampil_departemen($data['id_departemen_dinilai']) as $tampil)
                                                     {
-                                                        if($data['id_unit_dinilai'] == $tampil['id_unit'])
-                                                            echo $tampil['nama_unit'];
+                                                            echo $tampil['nama_departemen'];
                                                     }
+                                                ?>
+                                                </td>
+                                                <td>
+                                                <?php
+                                                    $ud = '';
+                                                    foreach($db->tampil_unit($data['id_unit_dinilai']) as $tampil)
+                                                    {
+                                                            $ud = $tampil['nama_unit'];
+                                                    }
+                                                    echo ($ud == '')?('-'):($ud);
                                                 ?>
                                                 </td>
                                                 <td class="text-right">
                                                     <div class="dropdown">
                                                         <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
                                                         <ul class="dropdown-menu pull-right">
-                                                            <li><a href="edit_aturan_penilai.php?idjp=<?php echo $data['id_jabatan_penilai']."&&idup=".$data['id_unit_penilai']; ?>" title="Edit"><i class="fa fa-pencil m-r-5"></i> Edit</a></li>
+                                                            <li><a href="edit_aturan_penilai.php?idjp=<?php echo $data['id_jabatan_penilai']."&&iddp=".$data['id_departemen_penilai']."&&idup=".$data['id_unit_penilai']."&&iddd=".$data['id_departemen_dinilai']."&&idud=".$data['id_unit_dinilai']; ?>" title="Edit"><i class="fa fa-pencil m-r-5"></i> Edit</a></li>
                                                             <li><a href="#" title="Delete" data-toggle="modal" data-target="#delete_ticket<?php echo $data['id_aturan']; ?>"><i class="fa fa-trash-o m-r-5"></i> Delete</a></li>
                                                         </ul>
                                                     </div>

@@ -193,13 +193,29 @@
                 {
                     $jp = $_POST['id_jabatan_penilai'];
                     $jd = $_POST['id_jabatan_dinilai'];
+                    $dp = $_POST['id_departemen_penilai'];
+                    $dd = $_POST['id_departemen_dinilai'];
                     $up = $_POST['id_unit_penilai'];
                     $ud = $_POST['id_unit_dinilai'];
 
-                    $eksekusi = $db->input_aturan($jp, $up, $jd, $ud);
+                    $eksekusi = $db->input_aturan($jp, $dp, $up, $jd, $dd, $ud);
                     if($eksekusi == 1)
                     {
-                        header("location:aturan_penilai.php");
+                        echo '
+                            <script>
+                                alert("Data Berhasil Tersimpan");
+                                window.location = "aturan_penilai.php";
+                            </script>
+                        ';
+                    }
+                    else if($eksekusi == 2)
+                    {
+                        echo '
+                            <script>
+                                alert("Data Gagal Tersimpan");
+                                window.location = "aturan_penilai.php";
+                            </script>
+                        ';
                     }
 
                 }
@@ -217,10 +233,10 @@
 					</div>
                     <!-- Form Kedua -->
                     <div class="row">
-                        <div class="col-md-10 col-md-offset-1">
+                        <div class="col-md-12">
                             <form action="#" method="POST" id="penilai_input">
                                 <div class="row">
-                                    <div class="col-sm-6">
+                                    <div class="col-sm-4">
                                         <div class="form-group">
                                             <label>Jabatan Penilai</label>
                                             <select name="id_jabatan_penilai" id="id_jabatan_penilai" class="form-control cek">
@@ -236,10 +252,26 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-sm-6">
+                                    <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <label>Departemen Penilai</label>
+                                            <select name="id_departemen_penilai" id="id_departemen_penilai" class="form-control cek">
+                                                <option value="">Silahkan Pilih Departemen</option>
+                                                <?php
+                                                    foreach($db->tampil_departemen() as $tampil)
+                                                    {
+                                                ?>
+                                                        <option value="<?php echo $tampil['id_departemen']?>"><?php echo $tampil['nama_departemen']; ?></option>
+                                                <?php
+                                                    }
+                                                ?>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
                                         <div class="form-group">
                                             <label>Unit Penilai</label>
-                                            <select name="id_unit_penilai" id="id_unit_penilai" class="form-control cek">
+                                            <select name="id_unit_penilai" id="id_unit_penilai" class="form-control">
                                                 <option value="">Silahkan Pilih Unit</option>
                                                 <?php
                                                     foreach($db->tampil_unit() as $tampil)
@@ -254,7 +286,7 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-sm-6">
+                                    <div class="col-sm-4">
                                         <div class="form-group">
                                             <label>Jabatan Dinilai</label>
                                             <select name="id_jabatan_dinilai[]" id="id_jabatan_dinilai" class="form-control cek" multiple="multiple">
@@ -270,10 +302,26 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-sm-6">
+                                    <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <label>Departemen Dinilai</label>
+                                            <select name="id_departemen_dinilai" id="id_departemen_dinilai" class="form-control cek">
+                                                <option value="">Silahkan Pilih Departemen</option>
+                                                <?php
+                                                    foreach($db->tampil_departemen() as $tampil)
+                                                    {
+                                                ?>
+                                                        <option value="<?php echo $tampil['id_departemen']?>"><?php echo $tampil['nama_departemen']; ?></option>
+                                                <?php
+                                                    }
+                                                ?>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
                                         <div class="form-group">
                                             <label>Unit Dinilai</label>
-                                            <select name="id_unit_dinilai" id="id_unit_dinilai" class="form-control cek">
+                                            <select name="id_unit_dinilai" id="id_unit_dinilai" class="form-control">
                                                 <option value="">Silahkan Pilih Unit</option>
                                                 <?php
                                                     foreach($db->tampil_unit() as $tampil)
@@ -314,6 +362,12 @@
                     placeholder: "Please Select"
                 });
                 $('#id_jabatan_penilai').select2({
+                    placeholder: "Please Select"
+                });
+                $('#id_departemen_dinilai').select2({
+                    placeholder: "Please Select"
+                });
+                $('#id_departemen_penilai').select2({
                     placeholder: "Please Select"
                 });
                 $('#id_unit_dinilai').select2({

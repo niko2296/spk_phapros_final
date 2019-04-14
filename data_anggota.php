@@ -301,7 +301,7 @@
                                                 <td><?php echo $data['nama_golongan']; ?></td>
                                                 <td><?php echo $data['nama_jabatan']; ?></td>
                                                 <td><?php echo $data['nama_departemen']; ?></td>
-                                                <td><?php echo $data['nama_unit']; ?></td>
+                                                <td><?php echo ($data['nama_unit'] == '')?('-'):($data['nama_unit']); ?></td>
                                                 <td><?php echo $data['alamat']; ?></td>
                                                 <td class="text-right">
                                                     <div class="dropdown">
@@ -358,8 +358,8 @@
                                                                     <div class="col-md-6">
                                                                         <div class="form-group">
                                                                             <label>Jenis Kelamin</label>
-                                                                            <select name="jenis_kelamin_edit" id="jenis_kelamin_edit" class="form-control">
-                                                                                <option value="">Silahkan Pilih Jenis Kelamin</option>
+                                                                            <select name="jenis_kelamin_edit" id="jenis_kelamin_edit" class="form-control" style="width:100%;">
+                                                                                <option value="0">Silahkan Pilih Jenis Kelamin</option>
                                                                                 <option value="1" <?php echo ($data['jenis_kelamin'] == 1)?'selected="selected"':''; ?>>Pria</option>
                                                                                 <option value="2" <?php echo ($data['jenis_kelamin'] == 2)?'selected="selected"':''; ?>>Wanita</option>
                                                                             </select>
@@ -368,8 +368,8 @@
                                                                     <div class="col-md-6">
                                                                         <div class="form-group">
                                                                             <label>Status</label>
-                                                                            <select name="status_edit" id="status_edit" class="form-control">
-                                                                                <option value="">Silahkan Pilih Status</option>
+                                                                            <select name="status_edit" id="status_edit" class="form-control" style="width:100%;">
+                                                                                <option value="0">Silahkan Pilih Status</option>
                                                                                 <option value="1" <?php echo ($data['status'] == '1')?'selected="selected"':'';?>>Belum Menikah</option>
                                                                                 <option value="2"<?php echo ($data['status'] == '2')?'selected="selected"':'';?>>Sudah Menikah</option>
                                                                             </select>
@@ -394,8 +394,8 @@
                                                                     <div class="col-md-6">
                                                                         <div class="form-group">
                                                                             <label>Golongan</label>
-                                                                            <select name="golongan_edit" id="golongan_edit" class="form-control">
-                                                                                <option value="">Silahkan Pilih Golongan</option>
+                                                                            <select name="golongan_edit" id="golongan_edit" class="form-control" style="width:100%;">
+                                                                                <option value="0">Silahkan Pilih Golongan</option>
                                                                                 <?php
                                                                                     foreach($db->tampil_golongan() as $data2)
                                                                                     {
@@ -413,8 +413,8 @@
                                                                     <div class="col-md-6">
                                                                         <div class="form-group">
                                                                             <label>Jabatan</label>
-                                                                            <select name="jabatan_edit" id="jabatan_edit" class="form-control">
-                                                                                <option value="">Silih Pilih Jabatan</option>
+                                                                            <select name="jabatan_edit" id="jabatan_edit" class="form-control" style="width:100%;">
+                                                                                <option value="0">Silih Pilih Jabatan</option>
                                                                                 <?php
                                                                                     foreach($db->tampil_jabatan() as $data2)
                                                                                     {
@@ -434,8 +434,8 @@
                                                                     <div class="col-md-6">
                                                                         <div class="form-group">
                                                                             <label>Departemen</label>
-                                                                            <select name="departemen_edit" id="departemen_edit" class="form-control">
-                                                                                <option value="">Silahkan Pilih Departemen</option>
+                                                                            <select name="departemen_edit" id="departemen_edit" class="form-control" style="width:100%;">
+                                                                                <option value="0">Silahkan Pilih Departemen</option>
                                                                                 <?php
                                                                                     foreach($db->tampil_departemen() as $data2)
                                                                                     {
@@ -453,8 +453,8 @@
                                                                     <div class="col-md-6">
                                                                         <div class="form-group">
                                                                             <label>Unit</label>
-                                                                            <select name="unit_edit" id="unit_edit" class="form-control">
-                                                                                <option value="">Silahkan Pilih Unit</option>
+                                                                            <select name="unit_edit" id="unit_edit" class="form-control" style="width:100%;">
+                                                                                <option value="0">Silahkan Pilih Unit</option>
                                                                                 <?php
                                                                                     foreach($db->tampil_unit() as $data2)
                                                                                     {
@@ -559,8 +559,8 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Jenis Kelamin</label>
-                                        <select name="jenis_kelamin" id="jenis_kelamin" class="form-control cek">
-                                            <option value="">Silahkan Pilih Jenis Kelamin</option>
+                                        <select name="jenis_kelamin" id="jenis_kelamin" class="form-control cek" style="width:100%;">
+                                            <option value="0">Silahkan Pilih Jenis Kelamin</option>
                                             <option value="1">Pria</option>
                                             <option value="2">Wanita</option>
                                         </select>
@@ -569,8 +569,8 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Status</label>
-                                        <select name="status" id="status" class="form-control cek">
-                                            <option value="">Silahkan Pilih Status</option>
+                                        <select name="status" id="status" class="form-control cek" style="width:100%;">
+                                            <option value="0">Silahkan Pilih Status</option>
                                             <option value="1">Belum Menikah</option>
                                             <option value="2">Sudah Menikah</option>
                                         </select>
@@ -595,8 +595,8 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Golongan</label>
-                                        <select name="golongan" id="golongan" class="form-control cek">
-                                            <option value="">Silahkan Pilih Golongan</option>
+                                        <select name="golongan" id="golongan" class="form-control cek" style="width:100%;">
+                                            <option value="0">Silahkan Pilih Golongan</option>
                                             <?php
                                                 foreach($db->tampil_golongan() as $data)
                                                 {
@@ -611,8 +611,8 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Jabatan</label>
-                                        <select name="jabatan" id="jabatan" class="form-control cek">
-                                            <option value="">Silih Pilih Jabatan</option>
+                                        <select name="jabatan" id="jabatan" class="form-control cek" style="width:100%;">
+                                            <option value="0">Silih Pilih Jabatan</option>
                                             <?php
                                                 foreach($db->tampil_jabatan() as $data)
                                                 {
@@ -629,8 +629,8 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Departemen</label>
-                                        <select name="departemen" id="departemen" class="form-control cek">
-                                            <option value="">Silahkan Pilih Departemen</option>
+                                        <select name="departemen" id="departemen" class="form-control cek" style="width:100%;">
+                                            <option value="0">Silahkan Pilih Departemen</option>
                                             <?php
                                                 foreach($db->tampil_departemen() as $data)
                                                 {
@@ -645,8 +645,8 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Unit</label>
-                                        <select name="unit" id="unit" class="form-control cek">
-                                            <option value="">Silahkan Pilih Unit</option>
+                                        <select name="unit" id="unit" class="form-control" style="width:100%;">
+                                            <option value="0">Silahkan Pilih Unit</option>
                                             <?php
                                                 foreach($db->tampil_unit() as $data)
                                                 {
@@ -696,6 +696,10 @@
                     searching : true
                 });
 
+                $('select').select2({
+                    placeholder: "Please Select"
+                });
+
                 $("#anggota_input").on("submit", function(e){
                     var inputan = $("#anggota_input").find(".cek");
                     var v = '';
@@ -703,7 +707,7 @@
                     var p = 0;
                     $.each(inputan, function(i){
                         v = $(this).val();
-                        if(v == '')
+                        if(v == '' || v == '0')
                         {
                             k[p] = 1;
                         }
