@@ -9,6 +9,8 @@
         header("location:login.php");
     $nama = $_SESSION['nama'];
     $jabatan = $_SESSION['id_jabatan'];
+    $departemen = $_SESSION['id_departemen'];
+    $unit = $_SESSION['id_unit'];
 ?>
 <!DOCTYPE html>
 <html>
@@ -157,33 +159,39 @@
 								<a href="#"><i class="la la-clipboard"></i> <span> KPI</span> <span class="menu-arrow"></span></a>
 								<ul style="display: none;">
                                     <?php
-                                        if($m5 == 1 || $_SESSION['aksus'] == TRUE)
+										$eksekusi1 = $db->cek_akses(1, $jabatan, $departemen, $unit);
+                                        if($eksekusi1 == 1 || $_SESSION['aksus'] == TRUE)
                                         {
                                     ?>
-									<li><a href="data_kpi.php">Data KPI Individu</a></li>
-									<li><a href="copy_kpi.php">Copy Data KPI Individu</a></li>
+											<li><a href="data_kpi.php">Data KPI Individu</a></li>
+											<li><a href="copy_kpi.php">Copy Data KPI Individu</a></li>
                                     <?php 
-                                        }
-                                        if($m6 == 1 || $_SESSION['aksus'] == TRUE)
+										}
+										$eksekusi2 = $db->cek_akses(2, $jabatan, $departemen, $unit);
+                                        if($eksekusi2 == 1 || $_SESSION['aksus'] == TRUE)
                                         {
                                     ?>
-                                    <li><a href="data_kpi_verifikasi.php">Data KPI Sub Ordinat</a></li>
+                                    		<li><a href="data_kpi_verifikasi.php">Data KPI Sub Ordinat</a></li>
                                     <?php
-                                        }
-                                        if($m7 == 1 || $_SESSION['aksus'] == TRUE)
+										}
+										if($m7 == 1 || $_SESSION['aksus'] == TRUE)
                                         {
                                             echo '<li><a href="data_kpi_seluruh.php">Data KPI Keseluruhan</a></li>';
                                         }
                                     ?>
                                 </ul>
 							</li>
-                            <li class="submenu">
+							<li class="submenu">
 								<a href="#"><i class="la la-tasks"></i> <span> Kompetensi</span> <span class="menu-arrow"></span></a>
 								<ul style="display: none;">
-                                    <li><a href="kompetensi_individu.php">Data Kompetensi Individu</a></li>
-									<li><a href="kompetensi_sub.php">Data Kompetensi Sub Ordinat</a></li>
+									<?php
+										if($eksekusi1 == 1 || $_SESSION['aksus'] == TRUE)
+											echo '<li><a href="kompetensi_individu.php">Data Kompetensi Individu</a></li>';
+										if($eksekusi2 == 1 || $_SESSION['aksus'] == TRUE)
+											echo '<li><a href="kompetensi_sub.php">Data Kompetensi Sub Ordinat</a></li>';
+									?>
                                 </ul>
-                            </li>
+							</li>
                             <li class=""> 
 								<a href="hasil_akhir.php"><i class="la la-edit"></i> <span>Hasil Akhir</span></a>
 							</li>
@@ -214,8 +222,6 @@
                                             <th>Aturan Penilai</th>
                                             <th>Aturan Waktu</th>
                                             <th>Akses Menu</th>
-                                            <th>Data KPI Individu</th>
-                                            <th>Data KPI Sub Ordinat</th>
                                             <th>Data KPI Keseluruhan</th>
 										</tr>
 									</thead>
@@ -226,8 +232,6 @@
                                         $m1 = 0;
                                         $m2 = 0;
                                         $m3 = 0;
-                                        $m4 = 0;
-                                        $m5 = 0;
                                         $m6 = 0;
                                         error_reporting(0);
                                         foreach($db->tampil_jabatan() as $data)
@@ -241,8 +245,6 @@
                                                     $m1 = $data2['menu2'];
                                                     $m2 = $data2['menu3'];
                                                     $m3 = $data2['menu4'];
-                                                    $m4 = $data2['menu5'];
-                                                    $m5 = $data2['menu6'];
                                                     $m6 = $data2['menu7'];
                                                 }
                                             }
@@ -253,8 +255,6 @@
                                                 <td><center><input data-id="<?php echo $data['id_jabatan']; ?>" data-field="menu2" type="checkbox" id='verifikasi2' <?php echo ($m1 == 1)?'checked':''; ?>></center></td>
                                                 <td><center><input data-id="<?php echo $data['id_jabatan']; ?>" data-field="menu3" type="checkbox" id='verifikasi3' <?php echo ($m2 == 1)?'checked':''; ?>></center></td>
                                                 <td><center><input data-id="<?php echo $data['id_jabatan']; ?>" data-field="menu4" type="checkbox" id='verifikasi4' <?php echo ($m3 == 1)?'checked':''; ?>></center></td>
-                                                <td><center><input data-id="<?php echo $data['id_jabatan']; ?>" data-field="menu5" type="checkbox" id='verifikasi5' <?php echo ($m4 == 1)?'checked':''; ?>></center></td>
-                                                <td><center><input data-id="<?php echo $data['id_jabatan']; ?>" data-field="menu6" type="checkbox" id='verifikasi6' <?php echo ($m5 == 1)?'checked':''; ?>></center></td>
                                                 <td><center><input data-id="<?php echo $data['id_jabatan']; ?>" data-field="menu7" type="checkbox" id='verifikasi7' <?php echo ($m6 == 1)?'checked':''; ?>></center></td>
                                             </tr>
                                     <?php
@@ -262,8 +262,6 @@
                                             $m1 = 0;
                                             $m2 = 0;
                                             $m3 = 0;
-                                            $m4 = 0;
-                                            $m5 = 0;
                                             $m6 = 0;
                                         }
                                     ?>

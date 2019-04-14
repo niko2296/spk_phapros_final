@@ -1525,7 +1525,7 @@
 		}
 		//Akhiran Fungsi Hapus
 
-		//Fungsi Cek Login
+		//Fungsi Cek
 		function cek_login($username = null, $password = null)
 		{
 			if($username == null || $password == null)
@@ -1540,6 +1540,7 @@
 					$_SESSION['aksus'] = TRUE;
 					$_SESSION['id_anggota'] = 0;
 					$_SESSION['id_jabatan'] = 0;
+					$_SESSION['id_departemen'] = 0;
 					$_SESSION['id_unit'] = 0;
 					$_SESSION['nama'] = 'Admin Super';
 					$_SESSION['nik'] = 0;
@@ -1572,6 +1573,7 @@
 							{
 								$id_anggota = $tampil['id_anggota'];
 								$id_jabatan = $tampil['id_jabatan'];
+								$id_departemen = $tampil['id_departemen'];
 								$id_unit = $tampil['id_unit'];
 								$nama = $tampil['nama'];
 							}
@@ -1585,6 +1587,7 @@
 								
 							$_SESSION['id_anggota'] = $id_anggota;
 							$_SESSION['id_jabatan'] = $id_jabatan;
+							$_SESSION['id_departemen'] = $id_departemen;
 							$_SESSION['id_unit'] = $id_unit;
 							$_SESSION['nama'] = $nama;
 							$_SESSION['nik'] = $username;
@@ -1635,7 +1638,33 @@
 				$id_periode = $tampil['id_periode'];
 			return $id_periode;
 		}
-		//Akhiran Fungsi Cek Login
+
+		function cek_akses($jenis = null, $idj = null, $idd = null, $idu = null)
+		{
+			if($jenis == 1 || $jenis == '1')
+			{
+				$query = $this->connection->query("SELECT * FROM aturan_penilai WHERE id_jabatan_dinilai = '$idj' AND id_departemen_dinilai = '$idd' AND id_unit_dinilai = '$idu'");
+				$jml = 0;
+				while($tampil = $query->fetch_array())
+					$jml = $jml+1;
+				if($jml == 0)
+					return 0;
+				else 
+					return 1;
+			}
+			else if($jenis == 2 || $jenis == '2')
+			{
+				$query = $this->connection->query("SELECT * FROM aturan_penilai WHERE id_jabatan_penilai = '$idj' AND id_departemen_penilai = '$idd' AND id_unit_penilai = '$idu'");
+				$jml = 0;
+				while($tampil = $query->fetch_array())
+					$jml = $jml+1;
+				if($jml == 0)
+					return 0;
+				else 
+					return 1;
+			}
+		}
+		//Akhiran Fungsi Cek
 
 		// Fungsi Verifikasi
 		function verifikasi($id = 0, $status = 0)

@@ -9,6 +9,8 @@
         header("location:login.php");
     $nama = $_SESSION['nama'];
     $jabatan = $_SESSION['id_jabatan'];
+    $departemen = $_SESSION['id_departemen'];
+    $unit = $_SESSION['id_unit'];
 ?>
 <!DOCTYPE html>
 <html>
@@ -160,33 +162,39 @@
 								<a href="#"><i class="la la-clipboard"></i> <span> KPI</span> <span class="menu-arrow"></span></a>
 								<ul style="display: none;">
                                     <?php
-                                        if($m5 == 1 || $_SESSION['aksus'] == TRUE)
+										$eksekusi1 = $db->cek_akses(1, $jabatan, $departemen, $unit);
+                                        if($eksekusi1 == 1 || $_SESSION['aksus'] == TRUE)
                                         {
                                     ?>
-									<li><a href="data_kpi.php">Data KPI Individu</a></li>
-                                    <li><a href="copy_kpi.php">Copy Data KPI Individu</a></li>
+											<li><a href="data_kpi.php">Data KPI Individu</a></li>
+											<li><a href="copy_kpi.php">Copy Data KPI Individu</a></li>
                                     <?php 
-                                        }
-                                        if($m6 == 1 || $_SESSION['aksus'] == TRUE)
+										}
+										$eksekusi2 = $db->cek_akses(2, $jabatan, $departemen, $unit);
+                                        if($eksekusi2 == 1 || $_SESSION['aksus'] == TRUE)
                                         {
                                     ?>
-                                    <li><a href="data_kpi_verifikasi.php">Data KPI Sub Ordinat</a></li>
+                                    		<li><a href="data_kpi_verifikasi.php">Data KPI Sub Ordinat</a></li>
                                     <?php
-                                        }
-                                        if($m7 == 1 || $_SESSION['aksus'] == TRUE)
+										}
+										if($m7 == 1 || $_SESSION['aksus'] == TRUE)
                                         {
                                             echo '<li><a href="data_kpi_seluruh.php">Data KPI Keseluruhan</a></li>';
                                         }
                                     ?>
                                 </ul>
 							</li>
-                            <li class="submenu">
+							<li class="submenu">
 								<a href="#"><i class="la la-tasks"></i> <span> Kompetensi</span> <span class="menu-arrow"></span></a>
 								<ul style="display: none;">
-                                    <li><a href="kompetensi_individu.php">Data Kompetensi Individu</a></li>
-									<li><a href="kompetensi_sub.php">Data Kompetensi Sub Ordinat</a></li>
+									<?php
+										if($eksekusi1 == 1 || $_SESSION['aksus'] == TRUE)
+											echo '<li><a href="kompetensi_individu.php">Data Kompetensi Individu</a></li>';
+										if($eksekusi2 == 1 || $_SESSION['aksus'] == TRUE)
+											echo '<li><a href="kompetensi_sub.php">Data Kompetensi Sub Ordinat</a></li>';
+									?>
                                 </ul>
-                            </li>
+							</li>
                             <li class=""> 
 								<a href="hasil_akhir.php"><i class="la la-edit"></i> <span>Hasil Akhir</span></a>
 							</li>
