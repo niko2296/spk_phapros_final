@@ -4,6 +4,7 @@
 
     $id_anggota = $_POST['id_anggota'];
     $id_jabatan = $_POST['id_jabatan'];
+    $id_departemen = $_POST['id_departemen'];
     $id_unit = $_POST['id_unit'];
     $kpi = $_POST['kpi'];
     $deskripsi = $_POST['deskripsi'];
@@ -13,5 +14,5 @@
     $sifat_kpi = $_POST['sifat_kpi'];
     $id_periode = $_POST['id_periode'];
 
-    $db->input_kpi_anggota($id_anggota, $id_jabatan, $id_unit, $kpi, $deskripsi, $bobot, $sasaran, $satuan, $sifat_kpi, $id_periode);
+    $db->input_kpi_anggota($id_anggota, $id_jabatan, $id_departemen, $id_unit, $kpi, $deskripsi, $bobot, $sasaran, $satuan, $sifat_kpi, $id_periode);
 ?>

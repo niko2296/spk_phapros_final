@@ -247,6 +247,7 @@
                                             <thead>
                                                 <tr>
                                                     <th>Jabatan</th>
+                                                    <th>Departemen</th>
                                                     <th>Unit</th>
                                                     <th>Jumlah Anggota</th>
                                                     <th>Actions</th>
@@ -256,17 +257,18 @@
                                             <?php
                                                 $no = 0;
                                                 error_reporting(0);
-                                                foreach($db->tampil_jabatan_grup($jabatan, $id_unitD) as $data)
+                                                foreach($db->tampil_jabatan_grup($jabatan, $departemenL, $id_unitD) as $data)
                                                 {
                                                     $no = $no+1;
                                             ?>
                                                     <tr>
                                                         <td><?php echo $data['nama_jabatan']; ?></td>
+                                                        <td><?php echo $data['nama_departemen']; ?></td>
                                                         <td><?php echo $data['nama_unit']; ?></td>
-                                                        <td><?php echo $db->hitung_jabatan_grup($data['id_jabatan_dinilai'], $data['id_unit_dinilai']); ?> Anggota</td>
+                                                        <td><?php echo $db->hitung_jabatan_grup($data['id_jabatan_dinilai'], $data['id_departemen_dinilai'], $data['id_unit_dinilai']); ?> Anggota</td>
                                                         <td class="text-center  ">
                                                             <div class="dropdown">
-                                                                <a href="detail_jabatan.php?id_jabatan=<?php echo $data['id_jabatan_dinilai']."&&id_unit=".$data['id_unit_dinilai']; ?>">Detail</a>
+                                                                <a href="detail_jabatan.php?id_jabatan=<?php echo $data['id_jabatan_dinilai']."&&id_departemen=".$data['id_departemen_dinilai']."&&id_unit=".$data['id_unit_dinilai']; ?>">Detail</a>
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -293,6 +295,7 @@
                                                     <th>Nomor Hp</th>
                                                     <th>Email</th>
                                                     <th>Jabatan</th>
+                                                    <th>Departemen</th>
                                                     <th>Unit</th>
                                                     <th>Jumlah KPI</th>
                                                     <th class="text-right">Actions</th>
@@ -312,11 +315,12 @@
                                                         <td><?php echo $data['nomor_hp']; ?></td>
                                                         <td><?php echo $data['email']; ?></td>
                                                         <td><?php echo $data['nama_jabatan']; ?></td>
+                                                        <td><?php echo $data['nama_departemen']; ?></td>
                                                         <td><?php echo $data['nama_unit']; ?></td>
-                                                        <td><?php echo $db->hitung_data_kpi($data['id_anggota'], $data['id_jabatan'], $data['id_unit'], $idA); ?> KPI</td>
+                                                        <td><?php echo $db->hitung_data_kpi($data['id_anggota'], $data['id_jabatan'], $data['id_departemen'], $data['id_unit'], $idA); ?> KPI</td>
                                                         <td class="text-center">
-                                                            <a href="detail_kpi.php?id_anggota=<?php echo $data['id_anggota']."&&id_jabatan=".$data['id_jabatan']."&&id_unit=".$data['id_unit']; ?>">Detail KPI</a>&nbsp;
-                                                            <a href="detail_realisasi.php?id_anggota=<?php echo $data['id_anggota']."&&id_jabatan=".$data['id_jabatan']."&&id_unit=".$data['id_unit']; ?>">Detail Realisasi KPI</a>
+                                                            <a href="detail_kpi.php?id_anggota=<?php echo $data['id_anggota']."&&id_jabatan=".$data['id_jabatan']."&&id_departemen=".$data['id_departemen']."&&id_unit=".$data['id_unit']; ?>">Detail KPI</a>&nbsp;
+                                                            <a href="detail_realisasi.php?id_anggota=<?php echo $data['id_anggota']."&&id_jabatan=".$data['id_jabatan']."&&id_departemen=".$data['id_departemen']."&&id_unit=".$data['id_unit']; ?>">Detail Realisasi KPI</a>
                                                         </td>
                                                     </tr>
                                             <?php

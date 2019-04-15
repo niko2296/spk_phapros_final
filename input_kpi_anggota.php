@@ -14,6 +14,7 @@
 
 	$id_anggotaD = $_GET['id_anggota'];
 	$id_jabatanD = $_GET['id_jabatan'];
+	$id_departemenD = $_GET['id_departemen'];
 	$id_unitD = $_GET['id_unit'];
 
 	$idA = 'kosong';
@@ -240,7 +241,7 @@
 					<?php
 						if(isset($_POST['tombolKirim']))
 						{
-							$jmlB = $db->total_bobot($id_anggotaD, $id_jabatanD, $id_unitD, $idA);
+							$jmlB = $db->total_bobot($id_anggotaD, $id_jabatanD, $id_departemenD, $id_unitD, $idA);
 							$html = '
 							<br><br><br>
 							<form action="simpan_kpi_anggota.php" method="POST" id="kpi_input">
@@ -248,6 +249,7 @@
                                 <div class="col-md-4">
                                     <input type="hidden" name="id_anggota" value="'.$_GET['id_anggota'].'">
                                     <input type="hidden" name="id_jabatan" value="'.$_GET['id_jabatan'].'">
+                                    <input type="hidden" name="id_departemen" value="'.$_GET['id_departemen'].'">
                                     <input type="hidden" name="id_unit" value="'.$_GET['id_unit'].'">
 									<select name="id_periode" class="form-control">
 							';
@@ -272,7 +274,7 @@
 								</div>
 							</div>
 							<br>
-								<div class="row">
+								<div class="row" style="border:1px solid black;color:black; background-color:white; padding:1%;">
 									<div class="col-md-12">
 										<div class="table-responsive">
 											<table class="table table-striped custom-table m-b-0">
@@ -343,7 +345,7 @@
                         }
                         else if(isset($_POST['tombolKembali']))
                         {
-                            header("location:detail_kpi.php?id_anggota=$id_anggotaD&&id_jabatan=$id_jabatanD&&id_unit=$id_unitD");
+                            header("location:detail_kpi.php?id_anggota=$id_anggotaD&&id_jabatan=$id_jabatanD&&id_departemen=$id_departemenD&&id_unit=$id_unitD");
                         }
 					?>
                 </div>

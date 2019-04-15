@@ -49,7 +49,7 @@
     }
     else if($_GET['jenis'] == 'hapus_kpi')
     {
-        $eksekusi = $db->hapus_kpi($_GET['id_kpi'], 1);
+        $eksekusi = $db->hapus_kpi($_GET['id_kpi'], $_GET['id_anggota'], $_GET['id_jabatan'], $_GET['id_departemen'], $_GET['id_unit'], $_GET['id_periode'], 1);
         if($eksekusi == 1)
             echo 1;
         else 

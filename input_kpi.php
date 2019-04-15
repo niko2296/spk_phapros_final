@@ -237,7 +237,7 @@
 					<?php
 						if(isset($_POST['tombolKirim']))
 						{
-							$jmlB = $db->total_bobot($id_anggotaD, $jabatan, $id_unitD, $idA);
+							$jmlB = $db->total_bobot($id_anggotaD, $jabatan, $departemenL, $id_unitD, $idA);
 
 							$html = '
 							<br><br><br>
@@ -267,7 +267,7 @@
 								</div>
 							</div>
 							<br>
-								<div class="row">
+								<div class="row" style="border:1px solid black;color:black; background-color:white; padding:1%;">
 									<div class="col-md-12">
 										<div class="table-responsive">
 											<table class="table table-striped custom-table m-b-0">

@@ -249,15 +249,15 @@
                                     }
                                 ?>
                             </div>
-                            <div class="row">
+                            <div class="row" style="border:1px solid black;color:black; background-color:white; padding:1%;">
                                 <?php
                                     if(isset($_POST['tombolHapus']))
                                     {
-                                        $db->hapus_kpi($_POST['id_kpi_hapus']);
+                                        $db->hapus_kpi($_POST['id_kpi_hapus'], $id_anggotaD, $jabatan, $departemenL, $id_unitD, $idA);
                                     }
 
                                     $ket = '';
-                                    $totB = $db->total_bobot($id_anggotaD, $jabatan, $id_unitD, $idA);
+                                    $totB = $db->total_bobot($id_anggotaD, $jabatan, $departemenL, $id_unitD, $idA);
                                     if($totB < 100)
                                         $ket = 'Bobot Masih Kurang dari 100%';
                                     else if($totB > 100)
@@ -274,19 +274,29 @@
                                                 </div>';
                                     }
 
-                                    if($db->hitung_catatan($id_anggotaD, $jabatan, $id_unitD, $idA) > 0)
+                                    if($db->hitung_perubahan_usulan($id_anggotaD, $jabatan, $departemenL, $id_unitD, $idA) > 0)
+                                    {
+                                        echo '<div class="alert alert-warning">
+                                                <div class="row" style="vertical-align:bottom;">
+                                                    <div class="col-md-10">
+                                                        <b>'.$db->pemberi_perubahan_usulan($id_anggotaD, $jabatan, $departemenL, $id_unitD, $idA).'</b> Telah Melakukan Perubahan Pada Data Bobot ataupun Sasaran Usulan KPI.
+                                                    </div>
+                                                </div>
+                                            </div>';
+                                    }
+                                    if($db->hitung_catatan($id_anggotaD, $jabatan, $departemenL, $id_unitD, $idA) > 0)
                                     {
                                         echo '<div class="alert alert-info">
                                                 <div class="row" style="vertical-align:bottom;">
                                                     <div class="col-md-12">
-                                                        <b>Catatan</b> : '.$db->tampil_catatan($id_anggotaD, $jabatan, $id_unitD, $idA).'
+                                                        <b>Catatan</b> : '.$db->tampil_catatan($id_anggotaD, $jabatan, $departemenL, $id_unitD, $idA).'
                                                     </div>
                                                 </div>
                                                 </div>';
                                     }
                                 ?>
 
-                                <div class="col-md-12" style="border:1px solid black;color:black; background-color:white; padding:1%;">
+                                <div class="col-md-12">
                                     <div class="table-responsive">
                                         <table class="table table-striped custom-table m-b-0 display" id="tabel">
                                             <thead>
