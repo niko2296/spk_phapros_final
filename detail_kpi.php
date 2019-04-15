@@ -461,14 +461,19 @@
                                         {
                                             if($cc != 1)  
                                             { 
-                                                if($cv == $db->hitung_data_kpi($id_anggotaD, $id_jabatanD, $id_departemenD, $id_unitD, $idA))
-                                                    echo '
-                                                        <button type="submit" name="tombolSimpan" class="btn btn-success">Simpan</button>
-                                                    ';
+                                                if($db->hitung_data_kpi($id_anggotaD, $id_jabatanD, $id_departemenD, $id_unitD, $idA) > 0)
+                                                {   
+                                                    if($cv == $db->hitung_data_kpi($id_anggotaD, $id_jabatanD, $id_departemenD, $id_unitD, $idA))
+                                                        echo '
+                                                            <button type="submit" name="tombolSimpan" class="btn btn-success">Simpan</button>
+                                                        ';
+                                                }
                                                 else
+                                                {
                                                     echo '
                                                         <button name="" class="btn btn-danger" disabled="disabled">Terdapat Data yang Masih Belum Diverifikasi</button>
                                                     ';
+                                                }
                                             }
                                             else
                                             {
