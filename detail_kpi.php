@@ -215,7 +215,7 @@
             <div class="page-wrapper">
                 <div class="content container-fluid">
 					<div class="row">
-						<div class="col-xs-8">
+						<div class="col-xs-7">
                             <?php
                                 foreach($ec = $db->tampil_anggota($id_anggotaD) as $tc)
                                 {
@@ -227,7 +227,7 @@
 							    echo '<h4 class="page-title">Data KPI Individu Detail <b>('.$np.' - '.$nj.' - '.$nd.' - '.$nu.')</b></h4>';
                             ?>
                         </div>
-                        <div class="col-xs-4 text-right m-b-30">
+                        <div class="col-xs-5 text-right">
                             <?php
                                 $b1 = 0;
                                 // error_reporting(0);

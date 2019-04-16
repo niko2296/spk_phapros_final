@@ -303,8 +303,20 @@
                                                 <tr>
                                                     <th>KPI</th>
                                                     <th>Deskripsi</th>
-                                                    <th>Bobot (%)</th>
-                                                    <th>Sasaran/Target</th>
+                                                    <?php
+                                                        if($db->hitung_perubahan_usulan($id_anggotaD, $jabatan, $departemenL, $id_unitD, $idA) > 0)
+                                                            echo '
+                                                                <th>Bobot Murni (%)</th>
+                                                                <th>Bobot Perubahan (%)</th>
+                                                                <th>Sasaran/Target Murni</th>
+                                                                <th>Sasaran/Target Perubahan</th>
+                                                            ';
+                                                        else
+                                                            echo '
+                                                                <th>Bobot (%)</th>
+                                                                <th>Sasaran/Target</th>
+                                                            ';
+                                                    ?>
                                                     <th>Satuan</th>
                                                     <th>Polarisasi</th>
                                                     <th>Periode</th>
@@ -319,12 +331,39 @@
                                                 foreach($db->tampil_kpi($idA) as $data)
                                                 {
                                                     $no = $no+1;
+                                                    $id_kpi = $data['id_kpi'];
+                                                    $bobot = $data['bobot'];
+                                                    $sasaran = $data['sasaran'];
+
+                                                    if($db->hitung_perubahan_usulan($id_anggotaD, $jabatan, $departemenL, $id_unitD, $idA) > 0)
+                                                    {
+                                                        foreach($db->cek_perubahan($id_kpi) as $tc)
+                                                        {
+                                                            if($tc['bobot'] != '' && $tc['bobot'] != '')
+                                                            {
+                                                                $bobot = $tc['bobot'];
+                                                                $sasaran = $tc['sasaran'];
+                                                            }
+                                                        }
+                                                    }
                                             ?>
                                                     <tr>
                                                         <td><?php echo $data['kpi']; ?></td>
                                                         <td><?php echo $data['deskripsi']; ?></td>
-                                                        <td><?php echo $data['bobot']; ?></td>
-                                                        <td><?php echo $data['sasaran']; ?></td>
+                                                        <?php
+                                                            if($db->hitung_perubahan_usulan($id_anggotaD, $jabatan, $departemenL, $id_unitD, $idA) > 0)
+                                                                echo '
+                                                                    <td>'.$data['bobot'].'</td>
+                                                                    <td>'.$sasaran.'</td>
+                                                                    <td>'.$data['sasaran'].'</td>
+                                                                    <td>'.$sasaran.'</td>
+                                                                ';
+                                                            else 
+                                                            echo '
+                                                                <td>'.$data['bobot'].'</td>
+                                                                <td>'.$data['sasaran'].'</td>
+                                                            ';
+                                                        ?>
                                                         <td><?php echo $data['nama_satuan']; ?></td>
                                                         <td><?php echo $data['nama_polarisasi']; ?></td>
                                                         <td><?php echo $data['tahun']; ?></td>
