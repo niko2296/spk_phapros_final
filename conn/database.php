@@ -555,6 +555,17 @@
 				$hasil[] = $tampil['nama_unit'];
 			return implode(' - ', $hasil);
 		}
+		function pemberi_perubahan_realisasi($id_anggota = null, $id_jabatan = null, $id_departemen = null, $id_unit = null, $id_periode = null)
+		{
+			$hasil = [];
+			$query = $this->connection->query("SELECT p.*, j.nama_jabatan, d.nama_departemen, u.nama_unit FROM perubahan_usulan_realisasi p LEFT JOIN mst_jabatan j ON j.id_jabatan = p.id_jabatan_perubahan LEFT JOIN mst_departemen d ON d.id_departemen = p.id_departemen_perubahan LEFT JOIN mst_unit u ON u.id_unit = p.id_unit_perubahan WHERE p.id_anggota = '$id_anggota' AND p.id_jabatan = '$id_jabatan' AND p.id_departemen = '$id_departemen' AND p.id_unit = '$id_unit' AND p.id_periode = '$id_periode' ORDER BY p.pangkat DESC");
+			$tampil = $query->fetch_array();
+			$hasil[] = $tampil['nama_jabatan'];
+			$hasil[] = $tampil['nama_departemen'];
+			if($tampil['id_unit_perubahan'] != 0)
+				$hasil[] = $tampil['nama_unit'];
+			return implode(' - ', $hasil);
+		}
 		//Akhiran Fungsi Tampil
 
 		//Fungsi Input
@@ -809,22 +820,22 @@
 				return 2;
 		}
 
-		function input_realisasi($id_kpi = [], $id_anggota = null, $id_jabatan = null, $id_unit = null, $id_periode = null, $realisasi = [], $keterangan = [])
+		function input_realisasi($id_kpi = [], $id_anggota = null, $id_jabatan = null, $id_departemen = null, $id_unit = null, $id_periode = null, $realisasi = [], $keterangan = [])
 		{
 			$tanggal = date('Y-m-d');
 			$jml = count($id_kpi);
 			if($jml > 0)
 			{
 				$k = [];
-				$c = 0;
 				for($a=0; $a<$jml; $a++)
 				{
-					$qc = $this->connection->query("SELECT * FROM data_realisasi_kpi WHERE id_kpi = '$id_kpi[$a]'");
+					$c = 0;
+					$qc = $this->connection->query("SELECT * FROM data_realisasi_kpi WHERE id_kpi = '$id_kpi[$a]' AND id_anggota = '$id_anggota' AND id_jabatan = '$id_jabatan' AND id_departemen = '$id_departemen' AND id_unit = '$id_unit'");
 					while($t = $qc->fetch_array())
 						$c = $c+1;
 					if($c == 0)
 					{
-						$query = "INSERT INTO data_realisasi_kpi VALUES ('', '$id_kpi[$a]', '$id_anggota', '$id_jabatan', '$id_unit', $id_periode, '$realisasi[$a]', '$keterangan[$a]', '0', '$tanggal', '0', '0000-00-00')";
+						$query = "INSERT INTO data_realisasi_kpi VALUES ('', '$id_kpi[$a]', '$id_anggota', '$id_jabatan', '$id_departemen', '$id_unit', $id_periode, '$realisasi[$a]', '$keterangan[$a]', '0', '$tanggal', '0', '0', '0', '0', '0000-00-00')";
 						$input = $this->connection->prepare($query);
 						if($input->execute())
 							$k[] = 1;
@@ -832,7 +843,7 @@
 							$k[] = 0;
 					}
 					else {
-						$query = "UPDATE data_realisasi_kpi SET realisasi = '$realisasi[$a]', keterangan = '$keterangan[$a]' WHERE id_kpi = '$id_kpi[$a]'";
+						$query = "UPDATE data_realisasi_kpi SET realisasi = '$realisasi[$a]', keterangan = '$keterangan[$a]' WHERE id_kpi = '$id_kpi[$a]' AND id_jabatan = '$id_jabatan' AND id_departemen = '$id_departemen' AND id_unit = '$id_unit'";
 						$edit = $this->connection->prepare($query);
 						if($edit->execute())
 							$k[] = 1;
@@ -1221,6 +1232,81 @@
 					$query = "UPDATE perubahan_usulan_kpi SET bobot = '$bobot[$i]', sasaran = '$sasaran[$i]', tanggal_perubahan = '$tanggal' WHERE id_kpi = '$id_kpi[$i]' AND id_periode = '$id_periode' AND id_anggota = '$id_anggota' AND id_jabatan = '$id_jabatan' AND id_departemen = '$id_departemen' AND id_unit = '$id_unit' AND id_anggota_perubahan = '$id_anggota_perubahan' AND id_jabatan_perubahan = '$id_jabatan_perubahan' AND id_departemen_perubahan = '$id_departemen_perubahan' AND id_unit_perubahan = '$id_unit_perubahan'";
 					$edit = $this->connection->prepare($query);
 					if($edit->execute())
+						$k[] = 1;
+					else 
+						$k[] = 0;
+				}
+			}
+
+			if(in_array(0, $k))
+				return 2;
+			else 
+				return 1;
+		}
+
+		function revisi_realisasi($id_kpi = [], $realisasi = [], $keterangan = [], $id_periode = null, $id_anggota = null, $id_jabatan = null, $id_departemen = null, $id_unit = null, $id_anggota_perubahan = null, $id_jabatan_perubahan = null, $id_departemen_perubahan = null, $id_unit_perubahan = null)
+		{
+			$jml = count($id_kpi);
+			$tanggal = date('Y-m-d');
+			$k = [];
+			for($i=0; $i<$jml; $i++)
+			{
+				$qc = $this->connection->query("SELECT * FROM data_realisasi_kpi WHERE id_kpi = '$id_kpi[$i]' AND id_anggota = '$id_anggota' AND id_jabatan = '$id_jabatan' AND id_departemen = '$id_departemen' AND id_unit = '$id_unit' AND id_periode = '$id_periode'");
+				$j = 0;
+				while($tc = $qc->fetch_array())
+					$j = $j+1;
+				if($j > 0)
+				{
+					$cc = 0;
+					$idj = $id_jabatan;
+					$idd = $id_departemen;
+					$idu = $id_unit;
+					$pangkat = 0;
+					while($cc == 0)
+					{
+						$qc1 = $this->connection->query("SELECT * FROM aturan_penilai WHERE id_jabatan_dinilai = '$idj' AND id_departemen_dinilai = '$idd' AND id_unit_dinilai = '$idu'");
+						$tc1 = $qc1->fetch_array();
+						if($id_jabatan_perubahan == $tc1['id_jabatan_penilai'] && $id_departemen_perubahan == $tc1['id_departemen_penilai'] && $id_unit_perubahan == $tc1['id_unit_penilai'])
+						{
+							$cc = 1;
+							$pangkat = $pangkat+1;
+						}
+						else {
+							$pangkat = $pangkat+1;
+							$idj = $tc1['id_jabatan_penilai'];
+							$idd = $tc1['id_departemen_penilai'];
+							$idu = $tc1['id_unit_penilai'];
+						}
+					}
+
+					$cj = 0;
+					$qc = $this->connection->query("SELECT * FROM perubahan_usulan_realisasi WHERE id_kpi_asli = '$id_kpi[$i]' AND id_anggota_perubahan = '$id_anggota_perubahan' AND id_jabatan_perubahan = '$id_jabatan_perubahan' AND id_departemen_perubahan = '$id_departemen_perubahan' AND id_unit_perubahan = '$id_unit_perubahan'");
+					while($tc = $qc->fetch_array())
+						$cj = $cj+1;
+					if($cj == 0)
+					{
+						$query = "INSERT INTO perubahan_usulan_realisasi VALUES ('', '$id_kpi[$i]', '$id_periode', '$id_anggota', '$id_jabatan', '$id_departemen', '$id_unit', '$id_anggota_perubahan', '$id_jabatan_perubahan', '$id_departemen_perubahan', '$id_unit_perubahan', '$pangkat', '$realisasi[$i]', '$keterangan[$i]', '$tanggal')";
+						$input = $this->connection->prepare($query);
+						if($input->execute())
+							$k[] = 1;
+						else 
+							$k[] = 0;
+					}
+					else
+					{
+						$query = "UPDATE perubahan_usulan_realisasi SET realisasi = '$realisasi[$i]', keterangan = '$keterangan[$i]', tanggal_perubahan = '$tanggal' WHERE id_kpi_asli = '$id_kpi[$i]' AND id_periode = '$id_periode' AND id_anggota = '$id_anggota' AND id_jabatan = '$id_jabatan' AND id_departemen = '$id_departemen' AND id_unit = '$id_unit' AND id_anggota_perubahan = '$id_anggota_perubahan' AND id_jabatan_perubahan = '$id_jabatan_perubahan' AND id_departemen_perubahan = '$id_departemen_perubahan' AND id_unit_perubahan = '$id_unit_perubahan'";
+						$edit = $this->connection->prepare($query);
+						if($edit->execute())
+							$k[] = 1;
+						else 
+							$k[] = 0;
+					}
+				}
+				else if($j == 0)
+				{
+					$query = "INSERT INTO data_realisasi_kpi VALUES ('', '$id_kpi[$i]', '$id_anggota', '$id_jabatan', '$id_departemen', '$id_unit', $id_periode, '$realisasi[$i]', '$keterangan[$i]', '0', '$tanggal', '0', '0', '0', '0', '0000-00-00')";
+					$input = $this->connection->prepare($query);	
+					if($input->execute())
 						$k[] = 1;
 					else 
 						$k[] = 0;
@@ -1827,6 +1913,14 @@
 			$hasil[] = $tampil;
 			return $hasil;
 		}
+		function cek_perubahan2($id_kpi = null)
+		{
+			$hasil = [];
+			$query = $this->connection->query("SELECT * FROM perubahan_usulan_realisasi WHERE id_kpi_asli = '$id_kpi' ORDER BY pangkat DESC");
+			$tampil = $query->fetch_array();
+			$hasil[] = $tampil;
+			return $hasil;
+		}
 		//Akhiran Fungsi Cek
 
 		// Fungsi Verifikasi
@@ -1834,14 +1928,17 @@
 		{
 			session_start();
 			$id_anggota = $_SESSION['id_anggota'];
+			$id_jabatan_verifikator = $_SESSION['id_jabatan'];
+			$id_departemen_verifikator = $_SESSION['id_departemen'];
+			$id_unit_verifikator = $_SESSION['id_unit'];
 			if($status == 1)
 			{
 				$tanggal = date('Y-m-d');
-				$query = "UPDATE data_kpi SET status = '$status', tanggal_verifikasi = '$tanggal', id_verifikator = '$id_anggota' WHERE id_kpi = '$id'";
+				$query = "UPDATE data_kpi SET status = '$status', tanggal_verifikasi = '$tanggal', id_verifikator = '$id_anggota', id_jabatan_verifikator = '$id_jabatan_verifikator', id_departemen_verifikator = '$id_departemen_verifikator', id_unit_verifikator = '$id_unit_verifikator' WHERE id_kpi = '$id'";
 				$verif = $this->connection->prepare($query);
 				if($verif->execute())
 				{
-					$queryT = $this->connection->query("SELECT k.*, j.nama_jabatan, d.nama_departemen, u.nama_unit, p.tahun, nama FROM data_kpi k LEFT JOIN mst_jabatan j ON k.id_jabatan = j.id_jabatan LEFT JOIN mst_departemen d ON d.id_departemen = k.id_departemen LEFT JOIN mst_unit u ON k.id_unit = u.id_unit LEFT JOIN mst_periode p ON k.id_periode = p.id_periode LEFT JOIN mst_anggota a ON a.id_anggota = k.id_anggota WHERE k.id_kpi = '$id'");
+					$queryT = $this->connection->query("SELECT k.*, j.nama_jabatan, d.nama_departemen, u.nama_unit, p.tahun, a.nama FROM data_kpi k LEFT JOIN mst_jabatan j ON k.id_jabatan = j.id_jabatan LEFT JOIN mst_departemen d ON d.id_departemen = k.id_departemen LEFT JOIN mst_unit u ON k.id_unit = u.id_unit LEFT JOIN mst_periode p ON k.id_periode = p.id_periode LEFT JOIN mst_anggota a ON a.id_anggota = k.id_anggota WHERE k.id_kpi = '$id'");
 					$tampilT = $queryT->fetch_array();
 					$id_kpi_asli = $tampilT['id_kpi'];
 					$nama_anggota = $tampilT['nama'];
@@ -1879,7 +1976,7 @@
 			else 
 			{
 				$tanggal = '0000-00-00';
-				$query = "UPDATE data_kpi SET status = '$status', tanggal_verifikasi = '$tanggal', id_verifikator = '$id_anggota' WHERE id_kpi = '$id'";
+				$query = "UPDATE data_kpi SET status = '0', tanggal_verifikasi = '$tanggal', id_verifikator = '0', id_jabatan_verifikator = '0', id_departemen_verifikator = '0', id_unit_verifikator = '0' WHERE id_kpi = '$id'";
 				$verif = $this->connection->prepare($query);
 				if($verif->execute())
 				{
@@ -1890,9 +1987,25 @@
 						$queryH2 = "DELETE FROM data_realisasi_kpi WHERE id_kpi = '$id'";
 						$hapus2 = $this->connection->prepare($queryH2);
 						if($hapus2->execute())
-							$c[] = 1;
-						else 
+						{
+							$queryH3 = "DELETE FROM data_realisasi_verifikasi WHERE id_kpi_asli = '$id'";
+							$hapus3 = $this->connection->prepare($queryH3);
+							if($hapus3->execute())
+							{
+								$queryH4 = "DELETE FROM perubahan_usulan_realisasi WHERE id_kpi_asli = '$id'";
+								$hapus4 = $this->connection->prepare($queryH4);
+								if($hapus4->execute())
+									$c[] = 1;
+								else 
+									$c[] = 0;
+							}
+							else {
+								$c[] = 0;
+							}
+						}
+						else {
 							$c[] = 0;
+						}
 					}
 					else 
 					{
@@ -2026,21 +2139,85 @@
 			}
 		}
 
-		function verif_realisasi($id_kpi = null, $status = null, $id_verifikator = null)
+		function verif_realisasi($id_kpi = null, $status = null)
 		{
-			$tanggal = date('Y-m-d');
-			if($status == 0)
+			session_start();
+			$id_anggota = $_SESSION['id_anggota'];
+			$id_jabatan_verifikator = $_SESSION['id_jabatan'];
+			$id_departemen_verifikator = $_SESSION['id_departemen'];
+			$id_unit_verifikator = $_SESSION['id_unit'];
+
+			if($status == 1)
 			{
-				$id_verifikator = 0;
+				$tanggal = date('Y-m-d');
+				$query = "UPDATE data_realisasi_kpi SET status = '$status', id_verifikator = '$id_anggota', id_jabatan_verifikator = '$id_jabatan_verifikator', id_departemen_verifikator = '$id_departemen_verifikator', id_unit_verifikator = '$id_unit_verifikator', tanggal_verif = '$tanggal' WHERE id_kpi = '$id_kpi'";
+				$verif = $this->connection->prepare($query);
+				if($verif->execute())
+				{
+					$queryT = $this->connection->query("SELECT r.*, j.nama_jabatan, d.nama_departemen, u.nama_unit, p.tahun, a.nama FROM data_realisasi_kpi r LEFT JOIN mst_jabatan j ON r.id_jabatan = j.id_jabatan LEFT JOIN mst_departemen d ON d.id_departemen = r.id_departemen LEFT JOIN mst_unit u ON r.id_unit = u.id_unit LEFT JOIN mst_periode p ON r.id_periode = p.id_periode LEFT JOIN mst_anggota a ON a.id_anggota = r.id_anggota WHERE r.id_kpi = '$id_kpi'");
+					$tampilT = $queryT->fetch_array();
+					$id_realisasi_asli = $tampilT['id_realisasi'];
+					$nama_anggota = $tampilT['nama'];
+					$jabatan = $tampilT['nama_jabatan'];
+					$departemen = $tampilT['nama_departemen'];
+					$unit = $tampilT['nama_unit'];
+					$tahun = $tampilT['tahun'];
+					$realisasi = $tampilT['realisasi'];
+					$keterangan = $tampilT['keterangan'];
+					
+					$id_verifikator = $tampilT['id_verifikator'];
+					$queryT2 = $this->connection->query("SELECT a.nama, j.nama_jabatan, d.nama_departemen, u.nama_unit FROM mst_anggota a LEFT JOIN mst_jabatan j ON j.id_jabatan = a.id_jabatan LEFT JOIN mst_departemen d ON d.id_departemen = a.id_departemen LEFT JOIN mst_unit u ON u.id_unit = a.id_unit WHERE a.id_anggota = '$id_verifikator'");
+					$tampilT2 = $queryT2->fetch_array();
+					$nama_verifikator = $tampilT2['nama'];
+					$jabatan_verifikator = $tampilT2['nama_jabatan'];
+					$departemen_verifikator = $tampilT2['nama_departemen'];
+					$unit_verifikator = $tampilT2['nama_unit'];
+
+					$tanggal_input = $tampilT['tanggal_input'];
+					$tanggal_verifikasi = $tampilT['tanggal_verif'];
+
+					$queryI = "INSERT INTO data_realisasi_verifikasi VALUES ('', '$id_realisasi_asli', '$id_kpi', '$nama_anggota', '$jabatan', '$departemen', '$unit', '$tahun', '$realisasi', '$keterangan', '$nama_verifikator', '$jabatan_verifikator', '$departemen_verifikator', '$unit_verifikator', '$tanggal_input', '$tanggal_verifikasi')";
+					$input1 = $this->connection->prepare($queryI);
+					if($input1->execute())
+						$c[] = 1;
+					else 
+						$c[] = 0;
+				}
+				else{
+					return 2;
+				}
+			}
+			else 
+			{
 				$tanggal = '0000-00-00';
+				$query = "UPDATE data_realisasi_kpi SET status = '0', tanggal_verif = '$tanggal', id_verifikator = '0', id_jabatan_verifikator = '$id_jabatan_verifikator', id_departemen_verifikator = '$id_departemen_verifikator', id_unit_verifikator = '$id_unit_verifikator' WHERE id_kpi = '$id_kpi'";
+				$verif = $this->connection->prepare($query);
+				if($verif->execute())
+				{
+					$queryH = "DELETE FROM data_realisasi_verifikasi WHERE id_kpi_asli = '$id_kpi'";
+					$hapus = $this->connection->prepare($queryH);
+					if($hapus->execute())
+					{
+						$c[] = 1;
+					}
+					else 
+					{
+						$c[] = 0;
+					}
+				}
+				else {
+					return 2;
+				}
 			}
 
-			$query = "UPDATE data_realisasi_kpi SET status = '$status', id_verifikator = '$id_verifikator', tanggal_verif = '$tanggal' WHERE id_kpi = '$id_kpi'";
-			$edit = $this->connection->prepare($query);
-			if($edit->execute())
-				return 1;
-			else 
+			if(in_array(0, $c))
+			{
 				return 2;
+			}
+			else
+			{
+				return 1;
+			}
 		}
 
 		function verif_kompetensi($id_kompetensi = null, $status = null, $id_verifikator = null, $id_anggota = null)
@@ -2276,6 +2453,18 @@
 		function hitung_perubahan_usulan($id_anggota = null, $id_jabatan = null, $id_departemen = null, $id_unit = null, $id_periode = null)
 		{
 			$query = $this->connection->query("SELECT * FROM perubahan_usulan_kpi WHERE id_anggota = '$id_anggota' AND id_jabatan = '$id_jabatan' AND id_departemen = '$id_departemen' AND id_unit = '$id_unit' AND id_periode = '$id_periode'");
+			$jml = 0;
+			while($tampil = $query->fetch_array())
+				$jml = $jml+1;
+			return $jml;
+		}
+
+		function hitung_perubahan_realisasi($id_anggota = null, $id_jabatan = null, $id_departemen = null, $id_unit = null, $id_periode = null, $id_kpi = null)
+		{
+			if($id_kpi != null)
+				$query = $this->connection->query("SELECT * FROM perubahan_usulan_realisasi WHERE id_anggota = '$id_anggota' AND id_jabatan = '$id_jabatan' AND id_departemen = '$id_departemen' AND id_unit = '$id_unit' AND id_periode = '$id_periode' AND id_kpi_asli = '$id_kpi'");
+			else if($id_kpi == null)
+				$query = $this->connection->query("SELECT * FROM perubahan_usulan_realisasi WHERE id_anggota = '$id_anggota' AND id_jabatan = '$id_jabatan' AND id_departemen = '$id_departemen' AND id_unit = '$id_unit' AND id_periode = '$id_periode'");
 			$jml = 0;
 			while($tampil = $query->fetch_array())
 				$jml = $jml+1;

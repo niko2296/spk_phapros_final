@@ -339,7 +339,7 @@
                                                     {
                                                         foreach($db->cek_perubahan($id_kpi) as $tc)
                                                         {
-                                                            if($tc['bobot'] != '' && $tc['bobot'] != '')
+                                                            if($tc['bobot'] != '' && $tc['sasaran'] != '')
                                                             {
                                                                 $bobot = $tc['bobot'];
                                                                 $sasaran = $tc['sasaran'];
@@ -354,7 +354,7 @@
                                                             if($db->hitung_perubahan_usulan($id_anggotaD, $jabatan, $departemenL, $id_unitD, $idA) > 0)
                                                                 echo '
                                                                     <td>'.$data['bobot'].'</td>
-                                                                    <td>'.$sasaran.'</td>
+                                                                    <td>'.$bobot.'</td>
                                                                     <td>'.$data['sasaran'].'</td>
                                                                     <td>'.$sasaran.'</td>
                                                                 ';
@@ -424,7 +424,7 @@
                             <?php
                                 if(isset($_POST['tombolSimpanRealisasi']))
                                 {
-                                    $input = $db->input_realisasi($_POST['id_kpi'], $id_anggotaD, $jabatan, $id_unitD, $idA, $_POST['realisasi'], $_POST['keterangan']);
+                                    $input = $db->input_realisasi($_POST['id_kpi'], $id_anggotaD, $jabatan, $departemenL, $id_unitD, $idA, $_POST['realisasi'], $_POST['keterangan']);
                                     if($input == 2)
                                     {
                                         echo '
@@ -469,12 +469,27 @@
                                                 {
                                                     if($data['status'] == 1)
                                                     {
+                                                        $id_kpi = $data['id_kpi'];
+                                                        $bobot = $data['bobot'];
+                                                        $sasaran = $data['sasaran'];
+
+                                                        if($db->hitung_perubahan_usulan($id_anggotaD, $jabatan, $departemenL, $id_unitD, $idA) > 0)
+                                                        {
+                                                            foreach($db->cek_perubahan($id_kpi) as $tc)
+                                                            {
+                                                                if($tc['bobot'] != '' && $tc['sasaran'] != '')
+                                                                {
+                                                                    $bobot = $tc['bobot'];
+                                                                    $sasaran = $tc['sasaran'];
+                                                                }
+                                                            }
+                                                        }
                                             ?>
                                                     <tr>
                                                         <td><?php echo $data['kpi']; ?></td>
                                                         <td><?php echo $data['deskripsi']; ?></td>
-                                                        <td><?php echo $data['bobot']; ?></td>
-                                                        <td><?php echo $data['sasaran']; ?></td>
+                                                        <td><?php echo $bobot; ?></td>
+                                                        <td><?php echo $sasaran; ?></td>
                                                         <td><?php echo $data['nama_satuan']; ?></td>
                                                         <td><?php echo $data['nama_polarisasi']; ?></td>
                                                         <td><?php echo $data['tahun']; ?></td>
@@ -493,9 +508,14 @@
                                         </table>
                                     </div>
                                 </div>
-                                <div class="col-md-12" align="right">
-                                    <button class="btn btn-primary" type="submit" name="tombolSimpanRealisasi">Simpan Data</button>
-                                </div>
+                                <?php
+                                    if($b2 == 1)
+                                        echo '
+                                            <div class="col-md-12" align="right">
+                                                <button class="btn btn-primary" type="submit" name="tombolSimpanRealisasi">Simpan Data</button>
+                                            </div>
+                                            ';
+                                ?>
                                 </form>
                             </div>
                         </div>

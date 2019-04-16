@@ -22,8 +22,11 @@
     }
 
     $id_anggotaD = $_GET['id_anggota'];
+    $id_departemenD = $_GET['id_departemen'];
     $id_jabatanD = $_GET['id_jabatan'];
     $id_unitD = $_GET['id_unit'];
+
+    $cc = $db->cek_pangkat($id_jabatanD, $id_departemenD, $id_unitD, $jabatan, $departemenL, $unitL);
 ?>
 <!DOCTYPE html>
 <html>
@@ -95,7 +98,7 @@
                                 $m5 = 0;
                                 $m6 = 0;
                                 $m7 = 0;
-                                error_reporting(0);
+                                // error_reporting(0);
                                 foreach($db->tampil_akses() as $tampil)
                                 {
                                     if($tampil['id_jabatan'] == $jabatan)
@@ -224,12 +227,13 @@
                             <?php
                                 if(isset($_POST['tombolSimpanRealisasi']))
                                 {
-                                    $input = $db->input_realisasi($_POST['id_kpi'], $id_anggotaD, $id_jabatanD, $id_unitD, $idA, $_POST['realisasi'], $_POST['keterangan']);
+                                    $input = $db->revisi_realisasi($_POST['id_kpi'], $_POST['realisasi'], $_POST['keterangan'], $idA, $id_anggotaD, $id_jabatanD, $id_departemenD, $id_unitD, $id_anggotaV, $jabatan, $departemenL, $unitL);
                                     if($input == 2)
                                     {
                                         echo '
                                             <script>
                                                 alert("Data Gagal Disimpan");
+                                                window.location = "detail_realisasi.php?id_anggota='.$id_anggotaD.'&&id_jabatan='.$id_jabatanD.'&&id_departemen='.$id_departemenD.'&&id_unit='.$id_unitD.'";
                                             </script>
                                         ';
                                     }
@@ -238,6 +242,7 @@
                                         echo '
                                             <script>
                                                 alert("Data Berhasil Disimpan");
+                                                window.location = "detail_realisasi.php?id_anggota='.$id_anggotaD.'&&id_jabatan='.$id_jabatanD.'&&id_departemen='.$id_departemenD.'&&id_unit='.$id_unitD.'";
                                             </script>
                                         ';
                                     }
@@ -247,7 +252,21 @@
                             <center><div style="background-color:red; width:20%; color:white; padding:5px; display:none; margin-bottom:2%;" id="notifikasi2">Data Batal Diverifikasi</div></center>
                         </div>
                     </div>
-					<div class="row">
+					<div class="row" style="border:1px solid black;color:black; background-color:white; padding:1%;">
+                        <div class="col-md-12">
+                            <?php
+                                if($db->hitung_perubahan_realisasi($id_anggotaD, $id_jabatanD, $id_departemenD, $id_unitD, $idA) > 0)
+                                {
+                                    echo '<div class="alert alert-warning">
+                                            <div class="row" style="vertical-align:bottom;">
+                                                <div class="col-md-10">
+                                                    <b>'.$db->pemberi_perubahan_realisasi($id_anggotaD, $id_jabatanD, $id_departemenD, $id_unitD, $idA).'</b> Telah Melakukan Perubahan Pada Data Realisasi ataupun Keterangan Pada Realisasi KPI Anda.
+                                                </div>
+                                            </div>
+                                        </div>';
+                                }
+                            ?>
+                        </div>
                         <form action="#" method="POST">
                         <div class="col-md-12">
                             <div class="table-responsive">
@@ -263,31 +282,90 @@
                                             <th>Periode</th>
                                             <th style="width:100px;">Realisasi</th>
                                             <th>Keterangan</th>
-                                            <th>Verifikasi</th>
+                                            <?php
+                                                if($cc == 1)
+                                                    echo '<th>Verifikasi</th>';
+                                            ?>
                                         </tr>
                                     </thead>
                                     <tbody>
                                     <?php
                                         error_reporting(0);
-                                        foreach($db->tampil_kpi_detail($id_anggotaD, $id_jabatanD, $id_unitD, $idA) as $data)
+                                        $cv = 0;
+                                        foreach($db->tampil_kpi_detail($id_anggotaD, $id_jabatanD, $id_departemenD, $id_unitD, $idA) as $data)
                                         {
                                             if($data['status'] == 1)
                                             {
+                                                $id_kpi = $data['id_kpi'];
+                                                $bobot = $data['bobot'];
+                                                $sasaran = $data['sasaran'];
+                                                $realisasi = 0;
+                                                $keterangan = '';
+
+                                                if($db->hitung_perubahan_usulan($id_anggotaD, $id_jabatanD, $id_departemenD, $id_unitD, $idA) > 0)
+                                                {
+                                                    foreach($db->cek_perubahan($id_kpi) as $tc)
+                                                    {
+                                                        if($tc['bobot'] != '' && $tc['sasaran'] != '')
+                                                        {
+                                                            $bobot = $tc['bobot'];
+                                                            $sasaran = $tc['sasaran'];
+                                                        }
+                                                    }
+                                                }
+
+                                                if($db->hitung_realisasi($data['id_kpi']) > 0)
+                                                {
+                                                    if($db->hitung_perubahan_realisasi($id_anggotaD, $id_jabatanD, $id_departemenD, $id_unitD, $idA, $id_kpi) > 0)
+                                                    {
+                                                        foreach($db->cek_perubahan2($id_kpi) as $tc)
+                                                        {
+                                                            if($tc['realisasi'] != '' && $tc['keterangan'] != '')
+                                                            {
+                                                                $realisasi = $tc['realisasi'];
+                                                                $keterangan = $tc['keterangan'];
+                                                            }
+                                                        }
+                                                    }
+                                                    else{
+                                                        $realisasi =  $db->tampil_realisasi(1, $data['id_kpi']);
+                                                        $keterangan = $db->tampil_realisasi(2, $data['id_kpi']);
+                                                    }
+                                                }
+
+                                                $r = '';
+                                                if($db->cek_verif_realisasi($data['id_kpi']) == 1)
+                                                {
+                                                    $r = 'readonly="readonly"';
+                                                    $cv = $cv+1;
+                                                }
+
+                                                if($cc > 1)
+                                                {
+                                                    $r = '';
+                                                }
                                     ?>
                                             <tr>
                                                 <td><?php echo $data['kpi']; ?></td>
                                                 <td><?php echo $data['deskripsi']; ?></td>
-                                                <td><?php echo $data['bobot']; ?></td>
-                                                <td><?php echo $data['sasaran']; ?></td>
+                                                <td><?php echo $bobot; ?></td>
+                                                <td><?php echo $sasaran; ?></td>
                                                 <td><?php echo $data['nama_satuan']; ?></td>
                                                 <td><?php echo $data['nama_polarisasi']; ?></td>
                                                 <td><?php echo $data['tahun']; ?></td>
                                                 <td>
                                                     <input type="hidden" name="id_kpi[]" class="form-control" value="<?php echo $data['id_kpi']; ?>">
-                                                    <input type="text" id="realisasi<?php echo $data['id_kpi']; ?>" name="realisasi[]" class="form-control" value="<?php echo ($db->hitung_realisasi($data['id_kpi']) > 0)?($db->tampil_realisasi(1, $data['id_kpi'])):('0'); ?>" <?php echo ($db->cek_verif_realisasi($data['id_kpi']) == 1)?('readonly="readonly"'):(''); ?>>
+                                                    <input type="text" id="realisasi<?php echo $data['id_kpi']; ?>" name="realisasi[]" class="form-control" value="<?php echo $realisasi; ?>" <?php echo $r; ?>>
                                                 </td>
-                                                <td><textarea id="keterangan<?php echo $data['id_kpi']; ?>" name="keterangan[]" cols="10" rows="1" class="form-control" placeholder="Isikan Keterangan" <?php echo ($db->cek_verif_realisasi($data['id_kpi']) == 1)?('readonly="readonly"'):(''); ?>><?php echo ($db->hitung_realisasi($data['id_kpi']) > 0)?($db->tampil_realisasi(2, $data['id_kpi'])):(''); ?></textarea></td>
-                                                <td class="text-center"><input type="checkbox" name="verifikasi1" id="verifikasi1" data-id="<?php echo $data['id_kpi']; ?>" data-id_verifikator="<?php echo $id_anggotaV; ?>" class="form-control" <?php echo ($db->cek_verif_realisasi($data['id_kpi']) == 1)?('checked'):(''); ?>></td>
+                                                <td><textarea id="keterangan<?php echo $data['id_kpi']; ?>" name="keterangan[]" cols="10" rows="1" class="form-control" placeholder="Isikan Keterangan" <?php echo $r; ?>><?php echo $keterangan; ?></textarea></td>
+                                                <?php
+                                                    if($cc == 1)
+                                                    { 
+                                                ?>
+                                                        <td class="text-center"><input type="checkbox" name="verifikasi1" id="verifikasi1" data-id="<?php echo $data['id_kpi']; ?>" class="form-control" <?php echo ($db->cek_verif_realisasi($data['id_kpi']) == 1)?('checked'):(''); ?>></td>
+                                                <?php
+                                                    }
+                                                ?>
                                             </tr>
                                     <?php
                                             }
@@ -297,9 +375,30 @@
                                 </table>
                             </div>
                         </div>
-                        <div class="col-md-12" align="right">
-                            <button class="btn btn-primary" type="submit" name="tombolSimpanRealisasi">Simpan Data</button>
-                        </div>
+                        <?php
+                            if($cc != 1)
+                            {
+                                if($cv >= $db->hitung_data_kpi($id_anggotaD, $id_jabatanD, $id_departemenD, $id_unitD, $idA))
+                                    echo '
+                                        <div class="col-md-12" align="right">
+                                            <button class="btn btn-primary" type="submit" name="tombolSimpanRealisasi">Simpan Data</button>
+                                        </div>
+                                        ';
+                                else
+                                    echo '
+                                        <div class="col-md-12" align="right">
+                                            <button name="" class="btn btn-danger" disabled="disabled">Terdapat Data yang Masih Belum Diverifikasi</button>
+                                        </div>
+                                    ';
+                            }
+                            else {
+                                echo '
+                                    <div class="col-md-12" align="right">
+                                        <button class="btn btn-primary" type="submit" name="tombolSimpanRealisasi">Simpan Data</button>
+                                    </div>
+                                ';
+                            }
+                        ?>
                         </form>
                     </div>
                 </div>
@@ -341,7 +440,6 @@
                             'id' : paramId,
                             'value' : v,
                             'jenis' : 'verif_realisasi',
-                            'id_verifikator' : id_verifikator
                         },
                         success:function(html){
                             if(html == 1)
@@ -359,7 +457,7 @@
                                 document.getElementById(id2+paramId).readOnly = false;
                             }
                             else{
-                                alert("Terdapat Kegagal Pengiriman Data");
+                                alert("Terdapat Gagal Dalam Proses Penyimpanan");
                             }
                         }
                     });

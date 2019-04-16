@@ -403,7 +403,7 @@
                                                     {
                                                         foreach($db->cek_perubahan($id_kpi) as $tc)
                                                         {
-                                                            if($tc['bobot'] != '' && $tc['bobot'] != '')
+                                                            if($tc['bobot'] != '' && $tc['sasaran'] != '')
                                                             {
                                                                 $bobot = $tc['bobot'];
                                                                 $sasaran = $tc['sasaran'];
@@ -429,7 +429,7 @@
                                                         ?>
                                                                 <td class="text-center">
                                                                     <div class="dropdown">
-                                                                        <input data-id="<?php echo $id_kpi; ?>" type="checkbox" <?php echo ($data['status'] == '1')?'checked':''; ?> data-field='status1' id='verifikasi1' <?php echo $k1; ?>>
+                                                                        <input data-id="<?php echo $id_kpi; ?>" data-id_anggota="<?php echo $id_anggotaD; ?>" data-id_jabatan="<?php echo $id_jabatanD; ?>" data-id_departemen="<?php echo $id_departemenD; ?>" data-id_unit="<?php echo $id_unitD; ?>" type="checkbox" <?php echo ($data['status'] == '1')?'checked':''; ?> data-field='status1' id='verifikasi1' <?php echo $k1; ?>>
                                                                     </div>
                                                                 </td>
                                                                 <td class="text-center" id="<?php echo $id5; ?>">
@@ -465,23 +465,32 @@
                                                 {   
                                                     if($cv == $db->hitung_data_kpi($id_anggotaD, $id_jabatanD, $id_departemenD, $id_unitD, $idA))
                                                         echo '
-                                                            <button type="submit" name="tombolSimpan" class="btn btn-success">Simpan</button>
+                                                        <button type="submit" name="tombolSimpan" class="btn btn-success">Simpan</button>
+                                                        ';
+                                                    else if($cv < $db->hitung_data_kpi($id_anggotaD, $id_jabatanD, $id_departemenD, $id_unitD, $idA))
+                                                        echo '
+                                                            <button name="" class="btn btn-danger" disabled="disabled">Terdapat Data yang Masih Belum Diverifikasi</button>
                                                         ';
                                                 }
                                                 else
                                                 {
                                                     echo '
-                                                        <button name="" class="btn btn-danger" disabled="disabled">Terdapat Data yang Masih Belum Diverifikasi</button>
+                                                        <button name="" class="btn btn-danger" disabled="disabled">Belum Menginputkan Usulan KPI</button>
                                                     ';
                                                 }
                                             }
                                             else
                                             {
-                                                echo '
-                                                    <a href="#" class="btn btn-info" data-toggle="modal" data-target="#laporan">Catatan</a>
-                                                    <button type="submit" name="tombolSimpan" class="btn btn-success">Simpan</button>
-                                                ';
-                                            }
+                                                if($db->hitung_data_kpi($id_anggotaD, $id_jabatanD, $id_departemenD, $id_unitD, $idA) > 0)
+                                                    echo '
+                                                        <a href="#" class="btn btn-info" data-toggle="modal" data-target="#laporan">Catatan</a>
+                                                        <button type="submit" name="tombolSimpan" class="btn btn-success">Simpan</button>
+                                                    ';
+                                                else 
+                                                    echo '
+                                                        <a href="#" class="btn btn-info" data-toggle="modal" data-target="#laporan">Catatan</a>
+                                                    ';
+                                                }
                                         }
                                     ?>
                                 </div>
@@ -557,6 +566,11 @@
                 $('.table').on('change','#verifikasi1',function(e){
                     var v = ($(this).is(':checked'))?'1':'0';
                     var paramId = $(this).data('id');
+                    var id_anggota = $(this).data('id_anggota');
+                    var id_jabatan = $(this).data('id_jabatan');
+                    var id_departemen = $(this).data('id_departemen');
+                    var id_unit = $(this).data('id_unit');
+                    var lokasi = "detail_kpi.php?id_anggota="+id_anggota+"&&id_jabatan="+id_jabatan+"&&id_departemen="+id_departemen+"&&id_unit="+id_unit;
                     var id1 = 'bobot';
                     var id2 = 'sasaran';
                     var id3 = 'tempat';
@@ -584,7 +598,7 @@
                                 document.getElementById(id2+paramId).readOnly = false;
                                 document.getElementById(id3+paramId).innerHTML = '<a href="#" id="hapusData'+paramId+'" class="btn btn-danger" onclick="fungsi_hapus('+paramId+')">Hapus</a>';
                             }
-                            setTimeout(function(){location.reload();}, 1000);
+                            setTimeout(function(){window.location = lokasi}, 1000);
                         }
                     });
                 });
@@ -592,6 +606,7 @@
 
             function fungsi_hapus(id_kpi = null, id_anggota = null, id_jabatan = null, id_departemen = null, id_unit = null, id_periode = null){
                 var id = '#baris'+id_kpi;
+                var lokasi = "detail_kpi.php?id_anggota="+id_anggota+"&&id_jabatan="+id_jabatan+"&&id_departemen="+id_departemen+"&&id_unit="+id_unit;
                 $.ajax({
                     url : 'verifikasi_final.php',
                     type : 'get',
@@ -609,7 +624,7 @@
                         {
                             $(id).fadeOut("slow", function(){
                                 $(id).remove();
-                                location.reload();
+                                window.location = lokasi;
                             });
                         }
                         else
