@@ -223,6 +223,13 @@
 						</div>
 					</div>
 					<?php
+                        $b1 = 0;
+                        foreach($db->tampil_waktu_input(1) as $tampil)
+                        {
+                            $sekarang = date('Y-m-d');
+                            if($sekarang >= $tampil['tanggal_awal_input'] AND $sekarang <= $tampil['tanggal_akhir_input'])
+                                $b1 = 1;
+                        }
 						if(isset($_POST['tombolKirim']))
 						{
 							echo '
@@ -342,9 +349,23 @@
 									<tbody id="tambahan">
 									</tbody>
 								</table>
-                                <div class="m-t-20 text-center">
-									<button class="btn btn-primary" type="submit" name="tombolSimpan">Simpan Data KPI Individu</button>
-								</div>
+                                <?php
+                                    if($b1 == 1)
+                                    {
+                                        echo '
+                                            <div class="m-t-20 text-center">
+                                                <button class="btn btn-primary" type="submit" name="tombolSimpan">Simpan Data KPI Individu</button>
+                                            </div>
+                                            ';
+                                    }
+                                    else{
+                                        echo '
+                                            <div class="col-md-12" align="center">
+                                                <button name="" class="btn btn-danger" disabled="disabled">Waktu Pengajuan KPI Belum Dibuka</button>
+                                            </div>
+                                        ';
+                                    }
+                                ?>
 							</div>
 						</div>
                     </div>

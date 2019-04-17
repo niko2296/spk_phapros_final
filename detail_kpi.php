@@ -231,10 +231,10 @@
                             <?php
                                 $b1 = 0;
                                 // error_reporting(0);
-                                foreach($db->tampil_waktu_verifikasi() as $tampil)
+                                foreach($db->tampil_waktu_verifikasi(1) as $tampil)
                                 {
                                     $sekarang = date('Y-m-d');
-                                    if($sekarang >= $tampil['tanggal_awal_verifikasi'] AND $sekarang <= $tampil['tanggal_akhir_verifikasi'] AND $tampil['jenis_verifikasi'] == 1)
+                                    if($sekarang >= $tampil['tanggal_awal_verifikasi'] AND $sekarang <= $tampil['tanggal_akhir_verifikasi'])
                                         $b1 = 1;
                                 }
                                 

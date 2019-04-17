@@ -206,7 +206,7 @@
                             <a class="btn btn-warning" href="kompetensi_sub.php">Kembali Pada Data Kompetensi Sub Ordinat</a>
                         </div>
 					</div>
-					<div class="row">
+					<div class="row" style="border:1px solid black;color:black; background-color:white; padding:1%;">
 						<div class="col-md-12">
 							<div class="table-responsive">
 								<table class="table table-striped custom-table m-b-0 display" id="tabel">
@@ -225,7 +225,7 @@
                                     <?php
                                         $no = 0;
                                         error_reporting(0);
-                                        foreach($db->tampil_anggota_grup2($_GET['id_jabatan'], $_GET['id_unit']) as $data)
+                                        foreach($db->tampil_anggota_grup2($_GET['id_jabatan'], $_GET['id_departemen'], $_GET['id_unit']) as $data)
                                         {
                                             $no = $no+1;
                                     ?>
@@ -237,7 +237,7 @@
                                                 <td><?php echo $data['nama_jabatan']; ?></td>
                                                 <td><?php echo $data['nama_unit']; ?></td>
                                                 <td class="text-center">
-                                                    <a href="detail_ks.php?id_anggota=<?php echo $data['id_anggota']."&&id_jabatan=".$data['id_jabatan']."&&id_unit=".$data['id_unit']; ?>">Detail</a>
+                                                    <a href="detail_ks.php?id_anggota=<?php echo $data['id_anggota']."&&id_jabatan=".$data['id_jabatan']."&&id_departemen=".$data['id_departemen']."&&id_unit=".$data['id_unit']; ?>">Detail</a>
                                                 </td>
                                             </tr>
                                     <?php

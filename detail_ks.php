@@ -226,6 +226,14 @@
                     <div class="row">
                         <div class="col-md-12">
                             <?php
+                                $b2 = 0;
+                                foreach($db->tampil_waktu_verifikasi(2) as $tampil)
+                                {
+                                    $sekarang = date('Y-m-d');
+                                    if($sekarang >= $tampil['tanggal_awal_verifikasi'] AND $sekarang <= $tampil['tanggal_akhir_verifikasi'])
+                                        $b2 = 1;
+                                }
+
                                 if(isset($_POST['tombolSimpanK']))
                                 {
                                     $id_ki = $_POST['id_ki'];
@@ -300,7 +308,7 @@
                             ?>
                         </div>
                     </div>
-					<div class="row">
+					<div class="row" style="border:1px solid black;color:black; background-color:white; padding:1%;">
                         <form action="#" method="POST">
                         <div class="col-md-12">
                             <div class="row">
@@ -366,10 +374,21 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-12" align="right">
-                                    <a href="#" class="btn btn-info" data-toggle="modal" data-target="#laporan">Catatan</a>
-                                    <button class="btn btn-primary" type="submit" name="tombolSimpanK">Simpan Data</button>
-                                </div>
+                                <?php
+                                    if($b2 == 1)
+                                        echo '
+                                            <div class="col-md-12" align="right">
+                                                <a href="#" class="btn btn-info" data-toggle="modal" data-target="#laporan">Catatan</a>
+                                                <button class="btn btn-primary" type="submit" name="tombolSimpanK">Simpan Data</button>
+                                            </div>
+                                            ';
+                                    else 
+                                        echo '
+                                            <div class="col-md-12" align="right">
+                                                <button class="btn btn-danger" disabled="disabled">Waktu Input/Verifikasi Data Kompetensi Sub Ordinat Belum Dibuka</button>
+                                            </div>
+                                            ';         
+                                ?>
                             </div>
                         </div>
                         </form>

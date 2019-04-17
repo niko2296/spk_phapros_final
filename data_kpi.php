@@ -230,12 +230,16 @@
                                     $b1 = 0;
                                     $b2 = 0;
                                     error_reporting(0);
-                                    foreach($db->tampil_waktu_input() as $tampil)
+                                    foreach($db->tampil_waktu_input(1) as $tampil)
                                     {
                                         $sekarang = date('Y-m-d');
-                                        if($sekarang >= $tampil['tanggal_awal_input'] AND $sekarang <= $tampil['tanggal_akhir_input'] AND $tampil['jenis_input'] == 1)
+                                        if($sekarang >= $tampil['tanggal_awal_input'] AND $sekarang <= $tampil['tanggal_akhir_input'])
                                             $b1 = 1;
-                                        if($sekarang >= $tampil['tanggal_awal_input'] AND $sekarang <= $tampil['tanggal_akhir_input'] AND $tampil['jenis_input'] == 2)
+                                    }
+                                    foreach($db->tampil_waktu_input(2) as $tampil)
+                                    {
+                                        $sekarang = date('Y-m-d');
+                                        if($sekarang >= $tampil['tanggal_awal_input'] AND $sekarang <= $tampil['tanggal_akhir_input'])
                                             $b2 = 1;
                                     }
                                     
@@ -510,11 +514,20 @@
                                 </div>
                                 <?php
                                     if($b2 == 1)
+                                    {
                                         echo '
                                             <div class="col-md-12" align="right">
                                                 <button class="btn btn-primary" type="submit" name="tombolSimpanRealisasi">Simpan Data</button>
                                             </div>
-                                            ';
+                                        ';
+                                    }
+                                    else {
+                                        echo '
+                                            <div class="col-md-12 text-right">
+                                                <a href="" class="btn btn-danger pull-right" data-toggle="modal" disabled="disabled"> Waktu Input Data Realisasi KPI Belum Dibuka</a>
+                                            </div>
+                                        ';
+                                    }
                                 ?>
                                 </form>
                             </div>

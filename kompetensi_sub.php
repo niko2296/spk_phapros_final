@@ -221,13 +221,14 @@
                     <div class="tab-content">
                         <div id="dk" class="tab-pane fade in active">
                             <!-- Tab Pertama -->
-                            <div class="row">
+                            <div class="row" style="border:1px solid black;color:black; background-color:white; padding:1%;">
                                 <div class="col-md-12">
                                     <div class="table-responsive">
                                         <table class="table table-striped custom-table m-b-0 display" id="tabel">
                                             <thead>
                                                 <tr>
                                                     <th>Jabatan</th>
+                                                    <th>Departemen</th>
                                                     <th>Unit</th>
                                                     <th>Jumlah Anggota</th>
                                                     <th>Actions</th>
@@ -237,17 +238,18 @@
                                             <?php
                                                 $no = 0;
                                                 error_reporting(0);
-                                                foreach($db->tampil_jabatan_grup($jabatan, $id_unitD) as $data)
+                                                foreach($db->tampil_jabatan_grup($jabatan, $departemenL, $id_unitD) as $data)
                                                 {
                                                     $no = $no+1;
                                             ?>
                                                     <tr>
                                                         <td><?php echo $data['nama_jabatan']; ?></td>
+                                                        <td><?php echo $data['nama_departemen']; ?></td>
                                                         <td><?php echo $data['nama_unit']; ?></td>
-                                                        <td><?php echo $db->hitung_jabatan_grup($data['id_jabatan_dinilai'], $data['id_unit_dinilai']); ?> Anggota</td>
+                                                        <td><?php echo $db->hitung_jabatan_grup($data['id_jabatan_dinilai'], $data['id_departemen_dinilai'], $data['id_unit_dinilai']); ?> Anggota</td>
                                                         <td class="text-center  ">
                                                             <div class="dropdown">
-                                                                <a href="detail_jabatan_kompetensi.php?id_jabatan=<?php echo $data['id_jabatan_dinilai']."&&id_unit=".$data['id_unit_dinilai']; ?>">Detail</a>
+                                                                <a href="detail_jabatan_kompetensi.php?id_jabatan=<?php echo $data['id_jabatan_dinilai']."&&id_departemen=".$data['id_departemen_dinilai']."&&id_unit=".$data['id_unit_dinilai']; ?>">Detail</a>
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -263,7 +265,7 @@
                         </div>
                         <div id="dp" class="tab-pane fade">
                             <!-- Tab Kedua -->
-                            <div class="row">
+                            <div class="row" style="border:1px solid black;color:black; background-color:white; padding:1%;">
                                 <div class="col-md-12">
                                     <div class="table-responsive">
                                         <table class="table table-striped custom-table m-b-0 display" id="tabel2">
@@ -294,7 +296,7 @@
                                                         <td><?php echo $data['nama_jabatan']; ?></td>
                                                         <td><?php echo $data['nama_unit']; ?></td>
                                                         <td class="text-center">
-                                                            <a href="detail_ks.php?id_anggota=<?php echo $data['id_anggota']."&&id_jabatan=".$data['id_jabatan']."&&id_unit=".$data['id_unit']; ?>">Detail</a>
+                                                            <a href="detail_ks.php?id_anggota=<?php echo $data['id_anggota']."&&id_jabatan=".$data['id_jabatan']."&&id_departemen=".$data['id_departemen']."&&id_unit=".$data['id_unit']; ?>">Detail</a>
                                                         </td>
                                                     </tr>
                                             <?php

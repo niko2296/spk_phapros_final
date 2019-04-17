@@ -197,16 +197,23 @@
 			return $hasil;
 		}
 
-		function tampil_waktu_input(){
-			$query = $this->connection->query("SELECT * FROM waktu_input");
+		function tampil_waktu_input($jenis_input = 0){
+			$hasil = [];
+			if($jenis_input == 0)
+				$query = $this->connection->query("SELECT * FROM waktu_input");
+			else
+				$query = $this->connection->query("SELECT * FROM waktu_input WHERE jenis_input = '$jenis_input'");
 			while($tampil = $query->fetch_array())
 				$hasil[] = $tampil;
 			return $hasil;
 		}
 		
-		function tampil_waktu_verifikasi(){
+		function tampil_waktu_verifikasi($jenis_verifikasi = 0){
 			$hasil = [];
-			$query = $this->connection->query("SELECT * FROM waktu_verifikasi");
+			if($jenis_verifikasi == 0)
+				$query = $this->connection->query("SELECT * FROM waktu_verifikasi");
+			else
+				$query = $this->connection->query("SELECT * FROM waktu_verifikasi WHERE jenis_verifikasi = '$jenis_verifikasi'");
 			while($tampil = $query->fetch_array())
 				$hasil[] = $tampil;
 			return $hasil;

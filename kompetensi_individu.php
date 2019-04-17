@@ -214,9 +214,31 @@
 						<div class="col-xs-8">
 							<h4 class="page-title">Data Kompetensi Individu</h4>
 						</div>
-						<div class="col-xs-4 text-right m-b-30">
-							<a href="#" class="btn btn-primary rounded pull-right" data-toggle="modal" data-target="#add_ticket"><i class="fa fa-plus"></i> Input Data Kompetensi Individu</a>
-						</div>
+                        <?php
+                            $b1 = 0;
+                            foreach($db->tampil_waktu_input(2) as $tampil)
+                            {
+                                $sekarang = date('Y-m-d');
+                                if($sekarang >= $tampil['tanggal_awal_input'] AND $sekarang <= $tampil['tanggal_akhir_input'])
+                                    $b1 = 1;
+                            }
+
+                            if($b1 == 1)
+                            {
+                                echo '
+                                    <div class="col-xs-4 text-right m-b-30">
+                                        <a href="#" class="btn btn-primary rounded pull-right" data-toggle="modal" data-target="#add_ticket"><i class="fa fa-plus"></i> Input Data Kompetensi Individu</a>
+                                    </div>
+                                ';
+                            }
+                            else{
+                                echo '
+                                    <div class="col-xs-4 text-right m-b-30">
+                                        <a href="" class="btn btn-danger rounded pull-right" data-toggle="modal" disabled="disabled"> Waktu Input Data Kompetensi Individu Belum Dibuka</a>
+                                    </div>
+                                ';
+                            }
+                        ?>
 					</div>
                     <div class="row">
                         <div class="col-md-12">
@@ -278,7 +300,7 @@
                             ?>
                         </div>
                     </div>
-					<div class="row">
+					<div class="row" style="border:1px solid black;color:black; background-color:white; padding:1%;">
 						<div class="col-md-12">
 							<div class="table-responsive">
 								<table class="table table-striped custom-table m-b-0 display" id="tabel">
@@ -393,7 +415,7 @@
 							<h4 class="modal-title">Input Data Kompetensi Individu</h4>
 						</div>
 						<div class="modal-body">
-                            <div class="row">
+                            <div class="row" style="border:1px solid black;color:black; background-color:white; padding:1%;">
                                 <form method="POST" action="#" id="golongan_input">
                                 <div class="col-md-12">
                                     <table class="table table-striped custom-table m-b-0" id="tabel2">

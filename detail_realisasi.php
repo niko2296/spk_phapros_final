@@ -247,6 +247,13 @@
                                         ';
                                     }
                                 }
+                                $b2 = 0;
+                                foreach($db->tampil_waktu_verifikasi(2) as $tampil)
+                                {
+                                    $sekarang = date('Y-m-d');
+                                    if($sekarang >= $tampil['tanggal_awal_verifikasi'] AND $sekarang <= $tampil['tanggal_akhir_verifikasi'])
+                                        $b2 = 1;
+                                }
                             ?>
                             <center><div style="background-color:#7CFC00; width:20%; color:white; padding:5px; display:none; margin-bottom:2%;" id="notifikasi1">Data Diverifikasi</div></center>
                             <center><div style="background-color:red; width:20%; color:white; padding:5px; display:none; margin-bottom:2%;" id="notifikasi2">Data Batal Diverifikasi</div></center>
@@ -334,15 +341,23 @@
                                                 }
 
                                                 $r = '';
-                                                if($db->cek_verif_realisasi($data['id_kpi']) == 1)
+                                                $d = '';
+                                                if($b2 == 1)
                                                 {
-                                                    $r = 'readonly="readonly"';
-                                                    $cv = $cv+1;
-                                                }
+                                                    if($db->cek_verif_realisasi($data['id_kpi']) == 1)
+                                                    {
+                                                        $r = 'readonly="readonly"';
+                                                        $cv = $cv+1;
+                                                    }
 
-                                                if($cc > 1)
-                                                {
-                                                    $r = '';
+                                                    if($cc > 1)
+                                                    {
+                                                        $r = '';
+                                                    }
+                                                }
+                                                else{
+                                                    $r = 'readonly="readonly"';
+                                                    $d = 'disabled="disabled"';
                                                 }
                                     ?>
                                             <tr>
@@ -362,7 +377,7 @@
                                                     if($cc == 1)
                                                     { 
                                                 ?>
-                                                        <td class="text-center"><input type="checkbox" name="verifikasi1" id="verifikasi1" data-id="<?php echo $data['id_kpi']; ?>" class="form-control" <?php echo ($db->cek_verif_realisasi($data['id_kpi']) == 1)?('checked'):(''); ?>></td>
+                                                        <td class="text-center"><input type="checkbox" name="verifikasi1" id="verifikasi1" data-id="<?php echo $data['id_kpi']; ?>" class="form-control" <?php echo ($db->cek_verif_realisasi($data['id_kpi']) == 1)?('checked'):(''); ?> <?php echo $d; ?>></td>
                                                 <?php
                                                     }
                                                 ?>
@@ -376,27 +391,37 @@
                             </div>
                         </div>
                         <?php
-                            if($cc != 1)
+                            if($b2 == 1)
                             {
-                                if($cv >= $db->hitung_data_kpi($id_anggotaD, $id_jabatanD, $id_departemenD, $id_unitD, $idA))
+                                if($cc != 1)
+                                {
+                                    if($cv >= $db->hitung_data_kpi($id_anggotaD, $id_jabatanD, $id_departemenD, $id_unitD, $idA))
+                                        echo '
+                                            <div class="col-md-12" align="right">
+                                                <button class="btn btn-primary" type="submit" name="tombolSimpanRealisasi">Simpan Data</button>
+                                            </div>
+                                            ';
+                                    else
+                                        echo '
+                                            <div class="col-md-12" align="right">
+                                                <button name="" class="btn btn-danger" disabled="disabled">Terdapat Data yang Masih Belum Diverifikasi</button>
+                                            </div>
+                                        ';
+                                }
+                                else {
                                     echo '
                                         <div class="col-md-12" align="right">
                                             <button class="btn btn-primary" type="submit" name="tombolSimpanRealisasi">Simpan Data</button>
                                         </div>
-                                        ';
-                                else
-                                    echo '
-                                        <div class="col-md-12" align="right">
-                                            <button name="" class="btn btn-danger" disabled="disabled">Terdapat Data yang Masih Belum Diverifikasi</button>
-                                        </div>
                                     ';
+                                }
                             }
                             else {
                                 echo '
-                                    <div class="col-md-12" align="right">
-                                        <button class="btn btn-primary" type="submit" name="tombolSimpanRealisasi">Simpan Data</button>
-                                    </div>
-                                ';
+                                        <div class="col-md-12" align="right">
+                                            <button name="" class="btn btn-danger" disabled="disabled">Waktu Verifikasi Belum Dibuka</button>
+                                        </div>
+                                    ';
                             }
                         ?>
                         </form>
