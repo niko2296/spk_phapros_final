@@ -111,6 +111,7 @@
                                             <li><a href="data_polarisasi.php">Polarisasi</a></li>
                                             <li><a href="data_satuan.php">Satuan</a></li>
                                             <li><a href="data_kompetensi.php">Kompetensi</a></li>
+                                            <li><a href="data_kompetensi_khusus.php">Kompetensi Khusus</a></li>
                                             <li><a href="data_peringkat.php">Peringkat Kompetensi</a></li>
 											<li><a href="persentase_nilai.php">Persentase Nilai</a></li>
 											<li><a href="kriteria_nilai.php">Kriteria Nilai</a></li>

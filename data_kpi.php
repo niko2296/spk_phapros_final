@@ -127,6 +127,7 @@
                                             <li><a href="data_polarisasi.php">Polarisasi</a></li>
                                             <li><a href="data_satuan.php">Satuan</a></li>
                                             <li><a href="data_kompetensi.php">Kompetensi</a></li>
+                                            <li><a href="data_kompetensi_khusus.php">Kompetensi Khusus</a></li>
                                             <li><a href="data_peringkat.php">Peringkat Kompetensi</a></li>
                                             <li><a href="persentase_nilai.php">Persentase Nilai</a></li>
                                             <li><a href="kriteria_nilai.php">Kriteria Nilai</a></li>
@@ -283,7 +284,7 @@
                                         echo '<div class="alert alert-warning">
                                                 <div class="row" style="vertical-align:bottom;">
                                                     <div class="col-md-10">
-                                                        <b>'.$db->pemberi_perubahan_usulan($id_anggotaD, $jabatan, $departemenL, $id_unitD, $idA).'</b> Telah Melakukan Perubahan Pada Data Bobot ataupun Sasaran Usulan KPI.
+                                                        <b>'.$db->pemberi_perubahan_usulan($id_anggotaD, $jabatan, $departemenL, $id_unitD, $idA).'</b> Telah Melakukan Perubahan Pada Data Bobot ataupun Sasaran Usulan KPI Anda.
                                                     </div>
                                                 </div>
                                             </div>';
@@ -449,6 +450,20 @@
                             ?>
                             <div class="row" style="border:1px solid black;color:black; background-color:white; padding:1%;">
                                 <form action="#" method="POST">
+                                <div class="col-md-12">
+                                    <?php
+                                        if($db->hitung_perubahan_realisasi($id_anggotaD, $jabatan, $departemenL, $unitL, $idA) > 0)
+                                        {
+                                            echo '<div class="alert alert-warning">
+                                                    <div class="row" style="vertical-align:bottom;">
+                                                        <div class="col-md-10">
+                                                            <b>'.$db->pemberi_perubahan_realisasi($id_anggotaD, $jabatan, $departemenL, $unitL, $idA).'</b> Telah Melakukan Perubahan Pada Data Realisasi dan Keterangan Pada Data Realisasi KPI Anda.
+                                                        </div>
+                                                    </div>
+                                                </div>';
+                                        }
+                                    ?>
+                                </div>
                                 <div class="col-md-12">
                                     <div class="table-responsive">
                                         <table class="table table-striped custom-table m-b-0 display" id="tabel2">

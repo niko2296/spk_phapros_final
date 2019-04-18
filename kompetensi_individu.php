@@ -125,6 +125,7 @@
                                             <li><a href="data_polarisasi.php">Polarisasi</a></li>
                                             <li><a href="data_satuan.php">Satuan</a></li>
                                             <li><a href="data_kompetensi.php">Kompetensi</a></li>
+                                            <li><a href="data_kompetensi_khusus.php">Kompetensi Khusus</a></li>
                                             <li><a href="data_peringkat.php">Peringkat Kompetensi</a></li>
                                             <li><a href="persentase_nilai.php">Persentase Nilai</a></li>
                                             <li><a href="kriteria_nilai.php">Kriteria Nilai</a></li>
@@ -252,7 +253,7 @@
                                         $peringkat[] = $_POST[$var];
                                     }
 
-                                    $eksekusi = $db->input_kompetensi_individu($id_anggotaD, $jabatan, $id_unitD, $_POST['id_kompetensi'], $peringkat, $idA);
+                                    $eksekusi = $db->input_kompetensi_individu($id_anggotaD, $jabatan, $departemenL, $id_unitD, $_POST['id_kompetensi'], $peringkat, $idA);
                                     if($eksekusi == 1)
                                         echo '
                                             <script>
@@ -287,12 +288,12 @@
                                         ';
                                 }
 
-                                if($db->hitung_catatan2($id_anggotaD, $jabatan, $id_unitD, $idA) > 0)
+                                if($db->hitung_catatan2($id_anggotaD, $jabatan, $departemenL, $id_unitD, $idA) > 0)
                                 {
                                     echo '<div class="alert alert-info">
                                             <div class="row" style="vertical-align:bottom;">
                                                 <div class="col-md-12">
-                                                    <b>Catatan : </b>'.$db->tampil_catatan2($id_anggotaD, $jabatan, $id_unitD, $idA).'
+                                                    <b>Catatan : </b>'.$db->tampil_catatan2($id_anggotaD, $jabatan, $departemenL, $id_unitD, $idA).'
                                                 </div>
                                             </div>
                                           </div>';
@@ -301,7 +302,21 @@
                         </div>
                     </div>
 					<div class="row" style="border:1px solid black;color:black; background-color:white; padding:1%;">
-						<div class="col-md-12">
+                        <div class="col-md-12">
+                            <?php
+                                if($db->hitung_perubahan_kompetensi($id_anggotaD, $jabatan, $departemenL, $unitL, $idA) > 0)
+                                {
+                                    echo '<div class="alert alert-warning">
+                                            <div class="row" style="vertical-align:bottom;">
+                                                <div class="col-md-10">
+                                                    <b>'.$db->pemberi_perubahan_kompetensi($id_anggotaD, $jabatan, $departemenL, $unitL, $idA).'</b> Telah Melakukan Perubahan Pada Data Peringkat Pada Kompetensi Individu.
+                                                </div>
+                                            </div>
+                                        </div>';
+                                }
+                            ?>
+                        </div>
+                        <div class="col-md-12">
 							<div class="table-responsive">
 								<table class="table table-striped custom-table m-b-0 display" id="tabel">
 									<thead>
@@ -321,12 +336,23 @@
                                         foreach($db->tampil_kompetensi_individu($id_anggotaD, $jabatan, $id_unitD, $idA) as $data)
                                         {
                                             $no = $no+1;
+                                            $id_peringkat = $data['id_peringkat'];
+                                            if($db->hitung_perubahan_kompetensi($id_anggotaD, $jabatan, $departemenL, $unitL, $idA, $data['id_kompetensi']))
+                                                $id_peringkat = $db->cek_perubahan3($data['id_kompetensi']);
                                     ?>
                                             <tr>
                                                 <td><?php echo $data['nama_kompetensi']; ?></td>
                                                 <td><?php echo $data['indikator_terendah']; ?></td>
                                                 <td><?php echo $data['indikator_tertinggi']; ?></td>
-                                                <td><?php echo $data['peringkat']; ?></td>
+                                                <td>
+                                                    <?php
+                                                        foreach($db->tampil_peringkat($idA) as $tampilP)
+                                                        {
+                                                            if($tampilP['id_peringkat'] == $id_peringkat)
+                                                                echo $tampilP['peringkat'];
+                                                        }
+                                                    ?>
+                                                </td>
                                                 <td><?php echo ($data['status'] == 1)?('Sudah Diverifikasi'):('Belum Diverifikasi'); ?></td>
                                                 <td class="text-right">
                                                     <div class="dropdown">
@@ -358,7 +384,7 @@
                                                                         <div class="form-group">
                                                                             <label>Indikator Terendah</label>
                                                                             <input class="form-control" type="hidden" name="id_ki_edit" value="<?php echo $data['id_kompetensi_individu']; ?>">
-                                                                            <input class="form-control" type="text" name="nama_golongan_edit" value="<?php echo $data['indikator_terendah']; ?>" disabled="disabled">
+                                                                            <textarea class="form-control" rows="10"  disabled="disabled"><?php echo $data['indikator_terendah']; ?></textarea>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-4">
@@ -384,7 +410,7 @@
                                                                     <div class="col-md-4">
                                                                         <div class="form-group">
                                                                             <label>Indikator Tertinggi</label>
-                                                                            <input class="form-control" type="text" name="" value="<?php echo $data['indikator_tertinggi']; ?>" disabled="disabled">
+                                                                            <textarea class="form-control" rows="10"  disabled="disabled"><?php echo $data['indikator_tertinggi']; ?></textarea>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -432,7 +458,7 @@
                                                 $c = 0;
                                                 foreach ($db->tampil_soal($idA, $jabatan) as $tampilS)
                                                 {
-                                                    if($db->cek_kompetensi($id_anggotaD, $jabatan, $id_unitD, $tampilS['id_kompetensi']) == 0)
+                                                    if($db->cek_kompetensi($id_anggotaD, $jabatan, $departemenL, $id_unitD, $tampilS['id_kompetensi']) == 0)
                                                     {
                                                         $no = $no+1;
                                             ?>

@@ -24,10 +24,13 @@
 
     $id_anggotaD = $_GET['id_anggota'];
     $id_jabatanD = $_GET['id_jabatan'];
+    $id_departemenD = $_GET['id_departemen'];
     $id_unitD = $_GET['id_unit'];
 
     foreach($db->tampil_anggota($id_anggotaD) as $tc)
         $nama_anggota = $tc['nama'];
+
+    $cc = $db->cek_pangkat($id_jabatanD, $id_departemenD, $id_unitD, $jabatan, $departemenL, $unitL);
 ?>
 <!DOCTYPE html>
 <html>
@@ -130,6 +133,7 @@
                                             <li><a href="data_polarisasi.php">Polarisasi</a></li>
                                             <li><a href="data_satuan.php">Satuan</a></li>
                                             <li><a href="data_kompetensi.php">Kompetensi</a></li>
+                                            <li><a href="data_kompetensi_khusus.php">Kompetensi Khusus</a></li>
                                             <li><a href="data_peringkat.php">Peringkat Kompetensi</a></li>
                                             <li><a href="persentase_nilai.php">Persentase Nilai</a></li>
                                             <li><a href="kriteria_nilai.php">Kriteria Nilai</a></li>
@@ -247,13 +251,13 @@
                                             $peringkat[] = $_POST[$p1]; 
                                         }
 
-                                        $eksekusi = $db->edit_kompetensi_penilai($id_ki, $peringkat);
+                                        $eksekusi = $db->revisi_kompetensi($id_ki, $peringkat, $idA, $id_anggotaD, $id_jabatanD, $id_departemenD, $id_unitD, $id_anggotaV, $jabatan, $departemenL, $unitL);
                                         if($eksekusi == 1)
                                         {
                                             echo    '
                                                         <script>
                                                             alert("Berhasil Disimpan");
-                                                            window.location = "detail_ks.php?id_anggota='.$id_anggotaD.'&&id_jabatan='.$id_jabatanD.'&&id_unit='.$id_unitD.'";
+                                                            window.location = "detail_ks.php?id_anggota='.$id_anggotaD.'&&id_jabatan='.$id_jabatanD.'&&id_departemen='.$id_departemenD.'&&id_unit='.$id_unitD.'";
                                                         </script>
                                                     ';
                                         }
@@ -262,7 +266,7 @@
                                             echo    '
                                                         <script>
                                                             alert("Gagal Disimpan");
-                                                            window.location = "detail_ks.php?id_anggota='.$id_anggotaD.'&&id_jabatan='.$id_jabatanD.'&&id_unit='.$id_unitD.'";
+                                                            window.location = "detail_ks.php?id_anggota='.$id_anggotaD.'&&id_jabatan='.$id_jabatanD.'&&id_departemen='.$id_departemenD.'&&id_unit='.$id_unitD.'";
                                                         </script>
                                                     ';
                                         }
@@ -270,41 +274,25 @@
                                 }
                                 else if(isset($_POST['tombolCatatan']))
                                 {
-                                    $eksekusi = $db->input_catatan2($id_anggotaD, $id_jabatanD, $id_unitD, $idA, $_POST['catatan']);
+                                    $eksekusi = $db->input_catatan2($id_anggotaD, $id_jabatanD, $id_departemenD, $id_unitD, $idA, $_POST['catatan']);
                                     if($eksekusi == 2 || $eksekusi == 3)
                                         echo '<center><div style="background-color:red; width:20%; color:white; padding:5px; margin-bottom:1%;">Data Gagal Disimpan</div></center>';
                                     else if($eksekusi == 1)
                                         echo '
                                             <script>
-                                                window.location = "detail_ks.php?id_anggota='.$id_anggotaD.'&&id_jabatan='.$id_jabatanD.'&&id_unit='.$id_unitD.'";
+                                                window.location = "detail_ks.php?id_anggota='.$id_anggotaD.'&&id_jabatan='.$id_jabatanD.'&&id_departemen='.$id_departemenD.'&&id_unit='.$id_unitD.'";
                                             </script>
                                         ';
                                 }
                                 else if(isset($_POST['tombolHapusC']))
                                 {
-                                    $eksekusi = $db->hapus_catatan2($id_anggotaD, $id_jabatanD, $id_unitD, $idA);
+                                    $eksekusi = $db->hapus_catatan2($id_anggotaD, $id_jabatanD, $id_departemenD, $id_unitD, $idA);
                                     if($eksekusi == 2 || $eksekusi == 3)
                                         echo '<center><div style="background-color:red; width:20%; color:white; padding:5px; margin-bottom:1%;">Data Gagal Dihapus</div></center>';
                                 }
 
                                 echo '<center><div style="background-color:#7CFC00; width:20%; color:white; padding:5px; display:none; margin-bottom:2%;" id="notifikasi1">Data Diverifikasi</div></center>';
                                 echo '<center><div style="background-color:red; width:20%; color:white; padding:5px; display:none; margin-bottom:2%;" id="notifikasi2">Data Batal Diverifikasi</div></center>';
-                                
-                                if($db->hitung_catatan2($id_anggotaD, $id_jabatanD, $id_unitD, $idA) > 0)
-                                {
-                                    echo '<div class="alert alert-info">
-                                            <div class="row" style="vertical-align:bottom;">
-                                                <div class="col-md-10">
-                                                    <b>Catatan : </b>'.$db->tampil_catatan2($id_anggotaD, $id_jabatanD, $id_unitD, $idA).'
-                                                </div>
-                                                <div class="col-md-2">
-                                                    <form method="POST">
-                                                        <button type="submit" name="tombolHapusC" class="btn btn-danger">Hapus Catatan</button>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                          </div>';
-                                }
                             ?>
                         </div>
                     </div>
@@ -313,21 +301,52 @@
                         <div class="col-md-12">
                             <div class="row">
                                 <div class="col-md-12">
+                                    <?php
+                                        if($db->hitung_perubahan_kompetensi($id_anggotaD, $id_jabatanD, $id_departemenD, $id_unitD, $idA) > 0)
+                                        {
+                                            echo '<div class="alert alert-warning">
+                                                    <div class="row" style="vertical-align:bottom;">
+                                                        <div class="col-md-10">
+                                                            <b>'.$db->pemberi_perubahan_kompetensi($id_anggotaD, $id_jabatanD, $id_departemenD, $id_unitD, $idA).'</b> Telah Melakukan Perubahan Pada Data Peringkat Pada Kompetensi Individu.
+                                                        </div>
+                                                    </div>
+                                                </div>';
+                                        }
+
+                                        if($db->hitung_catatan2($id_anggotaD, $id_jabatanD, $id_departemenD, $id_unitD, $idA) > 0)
+                                        {
+                                            echo '<div class="alert alert-info">
+                                                    <div class="row" style="vertical-align:bottom;">
+                                                        <div class="col-md-10">
+                                                            <b>Catatan : </b>'.$db->tampil_catatan2($id_anggotaD, $id_jabatanD, $id_departemenD, $id_unitD, $idA).'
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <form method="POST">
+                                                                <button type="submit" name="tombolHapusC" class="btn btn-danger">Hapus Catatan</button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>';
+                                        }
+                                    ?>
+                                </div>
+                                <div class="col-md-12">
                                     <div class="table-responsive">
                                         <table class="table table-striped custom-table m-b-0 display" id="tabel">
                                             <thead>
                                                 <tr>
-                                                    <th>Nama Kompetensi</th>
-                                                    <th>Indikator Terendah</th>
-                                                    <th>Indikator Tertinggi</th>
-                                                    <th>Peringkat</th>
-                                                    <th>Verifikasi</th>
+                                                    <th style="width:10%;">Nama Kompetensi</th>
+                                                    <th style="width:30%;">Indikator Terendah</th>
+                                                    <th style="width:30%;">Indikator Tertinggi</th>
+                                                    <th style="width:25%;">Peringkat</th>
+                                                    <th style="width:5%;">Verifikasi</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                             <?php
                                                 error_reporting(0);
                                                 $p = 0;
+                                                $cv = 0;
                                                 foreach($db->tampil_kompetensi_individu($id_anggotaD, $id_jabatanD, $id_unitD, $idA) as $data)
                                                 {
                                                     $d = '';
@@ -336,7 +355,17 @@
                                                     $v2 = 'id_ki'.$p;
                                                     
                                                     if($db->cek_verif_kompetensi($data['id_kompetensi_individu']) == 1)
+                                                    {
+                                                        $cv = $cv+1;
                                                         $d = 'disabled="disabled"';
+                                                    }
+
+                                                    if($cc != 1)
+                                                        $d = '';
+                                                    
+                                                    $id_peringkat = $data['id_peringkat'];
+                                                    if($db->hitung_perubahan_kompetensi($id_anggotaD, $id_jabatanD, $id_departemenD, $id_unitD, $idA, $data['id_kompetensi']))
+                                                        $id_peringkat = $db->cek_perubahan3($data['id_kompetensi']);
                                             ?>
                                                     <tr>
                                                         <td>
@@ -352,7 +381,7 @@
                                                             foreach($db->tampil_peringkat($idA) as $tampilP)
                                                             {
                                                                 $s = '';
-                                                                if($tampilP['id_peringkat'] == $data['id_peringkat'])
+                                                                if($tampilP['id_peringkat'] == $id_peringkat)
                                                                     $s = 'checked';
                                                                 
                                                                 echo '
@@ -363,7 +392,28 @@
                                                             }
                                                         ?>
                                                         </td>
-                                                        <td align="center"><input type="checkbox" name="verifikasi" id="verifikasi" class="form-control" data-id_anggota="<?php echo $id_anggotaD; ?>" data-verifikator="<?php echo $id_anggotaV; ?>" data-id="<?php echo $data['id_kompetensi_individu']; ?>" <?php echo ($db->cek_verif_kompetensi($data['id_kompetensi_individu']) == 1)?('checked'):(''); ?>></td>
+                                                        <?php
+                                                            if($cc == 1)
+                                                            {
+                                                        ?>
+                                                                <td align="center"><input type="checkbox" name="verifikasi" id="verifikasi" class="form-control" data-id_anggota="<?php echo $id_anggotaD; ?>" data-verifikator="<?php echo $id_anggotaV; ?>" data-jabatan_verifikator="<?php echo $jabatan; ?>" data-departemen_verifikator="<?php echo $departemenL; ?>" data-unit_verifikator="<?php echo $unitL; ?>" data-id="<?php echo $data['id_kompetensi_individu']; ?>" <?php echo ($db->cek_verif_kompetensi($data['id_kompetensi_individu']) == 1)?('checked'):(''); ?>></td>
+                                                        <?php
+                                                            }
+                                                            else {
+                                                                if($db->cek_verif_kompetensi($data['id_kompetensi_individu']) == 1)
+                                                                    echo '
+                                                                        <td>
+                                                                            Sudah Diverifikasi
+                                                                        </td>
+                                                                    ';
+                                                                else 
+                                                                    echo '
+                                                                        <td>
+                                                                            Belum Diverifikasi
+                                                                        </td>    
+                                                                        ';
+                                                            }
+                                                        ?>
                                                     </tr>
                                             <?php
                                                 }
@@ -376,18 +426,50 @@
                             <div class="row">
                                 <?php
                                     if($b2 == 1)
-                                        echo '
-                                            <div class="col-md-12" align="right">
-                                                <a href="#" class="btn btn-info" data-toggle="modal" data-target="#laporan">Catatan</a>
-                                                <button class="btn btn-primary" type="submit" name="tombolSimpanK">Simpan Data</button>
-                                            </div>
-                                            ';
+                                    {
+                                        if($cc == 1)
+                                        {
+                                            echo '
+                                                <div class="col-md-12" align="right">
+                                                    <a href="#" class="btn btn-info" data-toggle="modal" data-target="#laporan">Catatan</a>
+                                                    <button class="btn btn-primary" type="submit" name="tombolSimpanK">Simpan Data</button>
+                                                </div>
+                                                ';
+                                        }
+                                        else {
+                                            if($p == 0)
+                                            {
+                                                echo '
+                                                    <div class="col-md-12" align="right">
+                                                        <button name="" class="btn btn-danger" disabled="disabled">Data Kompetensi Belum Diisikan</button>
+                                                    </div>
+                                                    ';
+                                            }
+                                            else
+                                            {
+                                                if($cv < $p)
+                                                    echo '
+                                                        <div class="col-md-12" align="right">
+                                                            <button name="" class="btn btn-danger" disabled="disabled">Terdapat Data yang Masih Belum Diverifikasi</button>
+                                                        </div>
+                                                        ';
+                                                else
+                                                    echo '
+                                                        <div class="col-md-12" align="right">
+                                                            <button class="btn btn-primary" type="submit" name="tombolSimpanK">Simpan Data</button>
+                                                        </div>
+                                                        ';
+                                            }
+                                        }
+                                    }
                                     else 
+                                    {
                                         echo '
                                             <div class="col-md-12" align="right">
                                                 <button class="btn btn-danger" disabled="disabled">Waktu Input/Verifikasi Data Kompetensi Sub Ordinat Belum Dibuka</button>
                                             </div>
-                                            ';         
+                                            '; 
+                                    }
                                 ?>
                             </div>
                         </div>
@@ -407,10 +489,10 @@
                     <form method="POST" action="#" id="inputan">
                         <div class="modal-body card-box">
                             <?php
-                                if($db->hitung_catatan2($id_anggotaD, $id_jabatanD, $id_unitD, $idA) == 0)
+                                if($db->hitung_catatan2($id_anggotaD, $id_jabatanD, $id_departemenD, $id_unitD, $idA) == 0)
                                     echo '<textarea name="catatan" cols="30" rows="10" class="form-control" placeholder="Silahkan Masukkan Catatan Untuk Data KPI yang Ada"></textarea>';
                                 else
-                                    echo '<textarea name="catatan" cols="30" rows="10" class="form-control">'.$db->tampil_catatan2($id_anggotaD, $id_jabatanD, $id_unitD, $idA).'</textarea>';
+                                    echo '<textarea name="catatan" cols="30" rows="10" class="form-control">'.$db->tampil_catatan2($id_anggotaD, $id_jabatanD, $id_departemenD, $id_unitD, $idA).'</textarea>';
                             ?>
                             <div class="m-t-20"> 
                                 <a href="#" class="btn btn-default" data-dismiss="modal">Close</a>
@@ -449,6 +531,9 @@
                     var v = ($(this).is(':checked'))?'1':'0';
                     var paramId = $(this).data('id');
                     var verifikator = $(this).data('verifikator');
+                    var jabatan_verifikator = $(this).data('jabatan_verifikator');
+                    var departemen_verifikator = $(this).data('departemen_verifikator');
+                    var unit_verifikator = $(this).data('unit_verifikator');
                     var id_anggota = $(this).data('id_anggota');
                     var id1 = 'realisasi';
                     var id2 = 'keterangan';
@@ -461,6 +546,9 @@
                             'jenis' : 'verif_kompetensi',
                             'verifikator' : verifikator,
                             'id_anggota' : id_anggota,
+                            'jabatan_verifikator' : jabatan_verifikator,
+                            'departemen_verifikator' : departemen_verifikator,
+                            'unit_verifikator' : unit_verifikator
 
                         },
                         success:function(html){

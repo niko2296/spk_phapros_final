@@ -129,6 +129,7 @@
                                             <li><a href="data_polarisasi.php">Polarisasi</a></li>
                                             <li><a href="data_satuan.php">Satuan</a></li>
                                             <li><a href="data_kompetensi.php">Kompetensi</a></li>
+                                            <li><a href="data_kompetensi_khusus.php">Kompetensi Khusus</a></li>
                                             <li><a href="data_peringkat.php">Peringkat Kompetensi</a></li>
                                             <li><a href="persentase_nilai.php">Persentase Nilai</a></li>
                                             <li><a href="kriteria_nilai.php">Kriteria Nilai</a></li>
@@ -267,7 +268,7 @@
                                     echo '<div class="alert alert-warning">
                                             <div class="row" style="vertical-align:bottom;">
                                                 <div class="col-md-10">
-                                                    <b>'.$db->pemberi_perubahan_realisasi($id_anggotaD, $id_jabatanD, $id_departemenD, $id_unitD, $idA).'</b> Telah Melakukan Perubahan Pada Data Realisasi ataupun Keterangan Pada Realisasi KPI Anda.
+                                                    <b>'.$db->pemberi_perubahan_realisasi($id_anggotaD, $id_jabatanD, $id_departemenD, $id_unitD, $idA).'</b> Telah Melakukan Perubahan Pada Data Realisasi ataupun Keterangan Pada Realisasi KPI.
                                                 </div>
                                             </div>
                                         </div>';
