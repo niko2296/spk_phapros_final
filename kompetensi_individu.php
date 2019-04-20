@@ -94,7 +94,7 @@
                                 $m5 = 0;
                                 $m6 = 0;
                                 $m7 = 0;
-                                error_reporting(0);
+                                // error_reporting(0);
                                 foreach($db->tampil_akses() as $tampil)
                                 {
                                     if($tampil['id_jabatan'] == $jabatan)
@@ -253,7 +253,14 @@
                                         $peringkat[] = $_POST[$var];
                                     }
 
-                                    $eksekusi = $db->input_kompetensi_individu($id_anggotaD, $jabatan, $departemenL, $id_unitD, $_POST['id_kompetensi'], $peringkat, $idA);
+                                    $jml2 = $_POST['jml2'];
+                                    for($a=1; $a<=$jml2; $a++)
+                                    {
+                                        $var = 'peringkat_khusus'.$a;
+                                        $peringkat_khusus[] = $_POST[$var];
+                                    }
+
+                                    $eksekusi = $db->input_kompetensi_individu($id_anggotaD, $jabatan, $departemenL, $id_unitD, $_POST['id_kompetensi'], $peringkat, $_POST['jenis1'], $_POST['id_kompetensi_khusus'], $peringkat_khusus, $_POST['jenis2'], $idA);
                                     if($eksekusi == 1)
                                         echo '
                                             <script>
@@ -332,98 +339,101 @@
 									<tbody>
                                     <?php
                                         $no = 0;
-                                        error_reporting(0);
-                                        foreach($db->tampil_kompetensi_individu($id_anggotaD, $jabatan, $id_unitD, $idA) as $data)
+                                        // error_reporting(0);
+                                        foreach($db->tampil_kompetensi_individu($id_anggotaD, $jabatan, $departemenL, $id_unitD, $idA) as $data)
                                         {
-                                            $no = $no+1;
-                                            $id_peringkat = $data['id_peringkat'];
-                                            if($db->hitung_perubahan_kompetensi($id_anggotaD, $jabatan, $departemenL, $unitL, $idA, $data['id_kompetensi']))
-                                                $id_peringkat = $db->cek_perubahan3($data['id_kompetensi']);
+                                            foreach($db->tampil_kompetensi_individu($id_anggotaD, $jabatan, $departemenL, $id_unitD, $idA, $data['jenis'], $data['id_kompetensi_individu']) as $data2)
+                                            {
+                                                $no = $no+1;
+                                                $id_peringkat = $data['id_peringkat'];
+                                                if($db->hitung_perubahan_kompetensi($id_anggotaD, $jabatan, $departemenL, $unitL, $idA, $data2['id_kompetensi_individu']))
+                                                    $id_peringkat = $db->cek_perubahan3($data2['id_kompetensi_individu']);
                                     ?>
-                                            <tr>
-                                                <td><?php echo $data['nama_kompetensi']; ?></td>
-                                                <td><?php echo $data['indikator_terendah']; ?></td>
-                                                <td><?php echo $data['indikator_tertinggi']; ?></td>
-                                                <td>
-                                                    <?php
-                                                        foreach($db->tampil_peringkat($idA) as $tampilP)
-                                                        {
-                                                            if($tampilP['id_peringkat'] == $id_peringkat)
-                                                                echo $tampilP['peringkat'];
-                                                        }
-                                                    ?>
-                                                </td>
-                                                <td><?php echo ($data['status'] == 1)?('Sudah Diverifikasi'):('Belum Diverifikasi'); ?></td>
-                                                <td class="text-right">
-                                                    <div class="dropdown">
-                                                        <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
-                                                        <ul class="dropdown-menu pull-right">
-                                                            <?php
-                                                                if($db->cek_verif_kompetensi($data['id_kompetensi_individu']) == 1)
-                                                                    echo '<li>Tidak Terdapat Aksi</li>';
-                                                                else 
-                                                                    echo '<li><a href="#" title="Edit" data-toggle="modal" data-target="#edit_ticket'.$data['id_kompetensi_individu'].'"><i class="fa fa-pencil m-r-5"></i> Edit</a></li>';
-                                                            ?>
-                                                        </ul>
-                                                    </div>
-                                                </td>
-                                            </tr>
-
-                                            <!-- Modal Edit -->
-                                            <div id="edit_ticket<?php echo $data['id_kompetensi_individu']; ?>" class="modal custom-modal fade" role="dialog">
-                                                <div class="modal-dialog">
-                                                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                                    <div class="modal-content modal-lg">
-                                                        <div class="modal-header">
-                                                            <h4 class="modal-title">Edit Data Kompetensi Individu</h4>
+                                                <tr>
+                                                    <td><?php echo $data2['nama_kompetensi']; ?></td>
+                                                    <td><?php echo $data2['indikator_terendah']; ?></td>
+                                                    <td><?php echo $data2['indikator_tertinggi']; ?></td>
+                                                    <td>
+                                                        <?php
+                                                            foreach($db->tampil_peringkat($idA) as $tampilP)
+                                                            {
+                                                                if($tampilP['id_peringkat'] == $id_peringkat)
+                                                                    echo $tampilP['peringkat'];
+                                                            }
+                                                        ?>
+                                                    </td>
+                                                    <td><?php echo ($data2['status'] == 1)?('Sudah Diverifikasi'):('Belum Diverifikasi'); ?></td>
+                                                    <td class="text-right">
+                                                        <div class="dropdown">
+                                                            <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
+                                                            <ul class="dropdown-menu pull-right">
+                                                                <?php
+                                                                    if($db->cek_verif_kompetensi($data['id_kompetensi_individu']) == 1)
+                                                                        echo '<li>Tidak Terdapat Aksi</li>';
+                                                                    else 
+                                                                        echo '<li><a href="#" title="Edit" data-toggle="modal" data-target="#edit_ticket'.$data['id_kompetensi_individu'].'"><i class="fa fa-pencil m-r-5"></i> Edit</a></li>';
+                                                                ?>
+                                                            </ul>
                                                         </div>
-                                                        <div class="modal-body">
-                                                            <form method="POST" action="#" id="">
-                                                                <div class="row">
-                                                                    <div class="col-md-4">
-                                                                        <div class="form-group">
-                                                                            <label>Indikator Terendah</label>
-                                                                            <input class="form-control" type="hidden" name="id_ki_edit" value="<?php echo $data['id_kompetensi_individu']; ?>">
-                                                                            <textarea class="form-control" rows="10"  disabled="disabled"><?php echo $data['indikator_terendah']; ?></textarea>
+                                                    </td>
+                                                </tr>
+
+                                                <!-- Modal Edit -->
+                                                <div id="edit_ticket<?php echo $data2['id_kompetensi_individu']; ?>" class="modal custom-modal fade" role="dialog">
+                                                    <div class="modal-dialog">
+                                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                        <div class="modal-content modal-lg">
+                                                            <div class="modal-header">
+                                                                <h4 class="modal-title">Edit Data Kompetensi Individu</h4>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <form method="POST" action="#" id="">
+                                                                    <div class="row">
+                                                                        <div class="col-md-4">
+                                                                            <div class="form-group">
+                                                                                <label>Indikator Terendah</label>
+                                                                                <input class="form-control" type="hidden" name="id_ki_edit" value="<?php echo $data2['id_kompetensi_individu']; ?>">
+                                                                                <textarea class="form-control" rows="10"  disabled="disabled"><?php echo $data2['indikator_terendah']; ?></textarea>
+                                                                            </div>
                                                                         </div>
-                                                                    </div>
-                                                                    <div class="col-md-4">
-                                                                        <div class="form-group">
-                                                                            <center><label>Peringkat</label></center>
-                                                                            <div align="center">
-                                                                                <?php
-                                                                                    foreach($db->tampil_peringkat($idA) as $tampilP)
-                                                                                    {
-                                                                                        $s = '';
-                                                                                        if($tampilP['id_peringkat'] == $data['id_peringkat'])
-                                                                                            $s = 'checked';
-                                                                                        echo '
-                                                                                            <label class="btn btn-inline">
-                                                                                                <input class="form-control cek" type="radio" name="peringkat_edit" value="'.$tampilP['id_peringkat'].'" '.$s.'> '.$tampilP['peringkat'].'
-                                                                                            </label>
-                                                                                        ';
-                                                                                    }
-                                                                                ?>
+                                                                        <div class="col-md-4">
+                                                                            <div class="form-group">
+                                                                                <center><label>Peringkat</label></center>
+                                                                                <div align="center">
+                                                                                    <?php
+                                                                                        foreach($db->tampil_peringkat($idA) as $tampilP)
+                                                                                        {
+                                                                                            $s = '';
+                                                                                            if($tampilP['id_peringkat'] == $data2['id_peringkat'])
+                                                                                                $s = 'checked';
+                                                                                            echo '
+                                                                                                <label class="btn btn-inline">
+                                                                                                    <input class="form-control cek" type="radio" name="peringkat_edit" value="'.$tampilP['id_peringkat'].'" '.$s.'> '.$tampilP['peringkat'].'
+                                                                                                </label>
+                                                                                            ';
+                                                                                        }
+                                                                                    ?>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-4">
+                                                                            <div class="form-group">
+                                                                                <label>Indikator Tertinggi</label>
+                                                                                <textarea class="form-control" rows="10"  disabled="disabled"><?php echo $data2['indikator_tertinggi']; ?></textarea>
                                                                             </div>
                                                                         </div>
                                                                     </div>
-                                                                    <div class="col-md-4">
-                                                                        <div class="form-group">
-                                                                            <label>Indikator Tertinggi</label>
-                                                                            <textarea class="form-control" rows="10"  disabled="disabled"><?php echo $data['indikator_tertinggi']; ?></textarea>
-                                                                        </div>
+                                                                    <div class="m-t-20 text-center">
+                                                                        <button class="btn btn-primary" type="submit" name="tombolEdit">Edit Data Kompetensi Individu</button>
                                                                     </div>
-                                                                </div>
-                                                                <div class="m-t-20 text-center">
-                                                                    <button class="btn btn-primary" type="submit" name="tombolEdit">Edit Data Kompetensi Individu</button>
-                                                                </div>
-                                                            </form>
+                                                                </form>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <!-- Akhiran Modal Edit -->
+                                                <!-- Akhiran Modal Edit -->
                                     <?php
+                                            }
                                         }
                                     ?>
 									</tbody>
@@ -458,7 +468,7 @@
                                                 $c = 0;
                                                 foreach ($db->tampil_soal($idA, $jabatan) as $tampilS)
                                                 {
-                                                    if($db->cek_kompetensi($id_anggotaD, $jabatan, $departemenL, $id_unitD, $tampilS['id_kompetensi']) == 0)
+                                                    if($db->cek_kompetensi($id_anggotaD, $jabatan, $departemenL, $id_unitD, $tampilS['id_kompetensi'], 1) == 0)
                                                     {
                                                         $no = $no+1;
                                             ?>
@@ -476,6 +486,7 @@
                                                                                     </label>
                                                                                 ';
                                                                             echo '<input type="hidden" value="'.$tampilS['id_kompetensi'].'" name="id_kompetensi[]">';
+                                                                            echo '<input type="hidden" value="1" name="jenis1">';
                                                                         ?>
                                                                     </div>
                                                                 </td>
@@ -484,6 +495,38 @@
                                                         </tr>
                                             <?php
                                                         $c = $c+1;
+                                                    }
+                                                }
+
+                                                $no2 = 0;
+                                                foreach($db->tampil_soal_khusus($idA, $jabatan, $departemenL, $unitL) as $tampilSK)
+                                                {
+                                                    if($db->cek_kompetensi($id_anggotaD, $jabatan, $departemenL, $id_unitD, $id_unitD, 2) == 0)
+                                                    {
+                                                        $no2 = $no2+1;
+                                            ?>
+                                                        <tr>
+                                                            <div class="form-group">
+                                                                <td><?php echo $tampilSK['indikator_terendah']; ?></td>
+                                                                <td>
+                                                                    <div align="center">
+                                                                        <?php
+                                                                            $v1 = 'peringkat_khusus'.$no2;
+                                                                            foreach($db->tampil_peringkat($idA) as $tampilP)
+                                                                                echo '
+                                                                                    <label class="btn btn-inline">
+                                                                                        <input class="form-control cek" type="radio" name="'.$v1.'" value="'.$tampilP['id_peringkat'].'"> '.$tampilP['peringkat'].'
+                                                                                    </label>
+                                                                                ';
+                                                                            echo '<input type="hidden" value="'.$tampilSK['id_kompetensi_khusus'].'" name="id_kompetensi_khusus[]">';
+                                                                            echo '<input type="hidden" value="2" name="jenis2">';
+                                                                        ?>
+                                                                    </div>
+                                                                </td>
+                                                                <td><?php echo $tampilSK['indikator_tertinggi']; ?></td>
+                                                            </div>
+                                                        </tr>
+                                            <?php
                                                     }
                                                 }
                                             ?>
@@ -495,6 +538,7 @@
                                         if($c != 0)
                                         {
                                             echo '<input type="hidden" value="'.$no.'" name="jml">';
+                                            echo '<input type="hidden" value="'.$no2.'" name="jml2">';
                                             echo '<input type="submit" class="btn btn-primary" name="tombolSimpan" value="Simpan">';
                                         }
                                     ?>

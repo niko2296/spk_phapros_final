@@ -347,75 +347,78 @@
                                                 error_reporting(0);
                                                 $p = 0;
                                                 $cv = 0;
-                                                foreach($db->tampil_kompetensi_individu($id_anggotaD, $id_jabatanD, $id_unitD, $idA) as $data)
+                                                foreach($db->tampil_kompetensi_individu($id_anggotaD, $id_jabatanD, $id_departemenD, $id_unitD, $idA) as $data)
                                                 {
-                                                    $d = '';
-                                                    $p = $p+1;
-                                                    $v1 = 'peringkat'.$p;
-                                                    $v2 = 'id_ki'.$p;
-                                                    
-                                                    if($db->cek_verif_kompetensi($data['id_kompetensi_individu']) == 1)
+                                                    foreach($db->tampil_kompetensi_individu($id_anggotaD, $id_jabatanD, $id_departemenD, $id_unitD, $idA, $data['jenis'], $data['id_kompetensi_individu']) as $data2)
                                                     {
-                                                        $cv = $cv+1;
-                                                        $d = 'disabled="disabled"';
-                                                    }
-
-                                                    if($cc != 1)
                                                         $d = '';
-                                                    
-                                                    $id_peringkat = $data['id_peringkat'];
-                                                    if($db->hitung_perubahan_kompetensi($id_anggotaD, $id_jabatanD, $id_departemenD, $id_unitD, $idA, $data['id_kompetensi']))
-                                                        $id_peringkat = $db->cek_perubahan3($data['id_kompetensi']);
+                                                        $p = $p+1;
+                                                        $v1 = 'peringkat'.$data2['id_kompetensi_individu'];
+                                                        $v2 = 'id_ki'.$p;
+                                                        
+                                                        if($db->cek_verif_kompetensi($data2['id_kompetensi_individu']) == 1)
+                                                        {
+                                                            $cv = $cv+1;
+                                                            $d = 'disabled="disabled"';
+                                                        }
+
+                                                        if($cc != 1)
+                                                            $d = '';
+                                                        
+                                                        $id_peringkat = $data['id_peringkat'];
+                                                        if($db->hitung_perubahan_kompetensi($id_anggotaD, $id_jabatanD, $id_departemenD, $id_unitD, $idA, $data2['id_kompetensi_individu']))
+                                                            $id_peringkat = $db->cek_perubahan3($data2['id_kompetensi_individu']);
                                             ?>
-                                                    <tr>
-                                                        <td>
-                                                            <?php 
-                                                                    echo $data['nama_kompetensi'];
-                                                                    echo '<input type="hidden" name="id_ki[]" id="'.$v2.'" value="'.$data['id_kompetensi_individu'].'" '.$d.'>';
-                                                            ?>
-                                                        </td>
-                                                        <td><?php echo $data['indikator_terendah']; ?></td>
-                                                        <td><?php echo $data['indikator_tertinggi']; ?></td>
-                                                        <td>
-                                                        <?php
-                                                            foreach($db->tampil_peringkat($idA) as $tampilP)
-                                                            {
-                                                                $s = '';
-                                                                if($tampilP['id_peringkat'] == $id_peringkat)
-                                                                    $s = 'checked';
-                                                                
-                                                                echo '
-                                                                    <label class="btn btn-inline">
-                                                                        <input class="form-control peringkat'.$data['id_kompetensi_individu'].'" type="radio" name="'.$v1.'" value="'.$tampilP['id_peringkat'].'" '.$s.' '.$d.'> '.$tampilP['peringkat'].'
-                                                                    </label>
-                                                                ';
-                                                            }
-                                                        ?>
-                                                        </td>
-                                                        <?php
-                                                            if($cc == 1)
-                                                            {
-                                                        ?>
-                                                                <td align="center"><input type="checkbox" name="verifikasi" id="verifikasi" class="form-control" data-id_anggota="<?php echo $id_anggotaD; ?>" data-verifikator="<?php echo $id_anggotaV; ?>" data-jabatan_verifikator="<?php echo $jabatan; ?>" data-departemen_verifikator="<?php echo $departemenL; ?>" data-unit_verifikator="<?php echo $unitL; ?>" data-id="<?php echo $data['id_kompetensi_individu']; ?>" <?php echo ($db->cek_verif_kompetensi($data['id_kompetensi_individu']) == 1)?('checked'):(''); ?>></td>
-                                                        <?php
-                                                            }
-                                                            else {
-                                                                if($db->cek_verif_kompetensi($data['id_kompetensi_individu']) == 1)
+                                                        <tr>
+                                                            <td>
+                                                                <?php 
+                                                                        echo $data2['nama_kompetensi'];
+                                                                        echo '<input type="hidden" name="id_ki[]" id="'.$v2.'" value="'.$data2['id_kompetensi_individu'].'" '.$d.'>';
+                                                                ?>
+                                                            </td>
+                                                            <td><?php echo $data2['indikator_terendah']; ?></td>
+                                                            <td><?php echo $data2['indikator_tertinggi']; ?></td>
+                                                            <td>
+                                                            <?php
+                                                                foreach($db->tampil_peringkat($idA) as $tampilP)
+                                                                {
+                                                                    $s = '';
+                                                                    if($tampilP['id_peringkat'] == $id_peringkat)
+                                                                        $s = 'checked';
+                                                                    
                                                                     echo '
-                                                                        <td>
-                                                                            Sudah Diverifikasi
-                                                                        </td>
+                                                                        <label class="btn btn-inline">
+                                                                            <input class="form-control peringkat'.$data2['id_kompetensi_individu'].'" type="radio" name="'.$v1.'" value="'.$tampilP['id_peringkat'].'" '.$s.' '.$d.'> '.$tampilP['peringkat'].'
+                                                                        </label>
                                                                     ';
-                                                                else 
-                                                                    echo '
-                                                                        <td>
-                                                                            Belum Diverifikasi
-                                                                        </td>    
+                                                                }
+                                                            ?>
+                                                            </td>
+                                                            <?php
+                                                                if($cc == 1)
+                                                                {
+                                                            ?>
+                                                                    <td align="center"><input type="checkbox" name="verifikasi" id="verifikasi" class="form-control" data-id_anggota="<?php echo $id_anggotaD; ?>" data-verifikator="<?php echo $id_anggotaV; ?>" data-jabatan_verifikator="<?php echo $jabatan; ?>" data-departemen_verifikator="<?php echo $departemenL; ?>" data-unit_verifikator="<?php echo $unitL; ?>" data-id="<?php echo $data2['id_kompetensi_individu']; ?>" data-jenis="<?php echo $data2['jenis']; ?>" <?php echo ($db->cek_verif_kompetensi($data2['id_kompetensi_individu']) == 1)?('checked'):(''); ?>></td>
+                                                            <?php
+                                                                }
+                                                                else {
+                                                                    if($db->cek_verif_kompetensi($data2['id_kompetensi_individu']) == 1)
+                                                                        echo '
+                                                                            <td>
+                                                                                Sudah Diverifikasi
+                                                                            </td>
                                                                         ';
-                                                            }
-                                                        ?>
-                                                    </tr>
+                                                                    else 
+                                                                        echo '
+                                                                            <td>
+                                                                                Belum Diverifikasi
+                                                                            </td>    
+                                                                            ';
+                                                                }
+                                                            ?>
+                                                        </tr>
                                             <?php
+                                                    }
                                                 }
                                             ?>
                                             </tbody>
@@ -531,6 +534,7 @@
                     var v = ($(this).is(':checked'))?'1':'0';
                     var paramId = $(this).data('id');
                     var verifikator = $(this).data('verifikator');
+                    var jk = $(this).data('jenis');
                     var jabatan_verifikator = $(this).data('jabatan_verifikator');
                     var departemen_verifikator = $(this).data('departemen_verifikator');
                     var unit_verifikator = $(this).data('unit_verifikator');
@@ -545,6 +549,7 @@
                             'value' : v,
                             'jenis' : 'verif_kompetensi',
                             'verifikator' : verifikator,
+                            'jk' : jk,
                             'id_anggota' : id_anggota,
                             'jabatan_verifikator' : jabatan_verifikator,
                             'departemen_verifikator' : departemen_verifikator,
