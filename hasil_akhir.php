@@ -80,7 +80,7 @@
 				<div class="sidebar-inner slimscroll">
 					<div id="sidebar-menu" class="sidebar-menu">
 						<ul>
-							<li class="active"> 
+							<li class=""> 
 								<a href="index.php"><i class="la la-dashboard"></i> <span>Dashboard</span></a>
 							</li>
                             <?php 
@@ -199,7 +199,7 @@
 									?>
                                 </ul>
 							</li>
-							<li class=""> 
+							<li class="active"> 
 								<a href="hasil_akhir.php"><i class="la la-edit"></i> <span>Hasil Akhir</span></a>
 							</li>
 						</ul>
@@ -211,12 +211,12 @@
                     <div class="row" style="margin-bottom:2%;">
                         <div class="col-md-12" align="center">
                             <h1><b>Laporan Hasil Akhir Penilaian</b></h1>
-                            <h1><b>Periode 2020</b></h1>
+                            <h1><b>Periode <?php echo $tA; ?></b></h1>
                         </div>
                     </div>
                     <div class="row">
 						<div class="col-md-12">
-							<div class="panel panel-table">
+							<div class="panel panel-table" style="border: 1px solid black;">
 								<div class="panel-heading" align="center">
 									<h3 class="panel-title"><b>Data Pegawai</b></h3>
 								</div>
@@ -233,10 +233,9 @@
                                         }
                                     ?>
 									<div class="table-responsive">	
-										<table class="table table-striped custom-table m-b-0">
+										<table class="table table-normal custom-table m-b-0" border="1">
                                             <thead>
                                                 <tr>
-                                                    <th><b>NIK</b></th>
                                                     <th><b>Nama Pegawai</b></th>
                                                     <th><b>Golongan</b></th>
                                                     <th><b>Jabatan</b></th>
@@ -245,7 +244,6 @@
                                             </thead>
                                             <tbody>
                                                 <tr>
-                                                    <td><?php echo $nik_pegawai; ?></td>
                                                     <td><?php echo $nama_pegawai; ?></td>
                                                     <td><?php echo $golongan_pegawai; ?></td>
                                                     <td><?php echo $jabatan_pegawai; ?></td>
@@ -260,19 +258,19 @@
                     </div>
                     <div class="row">
 						<div class="col-md-6">
-							<div class="panel panel-table">
+							<div class="panel panel-table" style="border: 1px solid black;">
 								<div class="panel-heading" align="center">
 									<h3 class="panel-title"><b>Data Penilai KPI</b></h3>
 								</div>
 								<div class="panel-body" style="padding:0.5%;">
 									<div class="table-responsive">	
-										<table class="table table-striped custom-table m-b-0">
+										<table class="table table-striped custom-table m-b-0" border="1">
                                             <thead>
                                                 <tr>
-                                                    <th><b>NIK</b></th>
                                                     <th><b>Nama Penilai</b></th>
                                                     <th><b>Golongan</b></th>
                                                     <th><b>Jabatan</b></th>
+                                                    <th><b>Departemen</b></th>
                                                     <th><b>Unit</b></th>
                                                 </tr>
                                             </thead>
@@ -283,10 +281,10 @@
                                                     {
                                                         foreach($db->tampil_anggota($tampil['id_verifikator']) as $tampil2)
                                                             echo '<tr>
-                                                                        <td>'.$tampil2['nik'].'</td>
                                                                         <td>'.$tampil2['nama'].'</td>
                                                                         <td>'.$tampil2['nama_golongan'].'</td>
                                                                         <td>'.$tampil2['nama_jabatan'].'</td>
+                                                                        <td>'.$tampil2['nama_departemen'].'</td>
                                                                         <td>'.$tampil2['nama_unit'].'</td>
                                                                     </tr>';
                                                         $c = $c+1;
@@ -308,19 +306,19 @@
 							</div>
 						</div>
 						<div class="col-md-6">
-							<div class="panel panel-table">
+							<div class="panel panel-table" style="border: 1px solid black;">
 								<div class="panel-heading" align="center">
 									<h3 class="panel-title"><b>Data Penilai Kompetensi</b></h3>
 								</div>
 								<div class="panel-body" style="padding:0.5%;">
 									<div class="table-responsive">	
-										<table class="table table-striped custom-table m-b-0">
+										<table class="table table-striped custom-table m-b-0" border="1">
                                             <thead>
                                                 <tr>
-                                                    <th><b>NIK</b></th>
                                                     <th><b>Nama Penilai</b></th>
                                                     <th><b>Golongan</b></th>
                                                     <th><b>Jabatan</b></th>
+                                                    <th><b>Departemen</b></th>
                                                     <th><b>Unit</b></th>
                                                 </tr>
                                             </thead>
@@ -331,10 +329,10 @@
                                                     {
                                                         foreach($db->tampil_anggota($tampil['id_verifikator']) as $tampil2)
                                                             echo '<tr>
-                                                                        <td>'.$tampil2['nik'].'</td>
                                                                         <td>'.$tampil2['nama'].'</td>
                                                                         <td>'.$tampil2['nama_golongan'].'</td>
                                                                         <td>'.$tampil2['nama_jabatan'].'</td>
+                                                                        <td>'.$tampil2['nama_departemen'].'</td>
                                                                         <td>'.$tampil2['nama_unit'].'</td>
                                                                     </tr>';
                                                         $c = $c+1;
@@ -358,13 +356,13 @@
                     </div>
                     <div class="row">
                         <div class="col-md-12">
-							<div class="panel panel-table">
+							<div class="panel panel-table" style="border: 1px solid black;">
 								<div class="panel-heading" align="center">
 									<h3 class="panel-title"><b>Data KPI</b></h3>
 								</div>
 								<div class="panel-body" style="padding:0.5%;">
 									<div class="table-responsive">	
-										<table class="table table-striped custom-table m-b-0">
+										<table class="table table-striped custom-table m-b-0" border="1">
 											<thead>
                                                 <tr>
                                                     <th><b>KPI</b></th>
@@ -373,28 +371,45 @@
                                                     <th><b>Sasaran / Target</b></th>
                                                     <th><b>Satuan</b></th>
                                                     <th><b>Polarisasi</b></th>
-                                                    <th><b>Periode</b></th>
                                                     <th><b>Realisasi</b></th>
                                                     <th><b>Skor</b></th>
                                                     <th><b>Nilai</b></th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr>
-                                                    <td colspan="10" align="center"><b>Jabatan : Makan - Unit : Minum</b></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>1</td>
-                                                    <td>2</td>
-                                                    <td>3</td>
-                                                    <td>4</td>
-                                                    <td>5</td>
-                                                    <td>6</td>
-                                                    <td>7</td>
-                                                    <td>8</td>
-                                                    <td>9</td>
-                                                    <td>10</td>
-                                                </tr>
+                                                <?php
+                                                    foreach($db->hasil_kpi_grup($id_anggota, $idA) as $tampil)
+                                                    {
+                                                        $lp = [];
+                                                        $lp[] = $tampil['nama_jabatan'];
+                                                        $lp[] = $tampil['nama_departemen'];
+                                                        $lp[] = $tampil['nama_unit'];
+                                                ?>
+                                                        <tr>
+                                                            <td colspan="10" align="center"><b><?php echo implode(' - ', $lp); ?></b></td>
+                                                        </tr>
+                                                <?php
+                                                        foreach($db->tampil_kpi($idA, $id_anggota, $jabatan, $departemenL, $unitL) as $tampil2)
+                                                        {
+                                                            if($tampil2['status'] == 1)
+                                                            {
+                                                                echo '
+                                                                    <tr>
+                                                                        <td>'.$tampil2['kpi'].'</td>
+                                                                        <td>'.$tampil2['deskripsi'].'</td>
+                                                                        <td>'.$tampil2['bobot'].'</td>
+                                                                        <td>'.$tampil2['sasaran'].'</td>
+                                                                        <td>'.$tampil2['nama_satuan'].'</td>
+                                                                        <td>'.$tampil2['nama_polarisasi'].'</td>
+                                                                        <td>'.$db->hasil_realisasi_kpi($tampil2['id_kpi']).'</td>
+                                                                        <td>9</td>
+                                                                        <td>10</td>
+                                                                    </tr>
+                                                                ';
+                                                            }
+                                                        }
+                                                    }
+                                                ?>
                                             </tbody>
 										</table>
 									</div>
@@ -404,13 +419,13 @@
                     </div>
                     <div class="row">
                         <div class="col-md-12">
-							<div class="panel panel-table">
+							<div class="panel panel-table" style="border: 1px solid black;">
 								<div class="panel-heading" align="center">
 									<h3 class="panel-title"><b>Data Kompetensi</b></h3>
 								</div>
 								<div class="panel-body" style="padding:0.5%;">
 									<div class="table-responsive">	
-										<table class="table table-striped custom-table m-b-0">
+										<table class="table table-striped custom-table m-b-0" border="1">
 											<thead>
                                                 <tr>
                                                     <th><b>Dimensi Kompetensi</b></th>
@@ -435,13 +450,13 @@
                     </div>
                     <div class="row">
                         <div class="col-md-12">
-							<div class="panel panel-table">
+							<div class="panel panel-table" style="border: 1px solid black;">
 								<div class="panel-heading" align="center">
 									<h3 class="panel-title"><b>Perhitungan Total Nilai Kinerja</b></h3>
 								</div>
 								<div class="panel-body" style="padding:0.5%;">
 									<div class="table-responsive">	
-										<table class="table table-striped custom-table m-b-0">
+										<table class="table table-striped custom-table m-b-0" border="1">
 											<thead>
                                                 <tr>
                                                     <th><b>Komponen Penilaian</b></th>

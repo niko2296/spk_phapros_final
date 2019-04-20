@@ -50,13 +50,16 @@
 				$hasil[] = $tampil;
 			return $hasil;
 		}
-		function tampil_kpi($id_periode = null){
-			error_reporting(0);
-			session_start();
-			$id_anggota = $_SESSION['id_anggota'];
-			$id_jabatan = $_SESSION['id_jabatan'];
-			$id_departemen = $_SESSION['id_departemen'];
-			$id_unit = $_SESSION['id_unit'];
+		function tampil_kpi($id_periode = null, $id_anggota = null, $id_jabatan = null, $id_departemen = null, $id_unit = null){
+			if($id_anggota == null || $id_jabatan == null)
+			{
+				session_start();
+				$id_anggota = $_SESSION['id_anggota'];
+				$id_jabatan = $_SESSION['id_jabatan'];
+				$id_departemen = $_SESSION['id_departemen'];
+				$id_unit = $_SESSION['id_unit'];
+			}
+			$hasil = [];
 			if($id_periode != null)
 				$query = $this->connection->query("SELECT k.*, j.nama_jabatan, u.nama_unit, p.tahun, s.nama_satuan, pol.nama_polarisasi FROM data_kpi k LEFT JOIN mst_jabatan j ON j.id_jabatan = k.id_jabatan LEFT JOIN mst_unit u ON u.id_unit = k.id_unit LEFT JOIN mst_periode p ON p.id_periode = k.id_periode LEFT JOIN mst_satuan s ON s.id_satuan = k.satuan LEFT JOIN mst_polarisasi pol ON pol.id_polarisasi = k.sifat_kpi WHERE k.id_anggota = '$id_anggota' AND k.id_jabatan = '$id_jabatan' AND k.id_departemen = '$id_departemen' AND k.id_unit = '$id_unit' AND p.id_periode = '$id_periode'");
 			else
@@ -610,6 +613,41 @@
 			if($tampil['id_unit_perubahan'] != 0)
 				$hasil[] = $tampil['nama_unit'];
 			return implode(' - ', $hasil);
+		}
+
+		function hasil_kpi_grup($id_anggota = null, $id_periode = null)
+		{
+			$hasil = [];
+			$query = $this->connection->query("SELECT k.*, j.nama_jabatan, d.nama_departemen, u.nama_unit FROM data_kpi k LEFT JOIN mst_jabatan j ON k.id_jabatan = j.id_jabatan LEFT JOIN mst_departemen d ON k.id_departemen = d.id_departemen LEFT JOIN mst_unit u ON k.id_unit = u.id_unit WHERE k.id_anggota = '$id_anggota' AND k.id_periode = '$id_periode' AND k.status = '1' GROUP BY k.id_jabatan, k.id_departemen, k.id_unit");
+			while($tampil = $query->fetch_array())
+				$hasil[] = $tampil;
+			return $hasil;
+		}
+
+		function hasil_realisasi_kpi($id_kpi = null)
+		{
+			$query = $this->connection->query("SELECT * FROM perubahan_usulan_realisasi WHERE id_kpi_asli = '$id_kpi' ORDER BY pangkat DESC");
+			$realisasi = 0;
+			$jml = 0;
+			while($tampil = $query->fetch_array())
+			{
+				$jml = $jml+1;
+			}
+
+			if($jml > 0)
+			{
+				$qt = $this->connection->query("SELECT * FROM perubahan_usulan_realisasi WHERE id_kpi_asli = '$id_kpi' ORDER BY pangkat DESC");
+				$t = $qt->fetch_array();
+				$realisasi = $t['realisasi'];
+			}
+			else{
+				$qt = $this->connection->query("SELECT * FROM data_realisasi_kpi WHERE id_kpi = '$id_kpi'");
+				$t = $qt->fetch_array();
+				$realisasi = $t['realisasi'];
+			}
+
+			return $realisasi;
+
 		}
 		//Akhiran Fungsi Tampil
 
