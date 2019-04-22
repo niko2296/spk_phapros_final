@@ -131,7 +131,15 @@
                                         </ul>
                                     </li>
                             <?php
-                                }
+								}
+								if($_SESSION['aksus'] == TRUE)
+								{
+							?>
+									<li class=""> 
+										<a href="data_mutasi.php"><i class="wikwik"></i> <span>Mutasi</span></a>
+									</li>
+							<?php
+								}
                                 if($m2 == 1 || $_SESSION['aksus'] == TRUE)
                                 {
                             ?>
