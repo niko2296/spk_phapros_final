@@ -209,6 +209,15 @@
             <div class="page-wrapper">
                 <div class="content container-fluid">
                     <div class="row" style="margin-bottom:2%;">
+                        <div class="col-md-12">
+                            <button type="button" class="btn btn-info" onclick="cetak()">
+                                    <i class="fa fa-print"></i> 
+                                    Print Data
+                            </button>
+                        </div>
+                    </div>
+                    <div id="printArea">
+                    <div class="row">
                         <div class="col-md-12" align="center">
                             <h1><b>Laporan Hasil Akhir Penilaian</b></h1>
                             <h1><b>Periode <?php echo $tA; ?></b></h1>
@@ -380,34 +389,96 @@
                                                 <?php
                                                     foreach($db->hasil_kpi_grup($id_anggota, $idA) as $tampil)
                                                     {
+                                                        $tNil = 0;
                                                         $lp = [];
                                                         $lp[] = $tampil['nama_jabatan'];
                                                         $lp[] = $tampil['nama_departemen'];
                                                         $lp[] = $tampil['nama_unit'];
                                                 ?>
                                                         <tr>
-                                                            <td colspan="10" align="center"><b><?php echo implode(' - ', $lp); ?></b></td>
+                                                            <td colspan="9" align="center"><b><?php echo implode(' - ', $lp); ?></b></td>
                                                         </tr>
                                                 <?php
                                                         foreach($db->tampil_kpi($idA, $id_anggota, $jabatan, $departemenL, $unitL) as $tampil2)
                                                         {
                                                             if($tampil2['status'] == 1)
                                                             {
+                                                                $bobot = $tampil2['bobot'];
+                                                                $sasaran = $tampil2['sasaran'];
+                                                                if($db->hitung_perubahan_usulan($id_anggota, $jabatan, $departemenL, $unitL, $idA) > 0)
+                                                                {
+                                                                    foreach($db->cek_perubahan($tampil2['id_kpi']) as $tc)
+                                                                    {
+                                                                        $bobot = $tc['bobot'];
+                                                                        $sasaran = $tc['sasaran'];
+                                                                    }
+                                                                }
+
+                                                                $nilai = 0;
+                                                                $realisasi = $db->hasil_realisasi_kpi($tampil2['id_kpi']);
+                                                                if($tampil2['rumus'] == 1)
+                                                                {
+                                                                    $skor = ($realisasi/$sasaran)*100;
+                                                                }
+                                                                else if($tampil2['rumus'] == 2)
+                                                                {
+                                                                    $skor = $realisasi-$sasaran;
+                                                                }
+                                                                else if($tampil2['rumus'] == 3)
+                                                                {
+                                                                    $skor = $realisasi;
+                                                                }
+
+                                                                foreach($db->tampil_aturan_polarisasi($tampil2['sifat_kpi']) as $tP)
+                                                                {
+                                                                    if($tP['bmi'] != 0 AND $tP['bma'] == 0)
+                                                                    {   
+                                                                        if($skor >= $tP['bmi'])
+                                                                        {
+                                                                            $poin = $tP['poin'];
+                                                                        }
+                                                                    }
+                                                                    else if($tP['bmi'] == 0 AND $tP['bma'] != 0)
+                                                                    {
+                                                                        if($skor <= $tP['bmi'])
+                                                                        {
+                                                                            $poin = $tP['poin'];
+                                                                        }
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        if($skor >= $tP['bmi'] AND $skor <= $tP['bma'])
+                                                                        {
+                                                                            $poin = $tP['poin'];
+                                                                        }
+                                                                    }
+                                                                }
+
+                                                                $nilai = ($bobot*$poin)/100;
+                                                                $tNil = $tNil+$nilai;
                                                                 echo '
                                                                     <tr>
                                                                         <td>'.$tampil2['kpi'].'</td>
                                                                         <td>'.$tampil2['deskripsi'].'</td>
-                                                                        <td>'.$tampil2['bobot'].'</td>
-                                                                        <td>'.$tampil2['sasaran'].'</td>
+                                                                        <td>'.$bobot.'</td>
+                                                                        <td>'.$sasaran.'</td>
                                                                         <td>'.$tampil2['nama_satuan'].'</td>
                                                                         <td>'.$tampil2['nama_polarisasi'].'</td>
-                                                                        <td>'.$db->hasil_realisasi_kpi($tampil2['id_kpi']).'</td>
-                                                                        <td>9</td>
-                                                                        <td>10</td>
+                                                                        <td>'.$realisasi.'</td>
+                                                                        <td>'.$poin.'</td>
+                                                                        <td>'.$nilai.'</td>
                                                                     </tr>
                                                                 ';
                                                             }
                                                         }
+                                                       
+                                                        echo '
+                                                            <tr>
+                                                                <td colspan="8" align="center"><b>Total Nilai KPI</b></td>
+                                                                <td align="center"><b>'.$tNil.'</b></td>
+                                                            </tr>
+                                                        ';
+
                                                     }
                                                 ?>
                                             </tbody>
@@ -421,7 +492,7 @@
                         <div class="col-md-12">
 							<div class="panel panel-table" style="border: 1px solid black;">
 								<div class="panel-heading" align="center">
-									<h3 class="panel-title"><b>Data Kompetensi</b></h3>
+									<h3 class="panel-title"><b>Perhitungan Nilai Kompetensi</b></h3>
 								</div>
 								<div class="panel-body" style="padding:0.5%;">
 									<div class="table-responsive">	
@@ -430,17 +501,55 @@
                                                 <tr>
                                                     <th><b>Dimensi Kompetensi</b></th>
                                                     <th><b>Bobot (%)</b></th>
+                                                    <th><b>Peringkat</b></th>
                                                     <th><b>Skor</b></th>
                                                     <th><b>Nilai</b></th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr>
-                                                    <td>1</td>
-                                                    <td>2</td>
-                                                    <td>3</td>
-                                                    <td>4</td>
-                                                </tr>
+                                                <?php
+                                                    $tNil2 = 0;
+                                                    foreach($db->tampil_kompetensi_individu($id_anggota, $jabatan, $departemenL, $unitL, $idA) as $data)
+                                                    {
+                                                        if($data['status'] == 1)
+                                                        {
+                                                            foreach($db->tampil_kompetensi_individu($id_anggota, $jabatan, $departemenL, $unitL, $idA, $data['jenis'], $data['id_kompetensi_individu']) as $data2)
+                                                            {
+                                                                $no = $no+1;
+                                                                $peringkat = $data2['peringkat'];
+                                                                $nPer = $data2['nilai'];
+                                                                $nilai2 = 0;
+                                                                $id_peringkat = $data2['id_peringkat'];
+                                                                if($db->hitung_perubahan_kompetensi($id_anggota, $jabatan, $departemenL, $unitL, $idA, $data2['id_kompetensi_individu']))
+                                                                    $id_peringkat = $db->cek_perubahan3($data2['id_kompetensi_individu']);
+                                                                
+                                                                foreach($db->tampil_peringkat($idA, $id_peringkat) as $tPer)
+                                                                {
+                                                                    $peringkat = $tPer['peringkat'];
+                                                                    $nPer = $tPer['nilai'];
+                                                                }
+                                                                $nilai2 = ($data2['bobot']*$nPer)/100;
+                                                                $tNil2 = $tNil2+$nilai2;
+                                                                echo '
+                                                                    <tr>
+                                                                        <td>'.$data2['nama_kompetensi'].'</td>
+                                                                        <td>'.$data2['bobot'].'</td>
+                                                                        <td>'.$peringkat.'</td>
+                                                                        <td>'.$nPer.'</td>
+                                                                        <td>'.$nilai2.'</td>
+                                                                    </tr>
+                                                                ';
+                                                            }
+                                                        }
+                                                    }
+
+                                                    echo '
+                                                        <tr>
+                                                            <td colspan="4" align="center"><b>Total Nilai Kompetensi</b></td>
+                                                            <td align="center"><b>'.$tNil2.'</b></td>
+                                                        </tr>
+                                                    ';
+                                                ?>
                                             </tbody>
 										</table>
 									</div>
@@ -466,11 +575,32 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
+                                                <?php
+                                                    foreach($db->tampil_persentase($idA) as $data)
+                                                    {
+                                                        $kpi = $data['persentase_kpi'];
+                                                        $kompetensi = $data['persentase_kompetensi'];
+                                                    }
+
+                                                    $tA1 = ($tNil*$kpi)/100;
+                                                    $tA2 = ($tNil2*$kompetensi)/100;
+                                                    $tAkhir = $tA1+$tA2;
+                                                ?>
                                                 <tr>
-                                                    <td>1</td>
-                                                    <td>2</td>
-                                                    <td>3</td>
-                                                    <td>4</td>
+                                                    <td>KPI</td>
+                                                    <td><?php echo $tNil; ?></td>
+                                                    <td><?php echo $kpi; ?> %</td>
+                                                    <td><?php echo $tA1; ?></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Kompetensi</td>
+                                                    <td><?php echo $tNil2; ?></td>
+                                                    <td><?php echo $kompetensi; ?> %</td>
+                                                    <td><?php echo $tA2; ?></td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="3" align="center"><b>Total Nilai Kinerja</b></td>
+                                                    <td align="center"><b><?php echo $tAkhir; ?></b></td>
                                                 </tr>
                                             </tbody>
 										</table>
@@ -479,6 +609,7 @@
 							</div>
                         </div>
                     </div>
+                    </div>
 				</div>			
 			</div>
         </div>
@@ -486,11 +617,37 @@
 		<div class="sidebar-overlay" data-reff="#sidebar"></div>
         <script type="text/javascript" src="assets/js/jquery-3.2.1.min.js"></script>
         <script type="text/javascript" src="assets/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="assets/js/jquery.dataTables.min.js"></script>
+		<script type="text/javascript" src="assets/js/dataTables.bootstrap.min.js"></script>
 		<script type="text/javascript" src="assets/js/jquery.slimscroll.js"></script>
-		<script type="text/javascript" src="assets/plugins/morris/morris.min.js"></script>
-		<script type="text/javascript" src="assets/plugins/raphael/raphael-min.js"></script>
-		<script type="text/javascript" src="assets/js/chart.js"></script>
+		<script type="text/javascript" src="assets/js/select2.min.js"></script>
+		<script type="text/javascript" src="assets/js/moment.min.js"></script>
+		<script type="text/javascript" src="assets/js/bootstrap-datetimepicker.min.js"></script>
 		<script type="text/javascript" src="assets/js/app.js"></script>
+        <script>
+			function cetak(){
+				var windowContent = '<!DOCTYPE html>';
+                windowContent += '<html>'
+                windowContent += '<head>'+
+                                '<title>Print canvas</title>'+
+                                '<link href="assets/css/style.css" rel="stylesheet">'+
+                                '</head>';
+                windowContent += '<body style="background-color: white;">'
+                // windowContent += '<center><h3>Print Jadwal Meeting</h3></center>'
+                windowContent += $('#printArea').html();
+                windowContent += '</body>';
+                windowContent += '</html>';
+                var printWin = window.open('','','width=1024,height=780');
+                printWin.document.open();
+                printWin.document.write(windowContent);
+                // printWin.document.close();
+                printWin.focus();
+                setTimeout(function(){
+                    printWin.print();
+                    printWin.close();
+                },200);
+			}
+		</script>
 		
     </body>
 </html>

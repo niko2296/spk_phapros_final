@@ -286,9 +286,9 @@
                                                     if($data['rumus'] == 1)
                                                         $rumus = 'Pembagian';
                                                     else if($data['rumus'] == 2)
-                                                        $rumus == 'Pengurangan';
+                                                        $rumus = 'Pengurangan';
                                                     else if($data['rumus'] == 3)
-                                                        $rumus == 'Berdasarkan Realisasi';
+                                                        $rumus = 'Berdasarkan Realisasi';
                                                     echo "<td>".$rumus."</td>";
                                                 ?>
                                                 <td><a href="aturan_polarisasi.php?id_polarisasi=<?php echo $data['id_polarisasi']; ?>">tambah</a> (jml : <?php echo $jmlP; ?> aturan)</td>

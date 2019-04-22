@@ -94,7 +94,7 @@
                                 $m5 = 0;
                                 $m6 = 0;
                                 $m7 = 0;
-                                // error_reporting(0);
+                                error_reporting(0);
                                 foreach($db->tampil_akses() as $tampil)
                                 {
                                     if($tampil['id_jabatan'] == $jabatan)
@@ -339,7 +339,7 @@
 									<tbody>
                                     <?php
                                         $no = 0;
-                                        // error_reporting(0);
+                                        error_reporting(0);
                                         foreach($db->tampil_kompetensi_individu($id_anggotaD, $jabatan, $departemenL, $id_unitD, $idA) as $data)
                                         {
                                             foreach($db->tampil_kompetensi_individu($id_anggotaD, $jabatan, $departemenL, $id_unitD, $idA, $data['jenis'], $data['id_kompetensi_individu']) as $data2)

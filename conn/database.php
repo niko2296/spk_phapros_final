@@ -61,9 +61,9 @@
 			}
 			$hasil = [];
 			if($id_periode != null)
-				$query = $this->connection->query("SELECT k.*, j.nama_jabatan, u.nama_unit, p.tahun, s.nama_satuan, pol.nama_polarisasi FROM data_kpi k LEFT JOIN mst_jabatan j ON j.id_jabatan = k.id_jabatan LEFT JOIN mst_unit u ON u.id_unit = k.id_unit LEFT JOIN mst_periode p ON p.id_periode = k.id_periode LEFT JOIN mst_satuan s ON s.id_satuan = k.satuan LEFT JOIN mst_polarisasi pol ON pol.id_polarisasi = k.sifat_kpi WHERE k.id_anggota = '$id_anggota' AND k.id_jabatan = '$id_jabatan' AND k.id_departemen = '$id_departemen' AND k.id_unit = '$id_unit' AND p.id_periode = '$id_periode'");
+				$query = $this->connection->query("SELECT k.*, j.nama_jabatan, u.nama_unit, p.tahun, s.nama_satuan, pol.nama_polarisasi, pol.rumus FROM data_kpi k LEFT JOIN mst_jabatan j ON j.id_jabatan = k.id_jabatan LEFT JOIN mst_unit u ON u.id_unit = k.id_unit LEFT JOIN mst_periode p ON p.id_periode = k.id_periode LEFT JOIN mst_satuan s ON s.id_satuan = k.satuan LEFT JOIN mst_polarisasi pol ON pol.id_polarisasi = k.sifat_kpi WHERE k.id_anggota = '$id_anggota' AND k.id_jabatan = '$id_jabatan' AND k.id_departemen = '$id_departemen' AND k.id_unit = '$id_unit' AND p.id_periode = '$id_periode'");
 			else
-				$query = $this->connection->query("SELECT k.*, j.nama_jabatan, u.nama_unit, p.tahun, s.nama_satuan, pol.nama_polarisasi FROM data_kpi k LEFT JOIN mst_jabatan j ON j.id_jabatan = k.id_jabatan LEFT JOIN mst_unit u ON u.id_unit = k.id_unit LEFT JOIN mst_periode p ON p.id_periode = k.id_periode LEFT JOIN mst_satuan s ON s.id_satuan = k.satuan LEFT JOIN mst_polarisasi pol ON pol.id_polarisasi = k.sifat_kpi WHERE k.id_anggota = '$id_anggota' AND k.id_jabatan = '$id_jabatan' AND k.id_unit = '$id_unit'");
+				$query = $this->connection->query("SELECT k.*, j.nama_jabatan, u.nama_unit, p.tahun, s.nama_satuan, pol.nama_polarisasi, pol.rumus FROM data_kpi k LEFT JOIN mst_jabatan j ON j.id_jabatan = k.id_jabatan LEFT JOIN mst_unit u ON u.id_unit = k.id_unit LEFT JOIN mst_periode p ON p.id_periode = k.id_periode LEFT JOIN mst_satuan s ON s.id_satuan = k.satuan LEFT JOIN mst_polarisasi pol ON pol.id_polarisasi = k.sifat_kpi WHERE k.id_anggota = '$id_anggota' AND k.id_jabatan = '$id_jabatan' AND k.id_unit = '$id_unit'");
 			while($tampil = $query->fetch_array())
 				$hasil[] = $tampil;
 			return $hasil;
@@ -246,8 +246,11 @@
 			return $hasil;
 		}
 
-		function tampil_aturan_polarisasi(){
-			$query = $this->connection->query("SELECT * FROM aturan_polarisasi");
+		function tampil_aturan_polarisasi($id_polarisasi = null){
+			if($id_polarisasi != null)
+				$query = $this->connection->query("SELECT * FROM aturan_polarisasi WHERE id_polarisasi = '$id_polarisasi'");
+			else
+				$query = $this->connection->query("SELECT * FROM aturan_polarisasi");
 			while($tampil = $query->fetch_array())
 				$hasil[] = $tampil;
 			return $hasil;
@@ -400,9 +403,9 @@
 			}
 			else {
 				if($jenis == 1 || $jenis == '1')
-					$query = $this->connection->query("SELECT ki.*, mk.nama_kompetensi, mk.id_periode, mk.indikator_terendah, mk.indikator_tertinggi, p.peringkat, p.nilai FROM data_kompetensi_individu ki LEFT JOIN mst_kompetensi mk ON ki.id_kompetensi = mk.id_kompetensi LEFT JOIN mst_peringkat p ON ki.id_peringkat = p.id_peringkat WHERE ki.id_anggota = '$id_anggota' AND ki.id_periode = '$id_periode' AND ki.id_jabatan = '$id_jabatan' AND ki.id_departemen = '$id_departemen' AND ki.id_unit = '$id_unit' AND ki.jenis = '$jenis' AND ki.id_kompetensi_individu = '$id_kompetensi'");
+					$query = $this->connection->query("SELECT ki.*, mk.nama_kompetensi, mk.id_periode, mk.indikator_terendah, mk.indikator_tertinggi, mk.bobot, p.peringkat, p.nilai FROM data_kompetensi_individu ki LEFT JOIN mst_kompetensi mk ON ki.id_kompetensi = mk.id_kompetensi LEFT JOIN mst_peringkat p ON ki.id_peringkat = p.id_peringkat WHERE ki.id_anggota = '$id_anggota' AND ki.id_periode = '$id_periode' AND ki.id_jabatan = '$id_jabatan' AND ki.id_departemen = '$id_departemen' AND ki.id_unit = '$id_unit' AND ki.jenis = '$jenis' AND ki.id_kompetensi_individu = '$id_kompetensi'");
 				else if($jenis == 2 || $jenis == '2')
-					$query = $this->connection->query("SELECT ki.*, mk.nama_kompetensi, mk.id_periode, mk.indikator_terendah, mk.indikator_tertinggi, p.peringkat, p.nilai FROM data_kompetensi_individu ki LEFT JOIN mst_kompetensi_khusus mk ON ki.id_kompetensi = mk.id_kompetensi_khusus LEFT JOIN mst_peringkat p ON ki.id_peringkat = p.id_peringkat WHERE ki.id_anggota = '$id_anggota' AND ki.id_periode = '$id_periode' AND ki.id_jabatan = '$id_jabatan' AND ki.id_departemen = '$id_departemen' AND ki.id_unit = '$id_unit' AND ki.jenis = '$jenis' AND ki.id_kompetensi_individu = '$id_kompetensi'");
+					$query = $this->connection->query("SELECT ki.*, mk.nama_kompetensi, mk.id_periode, mk.indikator_terendah, mk.indikator_tertinggi, mk.bobot, p.peringkat, p.nilai FROM data_kompetensi_individu ki LEFT JOIN mst_kompetensi_khusus mk ON ki.id_kompetensi = mk.id_kompetensi_khusus LEFT JOIN mst_peringkat p ON ki.id_peringkat = p.id_peringkat WHERE ki.id_anggota = '$id_anggota' AND ki.id_periode = '$id_periode' AND ki.id_jabatan = '$id_jabatan' AND ki.id_departemen = '$id_departemen' AND ki.id_unit = '$id_unit' AND ki.jenis = '$jenis' AND ki.id_kompetensi_individu = '$id_kompetensi'");
 			}
 
 			while($tampil = $query->fetch_array())
