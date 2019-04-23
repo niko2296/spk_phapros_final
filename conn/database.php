@@ -31,6 +31,33 @@
 				$hasil[] = $tampil;
 			return $hasil;
 		}
+
+		function tampil_jabatan_detail($id_cek = null, $jenis = null)
+		{
+			$ket = '';
+			if($jenis != null)
+			{
+				if($jenis == 1 || $jenis == '1')
+				{
+					$query = $this->connection->query("SELECT * FROM mst_jabatan WHERE id_jabatan = '$id_cek'");
+					while($tampil = $query->fetch_array())
+						$ket = $tampil['nama_jabatan'];
+				}
+				else if($jenis == 2 || $jenis == '2')
+				{
+					$query = $this->connection->query("SELECT * FROM mst_departemen WHERE id_departemen = '$id_cek'");
+					while($tampil = $query->fetch_array())
+						$ket = $tampil['nama_departemen'];
+				}
+				else if($jenis == 3 || $jenis == '3')
+				{
+					$query = $this->connection->query("SELECT * FROM mst_unit WHERE id_unit = '$id_cek'");
+					while($tampil = $query->fetch_array())
+						$ket = $tampil['nama_unit'];
+				}
+			}
+			return $ket;
+		}
 		
 		function tampil_unit($id_unit = null){
 			if($id_unit == null)
@@ -652,6 +679,27 @@
 			return $realisasi;
 
 		}
+
+		function tampil_mutasi($id_periode = null, $id_mutasi = null){
+			$hasil = [];
+			if($id_mutasi != null)
+			{
+				if($id_periode != null)
+					$query = $this->connection->query("SELECT mp.*, a.nama, a.nik, j.nama_jabatan, d.nama_departemen, u.nama_unit FROM mutasi_pegawai mp LEFT JOIN mst_anggota a ON mp.id_anggota = a.id_anggota LEFT JOIN mst_jabatan j ON mp.id_jabatan_lama = j.id_jabatan LEFT JOIN mst_departemen d ON mp.id_departemen_lama = d.id_departemen LEfT JOIN mst_unit u ON mp.id_unit_lama = u.id_unit WHERE mp.id_periode = '$id_periode' AND mp.id_mutasi = '$id_mutasi'");
+				else
+					$query = $this->connection->query("SELECT mp.*, a.nama, a.nik, j.nama_jabatan, d.nama_departemen, u.nama_unit FROM mutasi_pegawai mp LEFT JOIN mst_anggota a ON mp.id_anggota = a.id_anggota LEFT JOIN mst_jabatan j ON mp.id_jabatan_lama = j.id_jabatan LEFT JOIN mst_departemen d ON mp.id_departemen_lama = d.id_departemen LEfT JOIN mst_unit u ON mp.id_unit_lama = u.id_unit WHERE mp.id_mutasi = '$id_mutasi'");
+				}
+			else {
+				if($id_periode != null)
+					$query = $this->connection->query("SELECT mp.*, a.nama, a.nik, j.nama_jabatan, d.nama_departemen, u.nama_unit FROM mutasi_pegawai mp LEFT JOIN mst_anggota a ON mp.id_anggota = a.id_anggota LEFT JOIN mst_jabatan j ON mp.id_jabatan_lama = j.id_jabatan LEFT JOIN mst_departemen d ON mp.id_departemen_lama = d.id_departemen LEfT JOIN mst_unit u ON mp.id_unit_lama = u.id_unit WHERE mp.id_periode = '$id_periode'");
+				else
+					$query = $this->connection->query("SELECT mp.*, a.nama, a.nik, j.nama_jabatan, d.nama_departemen, u.nama_unit FROM mutasi_pegawai mp LEFT JOIN mst_anggota a ON mp.id_anggota = a.id_anggota LEFT JOIN mst_jabatan j ON mp.id_jabatan_lama = j.id_jabatan LEFT JOIN mst_departemen d ON mp.id_departemen_lama = d.id_departemen LEfT JOIN mst_unit u ON mp.id_unit_lama = u.id_unit");
+			}
+
+			while($tampil = $query->fetch_array())
+				$hasil[] = $tampil;
+			return $hasil;
+		}
 		//Akhiran Fungsi Tampil
 
 		//Fungsi Input
@@ -1132,6 +1180,45 @@
 				return 1;
 			else 
 				return 2;
+		}
+
+		function input_mutasi($id_periode = null, $id_anggota = null, $id_jabatan = null, $id_departemen = null, $id_unit = null, $tanggal_mutasi = null)
+		{
+			$query = $this->connection->query("SELECT * FROM mst_anggota WHERE id_anggota = '$id_anggota'");
+			$jml = 0;
+			$id_jabatan_lama = null;
+			$id_departemen_lama = null;
+			$id_unit_lama = null;
+			while($tampil = $query->fetch_array())
+			{
+				$jml = $jml+1;
+				$id_jabatan_lama = $tampil['id_jabatan'];
+				$id_departemen_lama = $tampil['id_departemen'];
+				$id_unit_lama = $tampil['id_unit'];
+			}
+
+			if($jml > 0)
+			{
+				$tanggal = date('Y-m-d');
+				$query = "INSERT INTO mutasi_pegawai VALUES ('', '$id_anggota', '$id_jabatan_lama', '$id_departemen_lama', '$id_unit_lama', '$id_jabatan', '$id_departemen', '$id_unit', '$id_periode', '$tanggal_mutasi', '$tanggal')";
+				$input = $this->connection->prepare($query);
+				if($input->execute())
+				{
+					$query = "UPDATE mst_anggota SET id_jabatan = '$id_jabatan', id_departemen = '$id_departemen', id_unit = '$id_unit' WHERE id_anggota = '$id_anggota'";
+					$edit = $this->connection->prepare($query);
+					if($edit->execute())
+						header("location:data_mutasi.php");
+					else 
+						return 2;
+				}
+				else
+				{ 
+					return 2;
+				}		
+			}
+			else {
+				return 3;
+			}
 		}
 		//Akhiran Fungsi Input
 
@@ -1645,6 +1732,31 @@
 				return 3;
 			}
 		}
+
+		function edit_mutasi($id_anggota = null, $id_mutasi = null, $id_periode = null, $id_jabatan = null, $id_departemen = null, $id_unit = null, $tanggal_mutasi = null)
+		{
+			if($id_mutasi != null)
+			{
+				$query = "UPDATE mutasi_pegawai SET id_jabatan_baru = '$id_jabatan', id_departemen_baru = '$id_departemen', id_unit_baru = '$id_unit', tanggal_mutasi = '$tanggal_mutasi' WHERE id_mutasi = '$id_mutasi'";
+				$edit = $this->connection->prepare($query);
+				if($edit->execute())
+				{
+					$query = "UPDATE mst_anggota SET id_jabatan = '$id_jabatan', id_departemen = '$id_departemen', id_unit = '$id_unit' WHERE id_anggota = '$id_anggota'";
+					$edit = $this->connection->prepare($query);
+					if($edit->execute())
+						header("location:data_mutasi.php");
+					else 
+						return 2;
+				}
+				else
+				{ 
+					return 2;
+				}
+			}
+			else {
+				return 3;
+			}
+		}
 		//Akhiran Fungsi Edit
 
 		//Fungsi Hapus
@@ -1954,6 +2066,29 @@
 				$hapus = $this->connection->prepare($query);
 				if($hapus->execute())
 					return 1;
+				else 
+					return 2;
+			}
+			else {
+				return 3;
+			}
+		}
+
+		function hapus_mutasi($id_mutasi = null, $id_anggota = null, $id_jabatan_lama = null, $id_departemen_lama = null, $id_unit_lama = null)
+		{
+			if($id_mutasi != null)
+			{
+				$query = "DELETE FROM mutasi_pegawai WHERE id_mutasi = '$id_mutasi'";
+				$hapus = $this->connection->prepare($query);
+				if($hapus->execute())
+				{
+					$query = "UPDATE mst_anggota SET id_jabatan = '$id_jabatan_lama', id_departemen = '$id_departemen_lama', id_unit = '$id_unit_lama' WHERE id_anggota = '$id_anggota'";
+					$edit = $this->connection->prepare($query);
+					if($edit->execute())
+						header("location:data_mutasi.php");
+					else 
+						return 2;
+				}
 				else 
 					return 2;
 			}

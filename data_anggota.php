@@ -125,7 +125,7 @@
 								{
 							?>
 									<li class=""> 
-										<a href="data_mutasi.php"><i class="wikwik"></i> <span>Mutasi</span></a>
+										<a href="data_mutasi.php"><i class="la la-exchange"></i> <span>Mutasi</span></a>
 									</li>
 							<?php
 								}
