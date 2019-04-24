@@ -13,7 +13,11 @@
 	$unitL = $_SESSION['id_unit'];
 	$id_anggotaD = $_SESSION['id_anggota'];
 	$id_unitD = $_SESSION['id_unit'];
-	$idA = 'kosong';
+    $idA = 'kosong';
+
+    $id_jabatanD2 = $_GET['id_jabatan_lama'];
+    $id_departemenD2 = $_GET['id_departemen_lama'];
+    $id_unitD2 = $_GET['id_unit_lama'];
 
 	foreach($db->tampil_periode() as $tP)
 	{
@@ -248,18 +252,32 @@
 					<?php
 						if(isset($_POST['tombolKirim']))
 						{
-							$jmlB = $db->total_bobot($id_anggotaD, $jabatan, $departemenL, $id_unitD, $idA);
+                            $jmlB = $db->total_bobot($id_anggotaD, $id_jabatanD2, $id_departemenD2, $id_unitD2, $idA);
+                            if($db->hitung_perubahan_usulan($id_anggotaD, $id_jabatanD2, $id_departemenD2, $id_unitD2, $idA) > 0)
+                            {
+                                $jmlB = 0;
+                                foreach($db->tampil_kpi($idA, $id_anggotaD, $id_jabatanD2, $id_departemenD2, $id_unitD2) as $tk)
+                                {
+                                    $bobot = $tk['bobot'];
+                                    foreach($db->cek_perubahan($tk['id_kpi']) as $tc2)
+                                    {
+                                        if($tc2['bobot'] != '')
+                                            $bobot = $tc2['bobot'];
+                                        $jmlB = $jmlB+$bobot;
+                                    }
+                                }
+                            }
 
 							$html = '
 							<br><br><br>
 							<form action="simpan_kpi.php" method="POST" id="kpi_input">
 							<div class="row">
-								<div class="col-md-4">
-									<input type="hidden" name="id_anggota" value="'.$id_anggotaD.'">
-									<input type="hidden" name="id_jabatan" value="'.$jabatan.'">
-									<input type="hidden" name="id_departemen" value="'.$departemenL.'">
-									<input type="hidden" name="id_unit" value="'.$unitL.'">
-									<input type="hidden" name="link" value="kpi1">
+                                <div class="col-md-4">
+                                    <input type="hidden" name="id_anggota" value="'.$id_anggotaD.'">
+                                    <input type="hidden" name="id_jabatan" value="'.$id_jabatanD2.'">
+                                    <input type="hidden" name="id_departemen" value="'.$id_departemenD2.'">
+                                    <input type="hidden" name="id_unit" value="'.$id_unitD2.'">
+                                    <input type="hidden" name="link" value="kpi2">
 									<select name="id_periode" class="form-control cek">
 							';
 										foreach($db->tampil_periode() as $tampilP)

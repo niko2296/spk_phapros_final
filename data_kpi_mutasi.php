@@ -1,28 +1,30 @@
 <?php
-	ob_start();
-	include "conn/database.php";
-	$db = new database();
+    ob_start();
+    include "conn/database.php";
+    $db = new database();
     $nama = '';
     $jabatan = '';
+    $id_anggotaD = '';
+    $id_unitD = '';
 	session_start();
 	if($_SESSION['login'] == FALSE)
         header("location:login.php");
     $nama = $_SESSION['nama'];
-	$jabatan = $_SESSION['id_jabatan'];
-	$departemenL = $_SESSION['id_departemen'];
-	$unitL = $_SESSION['id_unit'];
-	$id_anggotaD = $_SESSION['id_anggota'];
-	$id_unitD = $_SESSION['id_unit'];
-	$idA = 'kosong';
+    $jabatan = $_SESSION['id_jabatan'];
+    $departemenL = $_SESSION['id_departemen'];
+    $unitL = $_SESSION['id_unit'];
+    $id_anggotaD = $_SESSION['id_anggota'];
+    $id_unitD = $_SESSION['id_unit'];
+    $idA = 'kosong';
 
-	foreach($db->tampil_periode() as $tP)
-	{
-		if($tP['status'] == 1)
-		{
-			$tA = $tP['tahun'];
-			$idA = $tP['id_periode'];
-		}	
-	}
+    foreach($db->tampil_periode() as $tampilP)
+    {
+        if($tampilP['status'] == 1)
+        {
+            $tA = $tampilP['tahun'];
+            $idA = $tampilP['id_periode'];
+        }
+    }
 ?>
 <!DOCTYPE html>
 <html>
@@ -35,7 +37,8 @@
         <link rel="stylesheet" type="text/css" href="assets/css/bootstrap.min.css">
         <link rel="stylesheet" type="text/css" href="assets/css/font-awesome.min.css">
         <link rel="stylesheet" type="text/css" href="assets/css/line-awesome.min.css">
-		<link rel="stylesheet" type="text/css" href="assets/css/dataTables.bootstrap.min.css">
+		<!-- <link rel="stylesheet" type="text/css" href="assets/css/dataTables.bootstrap.min.css"> -->
+        <link rel="stylesheet" type="text/css" href="assets/css/datatables.min.css"/>
 		<link rel="stylesheet" type="text/css" href="assets/css/select2.min.css">
 		<link rel="stylesheet" type="text/css" href="assets/css/bootstrap-datetimepicker.min.css">
         <link rel="stylesheet" type="text/css" href="assets/css/style.css">
@@ -62,24 +65,24 @@
 						<a href="" class="dropdown-toggle user-link" data-toggle="dropdown" title="Admin">
 							<!-- <span class="user-img"><img class="img-circle" src="assets/img/user.jpg" width="40" alt="Admin"> -->
 							<span>
-								<?php echo $nama; ?>
-							</span>
+                                <?php echo $nama; ?>
+                            </span>
 							<i class="caret"></i>
 						</a>
 						<ul class="dropdown-menu">
 							<!-- <li><a href="profile.html">My Profile</a></li>
 							<li><a href="edit-profile.html">Edit Profile</a></li> -->
-							<?php
-								if($jabatan != 0)
-									echo '<li><a href="settings.php">Settings</a></li>';
-							?>
-							<li><a href="logout.php">Logout</a></li>
+                            <?php
+                                if($jabatan != 0)
+							        echo '<li><a href="settings.php">Settings</a></li>';
+                            ?>
+                            <li><a href="logout.php">Logout</a></li>
 						</ul>
 					</li>
 				</ul>
             </div>
             <div class="sidebar" id="sidebar">
-				<div class="sidebar-inner slimscroll">
+                <div class="sidebar-inner slimscroll">
 					<div id="sidebar-menu" class="sidebar-menu">
 						<ul>
 							<li> 
@@ -92,8 +95,8 @@
                                 $m4 = 0;
                                 $m5 = 0;
                                 $m6 = 0;
-								$m7 = 0;
-								error_reporting(0);
+                                $m7 = 0;
+                                error_reporting(0);
                                 foreach($db->tampil_akses() as $tampil)
                                 {
                                     if($tampil['id_jabatan'] == $jabatan)
@@ -113,10 +116,10 @@
                                     <li class="submenu">
                                         <a href="#"><i class="la la-briefcase"></i> <span> Master Data</span> <span class="menu-arrow"></span></a>
                                         <ul style="display: none;">
-											<li><a href="data_golongan.php">Golongan</a></li>
+                                            <li><a href="data_golongan.php">Golongan</a></li>
                                             <li><a href="data_jabatan.php">Jabatan</a></li>
-											<li><a href="data_kelompok.php">Kelompok Jabatan</a></li>
-											<li><a href="data_departemen.php">Departemen</a></li>
+                                            <li><a href="data_kelompok.php">Kelompok Jabatan</a></li>
+                                            <li><a href="data_departemen.php">Departemen</a></li>
                                             <li><a href="data_unit.php">Unit</a></li>
                                             <li><a href="data_anggota.php">Pegawai</a></li>
                                             <li><a href="data_user.php">User</a></li>
@@ -124,15 +127,15 @@
                                             <li><a href="data_polarisasi.php">Polarisasi</a></li>
                                             <li><a href="data_satuan.php">Satuan</a></li>
                                             <li><a href="data_kompetensi.php">Kompetensi</a></li>
-											<li><a href="data_kompetensi_khusus.php">Kompetensi Khusus</a></li>
+                                            <li><a href="data_kompetensi_khusus.php">Kompetensi Khusus</a></li>
                                             <li><a href="data_peringkat.php">Peringkat Kompetensi</a></li>
-											<li><a href="persentase_nilai.php">Persentase Nilai</a></li>
-											<li><a href="kriteria_nilai.php">Kriteria Nilai</a></li>
+                                            <li><a href="persentase_nilai.php">Persentase Nilai</a></li>
+                                            <li><a href="kriteria_nilai.php">Kriteria Nilai</a></li>
                                         </ul>
                                     </li>
                             <?php
-								}
-								if($_SESSION['aksus'] == TRUE)
+                                }
+                                if($_SESSION['aksus'] == TRUE)
 								{
 							?>
 									<li class=""> 
@@ -146,7 +149,7 @@
                                     <li class=""> 
                                         <a href="aturan_penilai.php"><i class="la la-key"></i> <span>Aturan Penilai</span></a>
                                     </li>
-									<li class=""> 
+                                    <li class=""> 
                                         <a href="aturan_matriks.php"><i class="la la-th"></i> <span>Perhitungan Matriks</span></a>
                                     </li>
                             <?php
@@ -181,7 +184,7 @@
                                         {
                                     ?>
 											<li><a href="data_kpi.php">Data KPI Individu</a></li>
-											<li><a href="data_kpi_mutasi.php">Data KPI Individu (Mutasi)</a></li>
+                                            <li><a href="data_kpi_mutasi.php">Data KPI Individu (Mutasi)</a></li>
 											<li><a href="copy_kpi.php">Copy Data KPI Individu</a></li>
                                     <?php 
 										}
@@ -211,7 +214,7 @@
 									?>
                                 </ul>
 							</li>
-							<li class=""> 
+                            <li class=""> 
 								<a href="hasil_akhir.php"><i class="la la-edit"></i> <span>Hasil Akhir</span></a>
 							</li>
 						</ul>
@@ -221,241 +224,131 @@
             <div class="page-wrapper">
                 <div class="content container-fluid">
 					<div class="row">
-						<div class="col-xs-8">
-							<h4 class="page-title">Input Data KPI Individu</h4>
-						</div>
-						<div class="col-xs-4 text-right m-b-30">
-							<!-- <a href="#" class="btn btn-primary rounded pull-right" data-toggle="modal" data-target="#add_ticket"><i class="fa fa-plus"></i> Tambah Data KPI Individu</a> -->
+						<div class="col-xs-12">
+							<h4 class="page-title">Data KPI Individu (Mutasi)</h4>
 						</div>
 					</div>
-					<div class="row">
-						<div class="col-md-10 col-md-offset-1">
-							<form action="#" method="POST">
-								<div class="row">
-									<div class="col-sm-6">
-										<div class="form-group">
-											<label>Mau Input Berapa KPI ?</label>
-											<input type="text" value="" class="form-control" name="jml_kpi">
-										</div>
-									</div>
-									<div class="col-sm-6">
-										<button class="btn btn-primary" type="submit" name="tombolKirim" style="margin-top:6%;">Kirim Data</button>
-									</div>
-								</div>
-                            </form>
-						</div>
-					</div>
-					<?php
-						if(isset($_POST['tombolKirim']))
-						{
-							$jmlB = $db->total_bobot($id_anggotaD, $jabatan, $departemenL, $id_unitD, $idA);
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a data-toggle="tab" href="#dpk">Data Pengajuan KPI</a></li>
+                        <li><a data-toggle="tab" href="#drk">Data Realisasi KPI</a></li>
+                    </ul>
 
-							$html = '
-							<br><br><br>
-							<form action="simpan_kpi.php" method="POST" id="kpi_input">
-							<div class="row">
-								<div class="col-md-4">
-									<input type="hidden" name="id_anggota" value="'.$id_anggotaD.'">
-									<input type="hidden" name="id_jabatan" value="'.$jabatan.'">
-									<input type="hidden" name="id_departemen" value="'.$departemenL.'">
-									<input type="hidden" name="id_unit" value="'.$unitL.'">
-									<input type="hidden" name="link" value="kpi1">
-									<select name="id_periode" class="form-control cek">
-							';
-										foreach($db->tampil_periode() as $tampilP)
-										{
-											if($tampilP['status'] == 1)
-											{
-												$html .= '<option value="'.$tampilP['id_periode'].'">'.$tampilP['tahun'].'</option>';
-											}
-										}
-							$html .= '
-									</select>
-								</div>
-								<div class="col-md-8">
-									<div class="alert alert-info">
-										<div class="row" style="vertical-align:bottom;">
-											<div class="col-md-12" align="center">
-												<b>Bobot Saat Ini : <font id="skor">'.$jmlB.'</font>%</b>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-							<br>
-								<div class="row" style="border:1px solid black;color:black; background-color:white; padding:1%;">
-									<div class="col-md-12">
-										<div class="table-responsive">
-											<table class="table table-striped custom-table m-b-0">
-											<thead>
-												<tr>
-													<th>KPI</th>
-													<th>Deskripsi</th>
-													<th>Bobot (%)</th>
-													<th>Sasaran/Target</th>
-													<th>Satuan</th>
-													<th>Polarisasi</th>
-													<th>Action</th>
-												</tr>
-											</thead>
-							';
-
-							echo $html;
-
-							$jml_kpi = $_POST['jml_kpi'];
-							for($i=1; $i<=$jml_kpi; $i++)
-							{
-					?>
-								<!-- Form Kedua -->
-											<tbody>
-												<?php $id4 = "konten".$i; ?>
-												<tr id="<?php echo $id4; ?>">
-													<td><input type="text" value="" class="form-control cek" name="kpi[]"></td>
-													<td><textarea name="deskripsi[]" id="" cols="30" rows="0" class="form-control cek"></textarea></td>
-													<td><input type="text" value="" class="form-control cek cek2" name="bobot[]"></td>
-													<td><input type="text" value="" class="form-control cek" name="sasaran[]"></td>
-													<td>
-														<?php $id1 = "satuan".$i; ?>
-														<select id="<?php echo $id1; ?>" name="satuan[]" class="select cek" style="width:100%;" onchange="fungsi1(<?php echo $i; ?>)">
-															<option value="">Silahkan Pilih Satuan</option>
-															<?php
-																foreach($db->tampil_satuan($idA) as $tampil)
-																{
-																		echo '<option value="'.$tampil['id_satuan'].'">'.$tampil['nama_satuan'].'</option>';
-																}
-															?>
-														</select>
-													</td>
-													<td>
-														<?php $id2 = "sifat_kpi".$i; ?>
-														<select id="<?php echo $id2; ?>" name="sifat_kpi[]" class="select cek" style="width:100%;">
-															<option value="">Silahkan Pilih Polarisasi</option>
-														</select>
-													</td>
-													<td>
-														<?php $id3 = "hapus".$i; ?>
-														<button class="btn btn-danger" id="<?php echo $id3; ?>" onclick="fungsi2(<?php echo $i; ?>)">Hapus</button>
-													</td>
-												</tr>
-											</tbody>
-								<!-- Akhiran Form Kedua -->
-					<?php
-							}
-							echo '
-										</table>
-										</div>
-									</div>
-								</div>
-								<div class="m-t-20 text-center">
-									<button class="btn btn-primary" type="submit" name="tombolSimpan">Simpan Data KPI Individu</button>
-								</div>
-							</form>
-							';
-						}
-					?>
+                    <div class="tab-content">
+                        <!-- Tab Pertama -->
+                        <div id="dpk" class="tab-pane fade in active">
+                            <div class="row" style="border:1px solid black;color:black; background-color:white; padding:1%;">
+                                <div class="col-md-12">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped custom-table m-b-0 display" id="tabel2">
+                                            <thead>
+                                                <tr>
+                                                    <th>Jabatan Lama</th>
+                                                    <th>Departemen Lama</th>
+                                                    <th>Unit Lama</th>
+                                                    <th>Jabatan Baru</th>
+                                                    <th>Departemen Baru</th>
+                                                    <th>Unit Baru</th>
+                                                    <th>Tanggal</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            <?php
+                                                error_reporting(0);
+                                                foreach($db->tampil_mutasi_pribadi($idA, $id_anggotaD) as $data)
+                                                {
+                                            ?>
+                                                    <tr>
+                                                        <td><?php echo $data['nama_jabatan']; ?></td>
+                                                        <td><?php echo $data['nama_departemen']; ?></td>
+                                                        <td><?php echo $data['nama_unit']; ?></td>
+                                                        <td><?php echo $db->tampil_jabatan_detail($data['id_jabatan_baru'], 1); ?></td>
+                                                        <td><?php echo $db->tampil_jabatan_detail($data['id_departemen_baru'], 2); ?></td>
+                                                        <td><?php echo $db->tampil_jabatan_detail($data['id_unit_baru'], 3); ?></td>
+                                                        <td><?php echo date('d F Y', strtotime($data['tanggal_mutasi'])); ?></td>
+                                                        <td><a href="detail_kpi_individu_mutasi.php?id_anggota=<?php echo $data['id_anggota']."&&id_jabatan_lama=".$data['id_jabatan_lama']."&&id_departemen_lama=".$data['id_departemen_lama']."&&id_unit_lama=".$data['id_unit_lama']; ?>">Detail</a></td>
+                                                    </tr>
+                                            <?php
+                                                }
+                                            ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Akhiran Tab Pertama -->
+                        <!-- Tab Kedua -->
+                        <div id="drk" class="tab-pane fade">
+                            <div class="row" style="border:1px solid black;color:black; background-color:white; padding:1%;">
+                                <div class="col-md-12">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped custom-table m-b-0 display" id="tabel2">
+                                            <thead>
+                                                <tr>
+                                                    <th>Jabatan Lama</th>
+                                                    <th>Departemen Lama</th>
+                                                    <th>Unit Lama</th>
+                                                    <th>Jabatan Baru</th>
+                                                    <th>Departemen Baru</th>
+                                                    <th>Unit Baru</th>
+                                                    <th>Tanggal</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            <?php
+                                                error_reporting(0);
+                                                foreach($db->tampil_mutasi_pribadi($idA, $id_anggotaD) as $data)
+                                                {
+                                            ?>
+                                                    <tr>
+                                                        <td><?php echo $data['nama_jabatan']; ?></td>
+                                                        <td><?php echo $data['nama_departemen']; ?></td>
+                                                        <td><?php echo $data['nama_unit']; ?></td>
+                                                        <td><?php echo $db->tampil_jabatan_detail($data['id_jabatan_baru'], 1); ?></td>
+                                                        <td><?php echo $db->tampil_jabatan_detail($data['id_departemen_baru'], 2); ?></td>
+                                                        <td><?php echo $db->tampil_jabatan_detail($data['id_unit_baru'], 3); ?></td>
+                                                        <td><?php echo date('d F Y', strtotime($data['tanggal_mutasi'])); ?></td>
+                                                        <td><a href="detail_realisasi_individu_mutasi.php?id_anggota=<?php echo $data['id_anggota']."&&id_jabatan_lama=".$data['id_jabatan_lama']."&&id_departemen_lama=".$data['id_departemen_lama']."&&id_unit_lama=".$data['id_unit_lama']; ?>">Detail</a></td>
+                                                    </tr>
+                                            <?php
+                                                }
+                                            ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Akhiran Tab Kedua -->
+                    </div>
                 </div>
             </div>
         </div>
 		<div class="sidebar-overlay" data-reff="#sidebar"></div>
         <script type="text/javascript" src="assets/js/jquery-3.2.1.min.js"></script>
         <script type="text/javascript" src="assets/js/bootstrap.min.js"></script>
-		<script type="text/javascript" src="assets/js/jquery.dataTables.min.js"></script>
-		<script type="text/javascript" src="assets/js/dataTables.bootstrap.min.js"></script>
+		<!-- <script type="text/javascript" src="assets/js/jquery.dataTables.min.js"></script>
+		<script type="text/javascript" src="assets/js/dataTables.bootstrap.min.js"></script> -->
+        <script type="text/javascript" charset="utf8" src="assets/js/jquery.dataTables.js"></script>
+        <script type="text/javascript" src="assets/js/datatables.min.js"></script>
 		<script type="text/javascript" src="assets/js/jquery.slimscroll.js"></script>
 		<script type="text/javascript" src="assets/js/select2.min.js"></script>
 		<script type="text/javascript" src="assets/js/moment.min.js"></script>
 		<script type="text/javascript" src="assets/js/bootstrap-datetimepicker.min.js"></script>
 		<script type="text/javascript" src="assets/js/app.js"></script>
 
-		<script>
-			$(document).ready(function () {
-                $(".select").select2({
-                    placeholder: "Please Select"
-                });
-
-				$("#kpi_input").on("submit", function(e){
-                    var inputan = $("#kpi_input").find(".cek");
-                    var inputan2 = $("#kpi_input").find(".cek2");
-                    var v = '';
-                    var k = [];
-                    var p = 0;
-					var j = 0;
-                    $.each(inputan, function(i){
-                        v = $(this).val();
-                        if(v == '')
-                        {
-                            k[p] = 1;
-                        }
-                        else{
-                            k[p] = 0;
-                        }
-                        v = '';
-                        p = p+1;
-                    });
-                    for(var c=0; c < p; c++)
-                    {
-                        if(k[c] == 1)
-                        {
-                            e.preventDefault();
-                            alert('Masih Terdapat yg Kosong');
-                            break;
-                        }
-                    }
-
-					$.each(inputan2, function(i){
-                        v = $(this).val();
-                        j = parseInt(j) + parseInt(v);
-					});
-					var tot = parseInt(document.getElementById('skor').innerHTML) + j;
-					if(tot > 100)
-					{
-						e.preventDefault();
-						alert('Bobot Melebihi dari 100%');
-						tot = 0;
-					}
-					else if(tot < 100)
-					{
-						e.preventDefault();
-						alert('Bobot Kurang dari 100%');
-						tot = 0;
-					}
+        <script type="text/javascript">
+            $(document).ready(function(){
+                $('table').DataTable({
+                    searching : true,
+                    ordering : false
                 });
             });
-
-			function fungsi1(param = 0){
-				var v1 = '#satuan'+param;
-				var v2 = '#sifat_kpi'+param;
-				var v3 = 'sifat_kpi'+param;
-				var id = $(v1).children(":selected").attr("value");
-				
-				$.ajax({
-				url: "get_satuan.php?id_satuan="+id,
-				type: "GET",
-				
-				success: function(data) {
-					var result = JSON.parse(data);
-					document.getElementById(v3).innerHTML = '';
-					$.each(result, function (index, value) {
-						var jenis_polarisasi = value.id_polarisasi;
-						var ket = value.nama_polarisasi;
-
-						$(v2).append($('<option/>', { 
-							value: jenis_polarisasi,
-							text : ket 
-						}));
-					});
-					
-				}
-				});
-			}
-
-			function fungsi2(param = 0){
-				var v1 = "#konten"+param;
-				$(v1).remove();
-			}
-		</script>
+        </script>
     </body>
 </html>
 <?php
-	ob_end_flush();
+    ob_end_flush();
 ?>

@@ -700,6 +700,15 @@
 				$hasil[] = $tampil;
 			return $hasil;
 		}
+
+		function tampil_mutasi_pribadi($id_periode = null, $id_anggota = null)
+		{
+			$hasil = [];
+			$query = $this->connection->query("SELECT mp.*, j.nama_jabatan, d.nama_departemen, u.nama_unit FROM mutasi_pegawai mp LEFT JOIN mst_jabatan j ON mp.id_jabatan_lama = j.id_jabatan LEFT JOIN mst_departemen d ON mp.id_departemen_lama = d.id_departemen LEFT JOIN mst_unit u ON mp.id_unit_lama = u.id_unit WHERE mp.id_anggota = '$id_anggota' AND mp.id_periode = '$id_periode'");
+			while($tampil = $query->fetch_array())
+				$hasil[] = $tampil;
+			return $hasil;
+		}
 		//Akhiran Fungsi Tampil
 
 		//Fungsi Input
@@ -775,13 +784,8 @@
 				return 2;
 		}
 
-		function input_kpi($kpi = [], $deskripsi = [], $bobot = [], $sasaran = [], $satuan = [], $sifat_kpi = [], $id_periode = 0)
+		function input_kpi($id_anggota = null, $id_jabatan = null, $id_departemen = null, $id_unit = null, $kpi = [], $deskripsi = [], $bobot = [], $sasaran = [], $satuan = [], $sifat_kpi = [], $id_periode = 0)
 		{
-			session_start();
-			$id_anggota = $_SESSION['id_anggota'];
-			$id_jabatan = $_SESSION['id_jabatan'];
-			$id_departemen = $_SESSION['id_departemen'];
-			$id_unit = $_SESSION['id_unit'];
 			for($a=0; $a<count($kpi); $a++)
 			{
 				$tanggal_input = date('Y-m-d');
@@ -798,7 +802,7 @@
 				return 2;
 			}
 			else{
-				header('location:data_kpi.php');
+				return 1;
 			}
 		}
 
@@ -1853,10 +1857,28 @@
 					$hapus2 = $this->connection->prepare($query2);
 					if($hapus2->execute())
 					{	
-						if($jenis == null)
-							header("location:data_kpi.php");
-						else 
-							return 1;
+						$query3 = "DELETE FROM data_realisasi_kpi WHERE id_kpi = '$id_kpi' AND id_periode = '$id_periode'";
+						$hapus3 = $this->connection->preapre($query3);
+						if($hapus3->execute())
+						{
+							$query4 = "DELETE FROM data_realisasi_verifikasi WHERE id_kpi_asli = '$id_kpi'";
+							$hapus4 = $this->connection->prepare($query4);
+							if($hapus4->execute())
+							{
+								$query5 = "DELETE FROM perubahan_usulan_realisasi WHERE id_kpi_asli = '$id_kpi'";
+								$hapus5 = $this->connection->prepare($query5);
+								if($hapus5->execute())
+									return 1;
+								else 
+									return 2;
+							}
+							else{
+								return 2;
+							}
+						}
+						else{
+							return 2;
+						}
 					}
 					else {
 						return 2;
