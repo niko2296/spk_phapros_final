@@ -190,6 +190,7 @@
                                         {
                                     ?>
 											<li><a href="data_kpi.php">Data KPI Individu</a></li>
+                                            <li><a href="data_kpi_mutasi.php">Data KPI Individu (Mutasi)</a></li>
 											<li><a href="copy_kpi.php">Copy Data KPI Individu</a></li>
                                     <?php 
 										}
@@ -198,6 +199,7 @@
                                         {
                                     ?>
                                     		<li><a href="data_kpi_verifikasi.php">Data KPI Sub Ordinat</a></li>
+                                    		<li><a href="data_kpi_verifikasi_mutasi.php">Data KPI Sub Ordinat (Mutasi)</a></li>
                                     <?php
 										}
 										if($m7 == 1 || $_SESSION['aksus'] == TRUE)
