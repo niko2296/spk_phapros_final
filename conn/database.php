@@ -2021,7 +2021,7 @@
 			$query = "DELETE FROM data_catatan2 WHERE id_anggota = '$id_anggota' AND id_jabatan = '$id_jabatan' AND id_unit = '$id_unit' AND id_periode = '$id_periode'";
 			$hapus = $this->connection->prepare($query);
 			if($hapus->execute())
-				header("location:detail_ks.php?id_anggota=$id_anggota&&id_jabatan=$id_jabatan&&id_departemen=$id_departemen&&id_unit=$id_unit");
+				return 1;
 			else 
 				return 2;
 		}

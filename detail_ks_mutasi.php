@@ -23,9 +23,9 @@
     }
 
     $id_anggotaD = $_GET['id_anggota'];
-    $id_jabatanD = $_GET['id_jabatan'];
-    $id_departemenD = $_GET['id_departemen'];
-    $id_unitD = $_GET['id_unit'];
+    $id_jabatanD = $_GET['id_jabatan_lama'];
+    $id_departemenD = $_GET['id_departemen_lama'];
+    $id_unitD = $_GET['id_unit_lama'];
 
     foreach($db->tampil_anggota($id_anggotaD) as $tc)
         $nama_anggota = $tc['nama'];
@@ -237,7 +237,7 @@
 							<h4 class="page-title">Detail Kompetensi - <b><?php echo $nama_anggota; ?></b></h4>
 						</div>
                         <div class="col-xs-5" align="right">
-                            <a class="btn btn-warning" href="kompetensi_sub.php">Kembali Pada Data Kompetensi Sub Ordinat</a>
+                            <a class="btn btn-warning" href="detail_jabatan_kompetensi_mutasi.php?id_jabatan_lama=<?php echo $id_jabatanD."&&id_departemen_lama=".$id_departemenD."&&id_unit_lama=".$id_unitD; ?>">Kembali Halaman Sebelumnya</a>
                         </div>
 					</div>
                     <div class="row">
@@ -270,7 +270,7 @@
                                             echo    '
                                                         <script>
                                                             alert("Berhasil Disimpan");
-                                                            window.location = "detail_ks.php?id_anggota='.$id_anggotaD.'&&id_jabatan='.$id_jabatanD.'&&id_departemen='.$id_departemenD.'&&id_unit='.$id_unitD.'";
+                                                            window.location = "detail_ks_mutasi.php?id_anggota='.$id_anggotaD.'&&id_jabatan_lama='.$id_jabatanD.'&&id_departemen_lama='.$id_departemenD.'&&id_unit_lama='.$id_unitD.'";
                                                         </script>
                                                     ';
                                         }
@@ -279,7 +279,7 @@
                                             echo    '
                                                         <script>
                                                             alert("Gagal Disimpan");
-                                                            window.location = "detail_ks.php?id_anggota='.$id_anggotaD.'&&id_jabatan='.$id_jabatanD.'&&id_departemen='.$id_departemenD.'&&id_unit='.$id_unitD.'";
+                                                            window.location = "detail_ks.php?id_anggota='.$id_anggotaD.'&&id_jabatan_lama='.$id_jabatanD.'&&id_departemen_lama='.$id_departemenD.'&&id_unit_lama='.$id_unitD.'";
                                                         </script>
                                                     ';
                                         }
@@ -293,7 +293,7 @@
                                     else if($eksekusi == 1)
                                         echo '
                                             <script>
-                                                window.location = "detail_ks.php?id_anggota='.$id_anggotaD.'&&id_jabatan='.$id_jabatanD.'&&id_departemen='.$id_departemenD.'&&id_unit='.$id_unitD.'";
+                                                window.location = "detail_ks_mutasi.php?id_anggota='.$id_anggotaD.'&&id_jabatan_lama='.$id_jabatanD.'&&id_departemen_lama='.$id_departemenD.'&&id_unit_lama='.$id_unitD.'";
                                             </script>
                                         ';
                                 }
@@ -303,7 +303,7 @@
                                     if($eksekusi == 2 || $eksekusi == 3)
                                         echo '<center><div style="background-color:red; width:20%; color:white; padding:5px; margin-bottom:1%;">Data Gagal Dihapus</div></center>';
                                     else if($eksekusi == 1)
-                                        header("location:detail_ks.php?id_anggota=$id_anggotaD&&id_jabatan=$id_jabatanD&&id_departemen=$id_departemenD&&id_unit=$id_unitD");
+                                        header("location:detail_ks_mutasi.php?id_anggota=$id_anggotaD&&id_jabatan_lama=$id_jabatanD&&id_departemen_lama=$id_departemenD&&id_unit_lama=$id_unitD");
                                 }
 
                                 echo '<center><div style="background-color:#7CFC00; width:20%; color:white; padding:5px; display:none; margin-bottom:2%;" id="notifikasi1">Data Diverifikasi</div></center>';
