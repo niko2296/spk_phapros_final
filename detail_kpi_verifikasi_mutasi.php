@@ -277,7 +277,7 @@
                     <br>
                     <div class="row">
                         <div class="col-md-12" align="right">
-                            <a class="btn btn-warning" href="data_kpi_verifikasi_mutasi.php">Kembali</a>
+                            <a class="btn btn-warning" href="data_kpi_verifikasi_mutasi.php">Kembali Halaman Sebelumnya</a>
                         </div>
                     </div>
                 </div>
