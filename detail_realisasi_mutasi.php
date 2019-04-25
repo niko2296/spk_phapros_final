@@ -229,11 +229,16 @@
 						<div class="col-xs-12">
 							<h4 class="page-title">
                                 <?php
+                                    foreach($ec = $db->tampil_anggota($id_anggotaD) as $tc)
+                                    {
+                                        $np = $tc['nama'];
+                                    }
+    
                                     $nj = $db->tampil_jabatan_detail($id_jabatanD, 1);
                                     $nd = $db->tampil_jabatan_detail($id_departemenD, 2);
                                     $nu = $db->tampil_jabatan_detail($id_unitD, 3);
-                                        
-                                    echo 'Detail Realisasi KPI <b>('.$nj.' - '.$nd.' - '.$nu.')</b>';
+    
+                                    echo '<h4 class="page-title">Data Realisasi KPI Individu Detail <b>('.$np.' - '.$nj.' - '.$nd.' - '.$nu.')</b></h4>';
                                 ?>
                             </h4>
 						</div>

@@ -98,7 +98,7 @@
                                 $m5 = 0;
                                 $m6 = 0;
                                 $m7 = 0;
-                                // error_reporting(0);
+                                error_reporting(0);
                                 foreach($db->tampil_akses() as $tampil)
                                 {
                                     if($tampil['id_jabatan'] == $jabatan)
@@ -386,7 +386,7 @@
                                             <tbody>
                                             <?php
                                                 $no = 0;
-                                                // error_reporting(0);
+                                                error_reporting(0);
                                                 $cv = 0;
                                                 foreach($db->tampil_kpi_detail($id_anggotaD, $id_jabatanD, $id_departemenD, $id_unitD, $idA, $cc) as $data)
                                                 {
