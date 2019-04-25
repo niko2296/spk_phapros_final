@@ -201,8 +201,11 @@
 									<?php
 										if($eksekusi1 == 1 || $_SESSION['aksus'] == TRUE)
 											echo '<li><a href="kompetensi_individu.php">Data Kompetensi Individu</a></li>';
-										if($eksekusi2 == 1 || $_SESSION['aksus'] == TRUE)
-											echo '<li><a href="kompetensi_sub.php">Data Kompetensi Sub Ordinat</a></li>';
+                                        if($eksekusi2 == 1 || $_SESSION['aksus'] == TRUE)
+                                        {
+                                            echo '<li><a href="kompetensi_sub.php">Data Kompetensi Sub Ordinat</a></li>';
+                                            echo '<li><a href="kompetensi_sub_mutasi.php">Data Kompetensi Sub Ordinat (Mutasi)</a></li>';
+                                        }
 									?>
                                 </ul>
 							</li>
