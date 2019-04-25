@@ -313,13 +313,19 @@
                                 {
                                     $eksekusi = $db->input_catatan($id_anggotaD, $id_jabatanD, $id_departemenD, $id_unitD, $idA, $_POST['catatan']);
                                     if($eksekusi == 2 || $eksekusi == 3)
+                                    {
                                         echo '<center><div style="background-color:red; width:20%; color:white; padding:5px; margin-bottom:1%;">Data Gagal Disimpan</div></center>';
+                                    }else if($eksekusi == 1){
+                                        header("location:detail_kpi.php?id_anggota=$id_anggotaD&&id_jabatan=$id_jabatanD&&id_departemen=$id_departemenD&&id_unit=$id_unitD");
+                                    }
                                 }
                                 else if(isset($_POST['tombolHapusC']))
                                 {
                                     $eksekusi = $db->hapus_catatan($id_anggotaD, $id_jabatanD, $id_departemenD, $id_unitD, $idA);
                                     if($eksekusi == 2 || $eksekusi == 3)
                                         echo '<center><div style="background-color:red; width:20%; color:white; padding:5px; margin-bottom:1%;">Data Gagal Dihapus</div></center>';
+                                    else if($eksekusi == 1) 
+                                        header("location:detail_kpi.php?id_anggota=$id_anggotaD&&id_jabatan=$id_jabatanD&&id_departemen=$id_departemenD&&id_unit=$id_unitD");
                                 }
 
                                 if($db->hitung_perubahan_usulan($id_anggotaD, $id_jabatanD, $id_departemenD, $id_unitD, $idA) > 0)

@@ -709,6 +709,15 @@
 				$hasil[] = $tampil;
 			return $hasil;
 		}
+
+		function tampil_usulan_mutasi($id_periode = null, $id_jabatan = null, $id_departemen = null, $id_unit = null)
+		{
+			$hasil = [];
+			$query = $this->connection->query("SELECT mp.*, a.nik, a.nama, a.nomor_hp, a.email FROM mutasi_pegawai mp LEFT JOIN mst_anggota a ON mp.id_anggota = a.id_anggota WHERE mp.id_periode = '$id_periode'");
+			while($tampil = $query->fetch_array())
+				$hasil[] = $tampil;
+			return $hasil;
+		}
 		//Akhiran Fungsi Tampil
 
 		//Fungsi Input
@@ -927,7 +936,7 @@
 			}
 
 			if($k == 1)
-				header("location:detail_kpi.php?id_anggota=$id_anggota&&id_jabatan=$id_jabatan&&id_departemen=$id_departemen&&id_unit=$id_unit");
+				return 1;
 			else 
 				return 2;
 		}
@@ -1853,34 +1862,42 @@
 				$hapus = $this->connection->prepare($query);
 				if($hapus->execute())
 				{
-					$query2 = "DELETE FROM perubahan_usulan_kpi WHERE id_kpi = '$id_kpi' AND id_periode = '$id_periode' AND id_anggota = '$id_anggota' AND id_jabatan = '$id_jabatan' AND id_departemen = '$id_departemen' AND id_unit = '$id_unit'";
-					$hapus2 = $this->connection->prepare($query2);
-					if($hapus2->execute())
-					{	
-						$query3 = "DELETE FROM data_realisasi_kpi WHERE id_kpi = '$id_kpi' AND id_periode = '$id_periode'";
-						$hapus3 = $this->connection->preapre($query3);
-						if($hapus3->execute())
-						{
-							$query4 = "DELETE FROM data_realisasi_verifikasi WHERE id_kpi_asli = '$id_kpi'";
-							$hapus4 = $this->connection->prepare($query4);
-							if($hapus4->execute())
+					$query1 = "DELETE FROM data_kpi_verifikasi WHERE id_kpi_asli = '$id_kpi'";
+					$hapus1 = $this->connection->prepare($query1);
+					if($hapus1->execute())
+					{
+						$query2 = "DELETE FROM perubahan_usulan_kpi WHERE id_kpi = '$id_kpi' AND id_periode = '$id_periode' AND id_anggota = '$id_anggota' AND id_jabatan = '$id_jabatan' AND id_departemen = '$id_departemen' AND id_unit = '$id_unit'";
+						$hapus2 = $this->connection->prepare($query2);
+						if($hapus2->execute())
+						{	
+							$query3 = "DELETE FROM data_realisasi_kpi WHERE id_kpi = '$id_kpi' AND id_periode = '$id_periode'";
+							$hapus3 = $this->connection->preapre($query3);
+							if($hapus3->execute())
 							{
-								$query5 = "DELETE FROM perubahan_usulan_realisasi WHERE id_kpi_asli = '$id_kpi'";
-								$hapus5 = $this->connection->prepare($query5);
-								if($hapus5->execute())
-									return 1;
-								else 
+								$query4 = "DELETE FROM data_realisasi_verifikasi WHERE id_kpi_asli = '$id_kpi'";
+								$hapus4 = $this->connection->prepare($query4);
+								if($hapus4->execute())
+								{
+									$query5 = "DELETE FROM perubahan_usulan_realisasi WHERE id_kpi_asli = '$id_kpi'";
+									$hapus5 = $this->connection->prepare($query5);
+									if($hapus5->execute())
+										return 1;
+									else 
+										return 2;
+								}
+								else{
 									return 2;
+								}
 							}
 							else{
 								return 2;
 							}
 						}
-						else{
+						else {
 							return 2;
 						}
 					}
-					else {
+					else{
 						return 2;
 					}
 				}
@@ -1892,7 +1909,6 @@
 			else {
 				return 3;
 			}
-			// return $id_kpi.' - Anggota :'.$id_anggota.' - Jabatan :'.$id_jabatan.' - Departemen :'.$id_departemen.' - Unit :'.$id_unit.' - Periode :'.$id_periode.' - Jenis :'.$jenis;
 		}
 
 		function hapus_aturan($id_aturan = null)
@@ -2903,6 +2919,15 @@
 			else
 				$query = $this->connection->query("SELECT * FROM perubahan_kompetensi WHERE id_anggota = '$id_anggota' AND id_jabatan = '$id_jabatan' AND id_departemen = '$id_departemen' AND id_unit = '$id_unit' AND id_periode = '$id_periode'");
 			$jml = 0;
+			while($tampil = $query->fetch_array())
+				$jml = $jml+1;
+			return $jml;
+		}
+
+		function hitung_pegawai_mutasi($id_periode = null, $id_jabatan = null, $id_departemen = null, $id_unit = null)
+		{
+			$jml = 0;
+			$query = $this->connection->query("SELECT * FROM mutasi_pegawai WHERE id_jabatan_lama = '$id_jabatan' AND id_departemen_lama = '$id_departemen' AND id_unit_lama = '$id_unit' AND id_periode = '$id_periode'");
 			while($tampil = $query->fetch_array())
 				$jml = $jml+1;
 			return $jml;

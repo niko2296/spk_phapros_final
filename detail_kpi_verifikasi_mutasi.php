@@ -17,6 +17,10 @@
     $id_unitD = $_SESSION['id_unit'];
     $idA = 'kosong';
 
+    $id_jabatanD2 = $_GET['id_jabatan_lama'];
+    $id_departemenD2 = $_GET['id_departemen_lama'];
+    $id_unitD2 = $_GET['id_unit_lama'];
+
     foreach($db->tampil_periode() as $tampilP)
     {
         if($tampilP['status'] == 1)
@@ -225,7 +229,15 @@
                 <div class="content container-fluid">
 					<div class="row">
 						<div class="col-xs-12">
-							<h4 class="page-title">Data KPI Sub Ordinat Mutasi</h4>
+							<h4 class="page-title">
+                                <?php
+                                    $nj = $db->tampil_jabatan_detail($id_jabatanD2, 1);
+                                    $nd = $db->tampil_jabatan_detail($id_departemenD2, 2);
+                                    $nu = $db->tampil_jabatan_detail($id_unitD2, 3);
+                                        
+                                    echo 'Detail KPI Sub Ordinat Mutasi <b>('.$nj.' - '.$nd.' - '.$nu.')</b>';
+                                ?>
+                            </h4>
 						</div>
 					</div>
                     <div class="row" style="border:1px solid black;color:black; background-color:white; padding:1%;">
@@ -234,25 +246,25 @@
                                 <table class="table table-striped custom-table m-b-0 display" id="tabel2">
                                     <thead>
                                         <tr>
-                                            <th>Jabatan</th>
-                                            <th>Departemen</th>
-                                            <th>Unit</th>
-                                            <th>Jumlah Pegawai</th>
+                                            <th>NIK</th>
+                                            <th>Nama Pegawai</th>
+                                            <th>Nomor HP</th>
+                                            <th>Email</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                     <?php
                                         error_reporting(0);
-                                        foreach($db->tampil_jabatan_grup($jabatan, $departemenL, $id_unitD) as $data)
+                                        foreach($db->tampil_usulan_mutasi($idA, $id_jabatanD2, $id_departemenD2, $id_unitD2) as $data)
                                         {
                                     ?>
                                             <tr>
-                                                <td><?php echo $data['nama_jabatan']; ?></td>
-                                                <td><?php echo $data['nama_departemen']; ?></td>
-                                                <td><?php echo $data['nama_unit']; ?></td>
-                                                <td><?php echo $db->hitung_pegawai_mutasi($idA, $data['id_jabatan_dinilai'], $data['id_departemen_dinilai'], $data['id_unit_dinilai']); ?></td>
-                                                <td><a href="detail_kpi_verifikasi_mutasi.php?id_jabatan_lama=<?php echo $data['id_jabatan_dinilai']."&&id_departemen_lama=".$data['id_departemen_dinilai']."&&id_unit_lama=".$data['id_unit_dinilai']; ?>">Detail</a></td>
+                                                <td><?php echo $data['nik']; ?></td>
+                                                <td><?php echo $data['nama']; ?></td>
+                                                <td><?php echo $data['nomor_hp']; ?></td>
+                                                <td><?php echo $data['email']; ?></td>
+                                                <td><a href="detail_kpi_mutasi.php?id_anggota=<?php echo $data['id_anggota']."&&id_jabatan_lama=".$data['id_jabatan_lama']."&&id_departemen_lama=".$data['id_departemen_lama']."&&id_unit_lama=".$data['id_unit_lama']; ?>">Detail Pengajuan KPI</a> <br> <a href="detail_realisasi_mutasi.php?id_anggota=<?php echo $data['id_anggota']."&&id_jabatan_lama=".$data['id_jabatan_lama']."&&id_departemen_lama=".$data['id_departemen_lama']."&&id_unit_lama=".$data['id_unit_lama']; ?>">Detail Realisasi</a></td>
                                             </tr>
                                     <?php
                                         }
@@ -260,6 +272,12 @@
                                     </tbody>
                                 </table>
                             </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-md-12" align="right">
+                            <a class="btn btn-warning" href="data_kpi_verifikasi_mutasi.php">Kembali</a>
                         </div>
                     </div>
                 </div>
