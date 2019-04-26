@@ -2329,6 +2329,15 @@
 			$hasil = $tampil['id_peringkat'];
 			return $hasil;
 		}
+
+		function cek_matriks($id_departemen = null)
+		{
+			$hasil = 0;
+			$query = $this->connection->query("SELECT * FROM aturan_matriks WHERE id_departemen = '$id_departemen'");
+			while($tampil = $query->fetch_array())
+				$hasil = $hasil+1;
+			return $hasil;
+		}
 		//Akhiran Fungsi Cek
 
 		// Fungsi Verifikasi

@@ -201,8 +201,15 @@
 											echo '<li><a href="kompetensi_individu.php">Data Kompetensi Individu</a></li>';
                                         if($eksekusi2 == 1 || $_SESSION['aksus'] == TRUE)
                                         {
-                                            echo '<li><a href="kompetensi_sub.php">Data Kompetensi Sub Ordinat</a></li>';
-                                            echo '<li><a href="kompetensi_sub_mutasi.php">Data Kompetensi Sub Ordinat (Mutasi)</a></li>';
+                                            if($db->cek_matriks($departemenL) <= 0 || $_SESSION['aksus'] == TRUE)
+                                            {
+                                                echo '<li><a href="kompetensi_sub.php">Data Kompetensi Sub Ordinat</a></li>';
+                                                echo '<li><a href="kompetensi_sub_mutasi.php">Data Kompetensi Sub Ordinat (Mutasi)</a></li>';
+                                            }
+                                        }
+                                        if($_SESSION['aksus'] == TRUE || $db->cek_matriks($departemenL) > 0)
+                                        {
+                                            echo '<li><a href="kompetensi_matriks.php">Data Kompetensi Matriks</a></li>';
                                         }
 									?>
                                 </ul>
