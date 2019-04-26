@@ -52,7 +52,7 @@
             <div class="header">
 				<div class="header-left">
                     <a href="index.php" class="logo">
-						<img src="assets/img/logo-phapros.jpg" width="75" height="" alt="">
+						<img src="assets/img/logo.png" width="75" height="" alt="">
 					</a>
                 </div>
 				<a id="toggle_btn" href="javascript:void(0);"><i class="la la-bars"></i></a>

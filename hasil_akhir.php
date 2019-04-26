@@ -41,13 +41,22 @@
 			<script src="assets/js/html5shiv.min.js"></script>
 			<script src="assets/js/respond.min.js"></script>
 		<![endif]-->
+
+        <style type="text/css">
+            th, td {
+                font-family: "Arial";
+                font-size: 10px;
+                padding: 5px;
+                text-align: left;    
+            }
+        </style>
     </head>
     <body>
         <div class="main-wrapper">
             <div class="header">
                 <div class="header-left">
                     <a href="index.php" class="logo">
-						<img src="assets/img/logo-phapros.jpg" width="75" height="" alt="">
+						<img src="assets/img/logo.png" width="75" height="" alt="">
 					</a>
                 </div>
 				<a id="toggle_btn" href="javascript:void(0);"><i class="la la-bars"></i></a>
@@ -229,7 +238,1095 @@
                             </button>
                         </div>
                     </div>
-                    <div id="printArea">
+                    <div id="printArea" style="background-color:white; padding:15px; border:1;">
+                        <div class="row" style="page-break-inside: avoid;">
+                            <div class="col-md-12">
+                                <table width="100%" style="border: 1px solid black; border-collapse: collapse;" border="1">
+                                    <tr>
+                                        <td style="padding:5px;" colspan="2">
+                                            <table width="100%">
+                                                <tr>
+                                                    <td style="padding:10px;">
+                                                        <b>FORMULIR KERJA</b>
+                                                        <br>
+                                                        Document # : HR-FM-G3.04.001.05
+                                                        <br><br>
+                                                        <table style="border: 1px solid black; border-collapse: collapse;" border="1">
+                                                            <tr>
+                                                                <td style="padding:10px;"><b><h7>LEVEL ADMINISTRASI</h7></b></td>
+                                                            </tr></div>
+                                                        </table>
+                                                    </td>
+                                                    <td><div align="right">
+                                                        <table style="border: 1px solid black; border-collapse: collapse;" border="1">
+                                                            <tr>
+                                                                <td style="padding:10px;"><b><h7>BERSIFAT PRIBADI DAN RAHASIA</h7></b></td>
+                                                            </tr></div>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th width="30%"><center><img src="assets/img/logo.png" height="60" ></center></th>
+                                        <th width="70%"><center><br><h1><b>PENILAIAN KINERJA <br> PT PHAPROS</b></h1></center></th>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2" style="padding:5px;"><center><b>Periode Penilaian Januari tahun <?php echo $tA; ?> sampai dengan Desember tahun <?php echo $tA; ?></b></center></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row" style="page-break-inside: avoid;">
+                            <div class="col-md-12">
+                                <?php
+                                    foreach($db->tampil_anggota($id_anggota) as $tampil)
+                                    {
+                                        $nama_pegawai = $tampil['nama'];
+                                        $jk_pegawai = $tampil['jenis_kelamin'];
+                                        $golongan_pegawai = $tampil['nama_golongan'];
+                                        $jabatan_pegawai = $tampil['nama_jabatan'];
+                                        $departemen_pegawai = $tampil['nama_departemen'];
+                                        $unit_pegawai = $tampil['nama_unit'];
+                                    }
+                                ?>
+                                <table width="100%" style="border: 1px solid black; border-collapse: collapse;" border="1">
+                                    <tr>
+                                        <td colspan="5" style="padding:10px;"><b><center>- IDENTITAS PEGAWAI -</center></b></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:5px"><b><center>NAMA PEGAWAI</center></b></td>
+                                        <td style="padding:5px"><b><center>GOLONGAN</center></b></td>
+                                        <td style="padding:5px"><b><center>JABATAN</center></b></td>
+                                        <td style="padding:5px"><b><center>DEPARTEMEN</center></b></td>
+                                        <td style="padding:5px"><b><center>UNIT</center></b></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:5px;"><?php echo $nama_pegawai; ?></td>
+                                        <td style="padding:5px;"><?php echo $golongan_pegawai; ?></td>
+                                        <td style="padding:5px;"><?php echo $jabatan_pegawai; ?></td>
+                                        <td style="padding:5px;"><?php echo $departemen_pegawai; ?></td>
+                                        <td style="padding:5px;"><?php echo $unit_pegawai; ?></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row" style="page-break-inside: avoid;">
+                            <div class="col-md-12">
+                                <table width="100%">
+                                    <tr>
+                                        <td width="50%">
+                                            <table width="100%" style="border: 1px solid black; border-collapse: collapse;" border="1">
+                                                <tr>
+                                                    <td colspan="5" style="padding:10px;"><b><center>- IDENTITAS PENILAI KPI -</center></b></td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="padding:5px" width="20%"><b><center>NAMA</center></b></td>
+                                                    <td style="padding:5px" width="20%"><b><center>GOLONGAN</center></b></td>
+                                                    <td style="padding:5px" width="20%"><b><center>JABATAN</center></b></td>
+                                                    <td style="padding:5px" width="20%"><b><center>DEPARTEMEN</center></b></td>
+                                                    <td style="padding:5px" width="20%"><b><center>UNIT</center></b></td>
+                                                </tr>
+                                                <?php
+                                                    $c = 0;
+                                                    foreach($db->tampil_penilai_kpi($id_anggota, $idA) as $tampil)
+                                                    {
+                                                        foreach($db->tampil_anggota_detail($tampil['id_verifikator'], $tampil['id_jabatan_verifikator'], $tampil['id_departemen_verifikator'], $tampil['id_unit_verifikator']) as $tampil2)
+                                                            echo '<tr>
+                                                                        <td style="padding:5px">'.$tampil2['nama'].'</td>
+                                                                        <td style="padding:5px">'.$tampil2['nama_golongan'].'</td>
+                                                                        <td style="padding:5px">'.$tampil2['nama_jabatan'].'</td>
+                                                                        <td style="padding:5px">'.$tampil2['nama_departemen'].'</td>
+                                                                        <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                                    </tr>';
+                                                        $c = $c+1;
+                                                    }
+
+                                                    if($c == 0)
+                                                    {
+                                                        echo '
+                                                            <tr>
+                                                                <td colspan="5" align="center" style="padding:5px">Data Kosong</td>
+                                                            </tr>
+                                                        ';
+                                                    }
+                                                ?>
+                                            </table>
+                                        </td>
+                                        <td width="50%">
+                                            <table width="100%" style="border: 1px solid black; border-collapse: collapse;" border="1">
+                                                <tr>
+                                                    <td colspan="5" style="padding:10px;"><b><center>- IDENTITAS PENILAI KOMPETENSI -</center></b></td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="padding:5px" width="20%"><b><center>NAMA</center></b></td>
+                                                    <td style="padding:5px" width="20%"><b><center>GOLONGAN</center></b></td>
+                                                    <td style="padding:5px" width="20%"><b><center>JABATAN</center></b></td>
+                                                    <td style="padding:5px" width="20%"><b><center>DEPARTEMEN</center></b></td>
+                                                    <td style="padding:5px" width="20%"><b><center>UNIT</center></b></td>
+                                                </tr>
+                                                <?php
+                                                    $c = 0;
+                                                    foreach($db->tampil_penilai_kompetensi($id_anggota, $idA) as $tampil)
+                                                    {
+                                                        foreach($db->tampil_anggota_detail($tampil['id_verifikator'], $tampil['id_jabatan_verifikator'], $tampil['id_departemen_verifikator'], $tampil['id_unit_verifikator']) as $tampil2)
+                                                            echo '<tr>
+                                                                        <td style="padding:5px">'.$tampil2['nama'].'</td>
+                                                                        <td style="padding:5px">'.$tampil2['nama_golongan'].'</td>
+                                                                        <td style="padding:5px">'.$tampil2['nama_jabatan'].'</td>
+                                                                        <td style="padding:5px">'.$tampil2['nama_departemen'].'</td>
+                                                                        <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                                    </tr>';
+                                                        $c = $c+1;
+                                                    }
+
+                                                    if($c == 0)
+                                                    {
+                                                        echo '
+                                                            <tr>
+                                                                <td colspan="5" align="center" style="padding:5px">Data Kosong</td>
+                                                            </tr>
+                                                        ';
+                                                    }
+                                                ?>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row" style="page-break-inside: avoid;">
+                            <div class="col-md-12">
+                                <table width="100%" style="border: 1px solid black; border-collapse: collapse;" border="1">
+                                    <tr>
+                                        <td colspan="9" style="padding:10px;"><b><center>- DATA KPI JABATAN SAAT INI -</center></b></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:5px" width="15%"><b><center>KPI</center></b></td>
+                                        <td style="padding:5px" width="15%"><b><center>DESKRIPSI</center></b></td>
+                                        <td style="padding:5px" width="10%"><b><center>% BOBOT</center></b></td>
+                                        <td style="padding:5px" width="10%"><b><center>SASARAN / TARGET</center></b></td>
+                                        <td style="padding:5px" width="10%"><b><center>SATUAN</center></b></td>
+                                        <td style="padding:5px" width="10%"><b><center>SIFAT KPI</center></b></td>
+                                        <td style="padding:5px" width="10%"><b><center>REALISASI</center></b></td>
+                                        <td style="padding:5px" width="10%"><b><center>SKOR</center></b></td>
+                                        <td style="padding:5px" width="10%"><b><center>NILAI</center></b></td>
+                                    </tr>
+                                    <?php
+                                        $c = 0;
+                                        foreach($db->tampil_penilai_kompetensi($id_anggota, $idA) as $tampil)
+                                        {
+                                            foreach($db->tampil_anggota_detail($tampil['id_verifikator'], $tampil['id_jabatan_verifikator'], $tampil['id_departemen_verifikator'], $tampil['id_unit_verifikator']) as $tampil2)
+                                                echo '<tr>
+                                                            <td style="padding:5px">'.$tampil2['nama'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_golongan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_jabatan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_departemen'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                        </tr>';
+                                            $c = $c+1;
+                                        }
+                                        foreach($db->tampil_penilai_kompetensi($id_anggota, $idA) as $tampil)
+                                        {
+                                            foreach($db->tampil_anggota_detail($tampil['id_verifikator'], $tampil['id_jabatan_verifikator'], $tampil['id_departemen_verifikator'], $tampil['id_unit_verifikator']) as $tampil2)
+                                                echo '<tr>
+                                                            <td style="padding:5px">'.$tampil2['nama'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_golongan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_jabatan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_departemen'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                        </tr>';
+                                            $c = $c+1;
+                                        }
+                                        foreach($db->tampil_penilai_kompetensi($id_anggota, $idA) as $tampil)
+                                        {
+                                            foreach($db->tampil_anggota_detail($tampil['id_verifikator'], $tampil['id_jabatan_verifikator'], $tampil['id_departemen_verifikator'], $tampil['id_unit_verifikator']) as $tampil2)
+                                                echo '<tr>
+                                                            <td style="padding:5px">'.$tampil2['nama'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_golongan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_jabatan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_departemen'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                        </tr>';
+                                            $c = $c+1;
+                                        }
+                                        
+                                        foreach($db->tampil_penilai_kompetensi($id_anggota, $idA) as $tampil)
+                                        {
+                                            foreach($db->tampil_anggota_detail($tampil['id_verifikator'], $tampil['id_jabatan_verifikator'], $tampil['id_departemen_verifikator'], $tampil['id_unit_verifikator']) as $tampil2)
+                                                echo '<tr>
+                                                            <td style="padding:5px">'.$tampil2['nama'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_golongan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_jabatan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_departemen'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                        </tr>';
+                                            $c = $c+1;
+                                        }
+                                        foreach($db->tampil_penilai_kompetensi($id_anggota, $idA) as $tampil)
+                                        {
+                                            foreach($db->tampil_anggota_detail($tampil['id_verifikator'], $tampil['id_jabatan_verifikator'], $tampil['id_departemen_verifikator'], $tampil['id_unit_verifikator']) as $tampil2)
+                                                echo '<tr>
+                                                            <td style="padding:5px">'.$tampil2['nama'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_golongan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_jabatan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_departemen'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                        </tr>';
+                                            $c = $c+1;
+                                        }
+                                        
+                                        foreach($db->tampil_penilai_kompetensi($id_anggota, $idA) as $tampil)
+                                        {
+                                            foreach($db->tampil_anggota_detail($tampil['id_verifikator'], $tampil['id_jabatan_verifikator'], $tampil['id_departemen_verifikator'], $tampil['id_unit_verifikator']) as $tampil2)
+                                                echo '<tr>
+                                                            <td style="padding:5px">'.$tampil2['nama'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_golongan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_jabatan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_departemen'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                        </tr>';
+                                            $c = $c+1;
+                                        }
+                                        foreach($db->tampil_penilai_kompetensi($id_anggota, $idA) as $tampil)
+                                        {
+                                            foreach($db->tampil_anggota_detail($tampil['id_verifikator'], $tampil['id_jabatan_verifikator'], $tampil['id_departemen_verifikator'], $tampil['id_unit_verifikator']) as $tampil2)
+                                                echo '<tr>
+                                                            <td style="padding:5px">'.$tampil2['nama'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_golongan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_jabatan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_departemen'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                        </tr>';
+                                            $c = $c+1;
+                                        }
+                                        
+                                        foreach($db->tampil_penilai_kompetensi($id_anggota, $idA) as $tampil)
+                                        {
+                                            foreach($db->tampil_anggota_detail($tampil['id_verifikator'], $tampil['id_jabatan_verifikator'], $tampil['id_departemen_verifikator'], $tampil['id_unit_verifikator']) as $tampil2)
+                                                echo '<tr>
+                                                            <td style="padding:5px">'.$tampil2['nama'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_golongan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_jabatan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_departemen'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                        </tr>';
+                                            $c = $c+1;
+                                        }
+                                        foreach($db->tampil_penilai_kompetensi($id_anggota, $idA) as $tampil)
+                                        {
+                                            foreach($db->tampil_anggota_detail($tampil['id_verifikator'], $tampil['id_jabatan_verifikator'], $tampil['id_departemen_verifikator'], $tampil['id_unit_verifikator']) as $tampil2)
+                                                echo '<tr>
+                                                            <td style="padding:5px">'.$tampil2['nama'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_golongan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_jabatan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_departemen'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                        </tr>';
+                                            $c = $c+1;
+                                        }
+                                        
+                                        foreach($db->tampil_penilai_kompetensi($id_anggota, $idA) as $tampil)
+                                        {
+                                            foreach($db->tampil_anggota_detail($tampil['id_verifikator'], $tampil['id_jabatan_verifikator'], $tampil['id_departemen_verifikator'], $tampil['id_unit_verifikator']) as $tampil2)
+                                                echo '<tr>
+                                                            <td style="padding:5px">'.$tampil2['nama'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_golongan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_jabatan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_departemen'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                        </tr>';
+                                            $c = $c+1;
+                                        }
+                                        foreach($db->tampil_penilai_kompetensi($id_anggota, $idA) as $tampil)
+                                        {
+                                            foreach($db->tampil_anggota_detail($tampil['id_verifikator'], $tampil['id_jabatan_verifikator'], $tampil['id_departemen_verifikator'], $tampil['id_unit_verifikator']) as $tampil2)
+                                                echo '<tr>
+                                                            <td style="padding:5px">'.$tampil2['nama'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_golongan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_jabatan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_departemen'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                        </tr>';
+                                            $c = $c+1;
+                                        }
+                                        
+                                        foreach($db->tampil_penilai_kompetensi($id_anggota, $idA) as $tampil)
+                                        {
+                                            foreach($db->tampil_anggota_detail($tampil['id_verifikator'], $tampil['id_jabatan_verifikator'], $tampil['id_departemen_verifikator'], $tampil['id_unit_verifikator']) as $tampil2)
+                                                echo '<tr>
+                                                            <td style="padding:5px">'.$tampil2['nama'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_golongan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_jabatan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_departemen'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                        </tr>';
+                                            $c = $c+1;
+                                        }
+                                        foreach($db->tampil_penilai_kompetensi($id_anggota, $idA) as $tampil)
+                                        {
+                                            foreach($db->tampil_anggota_detail($tampil['id_verifikator'], $tampil['id_jabatan_verifikator'], $tampil['id_departemen_verifikator'], $tampil['id_unit_verifikator']) as $tampil2)
+                                                echo '<tr>
+                                                            <td style="padding:5px">'.$tampil2['nama'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_golongan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_jabatan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_departemen'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                        </tr>';
+                                            $c = $c+1;
+                                        }
+                                        
+                                        foreach($db->tampil_penilai_kompetensi($id_anggota, $idA) as $tampil)
+                                        {
+                                            foreach($db->tampil_anggota_detail($tampil['id_verifikator'], $tampil['id_jabatan_verifikator'], $tampil['id_departemen_verifikator'], $tampil['id_unit_verifikator']) as $tampil2)
+                                                echo '<tr>
+                                                            <td style="padding:5px">'.$tampil2['nama'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_golongan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_jabatan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_departemen'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                        </tr>';
+                                            $c = $c+1;
+                                        }
+                                        foreach($db->tampil_penilai_kompetensi($id_anggota, $idA) as $tampil)
+                                        {
+                                            foreach($db->tampil_anggota_detail($tampil['id_verifikator'], $tampil['id_jabatan_verifikator'], $tampil['id_departemen_verifikator'], $tampil['id_unit_verifikator']) as $tampil2)
+                                                echo '<tr>
+                                                            <td style="padding:5px">'.$tampil2['nama'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_golongan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_jabatan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_departemen'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                        </tr>';
+                                            $c = $c+1;
+                                        }
+                                        
+                                        foreach($db->tampil_penilai_kompetensi($id_anggota, $idA) as $tampil)
+                                        {
+                                            foreach($db->tampil_anggota_detail($tampil['id_verifikator'], $tampil['id_jabatan_verifikator'], $tampil['id_departemen_verifikator'], $tampil['id_unit_verifikator']) as $tampil2)
+                                                echo '<tr>
+                                                            <td style="padding:5px">'.$tampil2['nama'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_golongan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_jabatan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_departemen'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                        </tr>';
+                                            $c = $c+1;
+                                        }
+                                        foreach($db->tampil_penilai_kompetensi($id_anggota, $idA) as $tampil)
+                                        {
+                                            foreach($db->tampil_anggota_detail($tampil['id_verifikator'], $tampil['id_jabatan_verifikator'], $tampil['id_departemen_verifikator'], $tampil['id_unit_verifikator']) as $tampil2)
+                                                echo '<tr>
+                                                            <td style="padding:5px">'.$tampil2['nama'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_golongan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_jabatan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_departemen'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                        </tr>';
+                                            $c = $c+1;
+                                        }
+                                        
+                                        foreach($db->tampil_penilai_kompetensi($id_anggota, $idA) as $tampil)
+                                        {
+                                            foreach($db->tampil_anggota_detail($tampil['id_verifikator'], $tampil['id_jabatan_verifikator'], $tampil['id_departemen_verifikator'], $tampil['id_unit_verifikator']) as $tampil2)
+                                                echo '<tr>
+                                                            <td style="padding:5px">'.$tampil2['nama'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_golongan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_jabatan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_departemen'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                        </tr>';
+                                            $c = $c+1;
+                                        }
+                                        foreach($db->tampil_penilai_kompetensi($id_anggota, $idA) as $tampil)
+                                        {
+                                            foreach($db->tampil_anggota_detail($tampil['id_verifikator'], $tampil['id_jabatan_verifikator'], $tampil['id_departemen_verifikator'], $tampil['id_unit_verifikator']) as $tampil2)
+                                                echo '<tr>
+                                                            <td style="padding:5px">'.$tampil2['nama'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_golongan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_jabatan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_departemen'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                        </tr>';
+                                            $c = $c+1;
+                                        }
+                                        
+                                        foreach($db->tampil_penilai_kompetensi($id_anggota, $idA) as $tampil)
+                                        {
+                                            foreach($db->tampil_anggota_detail($tampil['id_verifikator'], $tampil['id_jabatan_verifikator'], $tampil['id_departemen_verifikator'], $tampil['id_unit_verifikator']) as $tampil2)
+                                                echo '<tr>
+                                                            <td style="padding:5px">'.$tampil2['nama'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_golongan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_jabatan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_departemen'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                        </tr>';
+                                            $c = $c+1;
+                                        }
+                                        foreach($db->tampil_penilai_kompetensi($id_anggota, $idA) as $tampil)
+                                        {
+                                            foreach($db->tampil_anggota_detail($tampil['id_verifikator'], $tampil['id_jabatan_verifikator'], $tampil['id_departemen_verifikator'], $tampil['id_unit_verifikator']) as $tampil2)
+                                                echo '<tr>
+                                                            <td style="padding:5px">'.$tampil2['nama'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_golongan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_jabatan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_departemen'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                        </tr>';
+                                            $c = $c+1;
+                                        }
+                                        
+                                        foreach($db->tampil_penilai_kompetensi($id_anggota, $idA) as $tampil)
+                                        {
+                                            foreach($db->tampil_anggota_detail($tampil['id_verifikator'], $tampil['id_jabatan_verifikator'], $tampil['id_departemen_verifikator'], $tampil['id_unit_verifikator']) as $tampil2)
+                                                echo '<tr>
+                                                            <td style="padding:5px">'.$tampil2['nama'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_golongan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_jabatan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_departemen'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                        </tr>';
+                                            $c = $c+1;
+                                        }
+                                        foreach($db->tampil_penilai_kompetensi($id_anggota, $idA) as $tampil)
+                                        {
+                                            foreach($db->tampil_anggota_detail($tampil['id_verifikator'], $tampil['id_jabatan_verifikator'], $tampil['id_departemen_verifikator'], $tampil['id_unit_verifikator']) as $tampil2)
+                                                echo '<tr>
+                                                            <td style="padding:5px">'.$tampil2['nama'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_golongan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_jabatan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_departemen'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                        </tr>';
+                                            $c = $c+1;
+                                        }
+                                        
+                                        foreach($db->tampil_penilai_kompetensi($id_anggota, $idA) as $tampil)
+                                        {
+                                            foreach($db->tampil_anggota_detail($tampil['id_verifikator'], $tampil['id_jabatan_verifikator'], $tampil['id_departemen_verifikator'], $tampil['id_unit_verifikator']) as $tampil2)
+                                                echo '<tr>
+                                                            <td style="padding:5px">'.$tampil2['nama'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_golongan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_jabatan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_departemen'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                        </tr>';
+                                            $c = $c+1;
+                                        }
+                                        foreach($db->tampil_penilai_kompetensi($id_anggota, $idA) as $tampil)
+                                        {
+                                            foreach($db->tampil_anggota_detail($tampil['id_verifikator'], $tampil['id_jabatan_verifikator'], $tampil['id_departemen_verifikator'], $tampil['id_unit_verifikator']) as $tampil2)
+                                                echo '<tr>
+                                                            <td style="padding:5px">'.$tampil2['nama'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_golongan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_jabatan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_departemen'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                        </tr>';
+                                            $c = $c+1;
+                                        }
+                                        
+                                        foreach($db->tampil_penilai_kompetensi($id_anggota, $idA) as $tampil)
+                                        {
+                                            foreach($db->tampil_anggota_detail($tampil['id_verifikator'], $tampil['id_jabatan_verifikator'], $tampil['id_departemen_verifikator'], $tampil['id_unit_verifikator']) as $tampil2)
+                                                echo '<tr>
+                                                            <td style="padding:5px">'.$tampil2['nama'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_golongan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_jabatan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_departemen'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                        </tr>';
+                                            $c = $c+1;
+                                        }
+                                        foreach($db->tampil_penilai_kompetensi($id_anggota, $idA) as $tampil)
+                                        {
+                                            foreach($db->tampil_anggota_detail($tampil['id_verifikator'], $tampil['id_jabatan_verifikator'], $tampil['id_departemen_verifikator'], $tampil['id_unit_verifikator']) as $tampil2)
+                                                echo '<tr>
+                                                            <td style="padding:5px">'.$tampil2['nama'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_golongan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_jabatan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_departemen'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                        </tr>';
+                                            $c = $c+1;
+                                        }
+                                        
+                                        foreach($db->tampil_penilai_kompetensi($id_anggota, $idA) as $tampil)
+                                        {
+                                            foreach($db->tampil_anggota_detail($tampil['id_verifikator'], $tampil['id_jabatan_verifikator'], $tampil['id_departemen_verifikator'], $tampil['id_unit_verifikator']) as $tampil2)
+                                                echo '<tr>
+                                                            <td style="padding:5px">'.$tampil2['nama'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_golongan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_jabatan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_departemen'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                        </tr>';
+                                            $c = $c+1;
+                                        }
+                                        foreach($db->tampil_penilai_kompetensi($id_anggota, $idA) as $tampil)
+                                        {
+                                            foreach($db->tampil_anggota_detail($tampil['id_verifikator'], $tampil['id_jabatan_verifikator'], $tampil['id_departemen_verifikator'], $tampil['id_unit_verifikator']) as $tampil2)
+                                                echo '<tr>
+                                                            <td style="padding:5px">'.$tampil2['nama'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_golongan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_jabatan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_departemen'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                        </tr>';
+                                            $c = $c+1;
+                                        }
+                                        
+                                        foreach($db->tampil_penilai_kompetensi($id_anggota, $idA) as $tampil)
+                                        {
+                                            foreach($db->tampil_anggota_detail($tampil['id_verifikator'], $tampil['id_jabatan_verifikator'], $tampil['id_departemen_verifikator'], $tampil['id_unit_verifikator']) as $tampil2)
+                                                echo '<tr>
+                                                            <td style="padding:5px">'.$tampil2['nama'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_golongan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_jabatan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_departemen'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                        </tr>';
+                                            $c = $c+1;
+                                        }
+                                        foreach($db->tampil_penilai_kompetensi($id_anggota, $idA) as $tampil)
+                                        {
+                                            foreach($db->tampil_anggota_detail($tampil['id_verifikator'], $tampil['id_jabatan_verifikator'], $tampil['id_departemen_verifikator'], $tampil['id_unit_verifikator']) as $tampil2)
+                                                echo '<tr>
+                                                            <td style="padding:5px">'.$tampil2['nama'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_golongan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_jabatan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_departemen'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                        </tr>';
+                                            $c = $c+1;
+                                        }
+                                        foreach($db->tampil_penilai_kompetensi($id_anggota, $idA) as $tampil)
+                                        {
+                                            foreach($db->tampil_anggota_detail($tampil['id_verifikator'], $tampil['id_jabatan_verifikator'], $tampil['id_departemen_verifikator'], $tampil['id_unit_verifikator']) as $tampil2)
+                                                echo '<tr>
+                                                            <td style="padding:5px">'.$tampil2['nama'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_golongan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_jabatan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_departemen'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                        </tr>';
+                                            $c = $c+1;
+                                        }
+                                        foreach($db->tampil_penilai_kompetensi($id_anggota, $idA) as $tampil)
+                                        {
+                                            foreach($db->tampil_anggota_detail($tampil['id_verifikator'], $tampil['id_jabatan_verifikator'], $tampil['id_departemen_verifikator'], $tampil['id_unit_verifikator']) as $tampil2)
+                                                echo '<tr>
+                                                            <td style="padding:5px">'.$tampil2['nama'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_golongan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_jabatan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_departemen'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                        </tr>';
+                                            $c = $c+1;
+                                        }
+                                        foreach($db->tampil_penilai_kompetensi($id_anggota, $idA) as $tampil)
+                                        {
+                                            foreach($db->tampil_anggota_detail($tampil['id_verifikator'], $tampil['id_jabatan_verifikator'], $tampil['id_departemen_verifikator'], $tampil['id_unit_verifikator']) as $tampil2)
+                                                echo '<tr>
+                                                            <td style="padding:5px">'.$tampil2['nama'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_golongan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_jabatan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_departemen'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                        </tr>';
+                                            $c = $c+1;
+                                        }
+                                        foreach($db->tampil_penilai_kompetensi($id_anggota, $idA) as $tampil)
+                                        {
+                                            foreach($db->tampil_anggota_detail($tampil['id_verifikator'], $tampil['id_jabatan_verifikator'], $tampil['id_departemen_verifikator'], $tampil['id_unit_verifikator']) as $tampil2)
+                                                echo '<tr>
+                                                            <td style="padding:5px">'.$tampil2['nama'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_golongan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_jabatan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_departemen'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                        </tr>';
+                                            $c = $c+1;
+                                        }
+                                        foreach($db->tampil_penilai_kompetensi($id_anggota, $idA) as $tampil)
+                                        {
+                                            foreach($db->tampil_anggota_detail($tampil['id_verifikator'], $tampil['id_jabatan_verifikator'], $tampil['id_departemen_verifikator'], $tampil['id_unit_verifikator']) as $tampil2)
+                                                echo '<tr>
+                                                            <td style="padding:5px">'.$tampil2['nama'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_golongan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_jabatan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_departemen'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                        </tr>';
+                                            $c = $c+1;
+                                        }
+                                        foreach($db->tampil_penilai_kompetensi($id_anggota, $idA) as $tampil)
+                                        {
+                                            foreach($db->tampil_anggota_detail($tampil['id_verifikator'], $tampil['id_jabatan_verifikator'], $tampil['id_departemen_verifikator'], $tampil['id_unit_verifikator']) as $tampil2)
+                                                echo '<tr>
+                                                            <td style="padding:5px">'.$tampil2['nama'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_golongan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_jabatan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_departemen'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                        </tr>';
+                                            $c = $c+1;
+                                        }
+                                        foreach($db->tampil_penilai_kompetensi($id_anggota, $idA) as $tampil)
+                                        {
+                                            foreach($db->tampil_anggota_detail($tampil['id_verifikator'], $tampil['id_jabatan_verifikator'], $tampil['id_departemen_verifikator'], $tampil['id_unit_verifikator']) as $tampil2)
+                                                echo '<tr>
+                                                            <td style="padding:5px">'.$tampil2['nama'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_golongan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_jabatan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_departemen'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                        </tr>';
+                                            $c = $c+1;
+                                        }
+                                        foreach($db->tampil_penilai_kompetensi($id_anggota, $idA) as $tampil)
+                                        {
+                                            foreach($db->tampil_anggota_detail($tampil['id_verifikator'], $tampil['id_jabatan_verifikator'], $tampil['id_departemen_verifikator'], $tampil['id_unit_verifikator']) as $tampil2)
+                                                echo '<tr>
+                                                            <td style="padding:5px">'.$tampil2['nama'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_golongan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_jabatan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_departemen'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                        </tr>';
+                                            $c = $c+1;
+                                        }
+                                        foreach($db->tampil_penilai_kompetensi($id_anggota, $idA) as $tampil)
+                                        {
+                                            foreach($db->tampil_anggota_detail($tampil['id_verifikator'], $tampil['id_jabatan_verifikator'], $tampil['id_departemen_verifikator'], $tampil['id_unit_verifikator']) as $tampil2)
+                                                echo '<tr>
+                                                            <td style="padding:5px">'.$tampil2['nama'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_golongan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_jabatan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_departemen'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                        </tr>';
+                                            $c = $c+1;
+                                        }
+                                        foreach($db->tampil_penilai_kompetensi($id_anggota, $idA) as $tampil)
+                                        {
+                                            foreach($db->tampil_anggota_detail($tampil['id_verifikator'], $tampil['id_jabatan_verifikator'], $tampil['id_departemen_verifikator'], $tampil['id_unit_verifikator']) as $tampil2)
+                                                echo '<tr>
+                                                            <td style="padding:5px">'.$tampil2['nama'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_golongan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_jabatan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_departemen'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                        </tr>';
+                                            $c = $c+1;
+                                        }
+
+                                        if($c == 0)
+                                        {
+                                            echo '
+                                                <tr>
+                                                    <td colspan="5" align="center" style="padding:5px">Data Kosong</td>
+                                                </tr>
+                                            ';
+                                        }
+
+                                        echo '
+                                            <td style="padding:5px" colspan="2"><b><center>TOTAL NILAI KPI</center></b></td>
+                                            <td style="padding:5px"><b><center>0</center></b></td>
+                                            <td style="padding:5px" colspan="5"><b><center></center></b></td>
+                                            <td style="padding:5px"><b><center>0</center></b></td>
+                                        ';
+                                    ?>
+                                </table>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row" style="page-break-inside: avoid;">
+                            <div class="col-md-12">
+                                <table width="100%" style="border: 1px solid black; border-collapse: collapse;" border="1">
+                                    <tr>
+                                        <td colspan="9" style="padding:10px;"><b><center>- DATA KPI MUTASI JABATAN -</center></b></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:5px" width="15%"><b><center>KPI</center></b></td>
+                                        <td style="padding:5px" width="15%"><b><center>DESKRIPSI</center></b></td>
+                                        <td style="padding:5px" width="10%"><b><center>% BOBOT</center></b></td>
+                                        <td style="padding:5px" width="10%"><b><center>SASARAN / TARGET</center></b></td>
+                                        <td style="padding:5px" width="10%"><b><center>SATUAN</center></b></td>
+                                        <td style="padding:5px" width="10%"><b><center>SIFAT KPI</center></b></td>
+                                        <td style="padding:5px" width="10%"><b><center>REALISASI</center></b></td>
+                                        <td style="padding:5px" width="10%"><b><center>SKOR</center></b></td>
+                                        <td style="padding:5px" width="10%"><b><center>NILAI</center></b></td>
+                                    </tr>
+                                    <?php
+                                        $c = 0;
+                                        foreach($db->tampil_penilai_kompetensi($id_anggota, $idA) as $tampil)
+                                        {
+                                            foreach($db->tampil_anggota_detail($tampil['id_verifikator'], $tampil['id_jabatan_verifikator'], $tampil['id_departemen_verifikator'], $tampil['id_unit_verifikator']) as $tampil2)
+                                                echo '<tr>
+                                                            <td style="padding:5px">'.$tampil2['nama'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_golongan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_jabatan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_departemen'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                        </tr>';
+                                            $c = $c+1;
+                                        }
+
+                                        foreach($db->tampil_penilai_kompetensi($id_anggota, $idA) as $tampil)
+                                        {
+                                            foreach($db->tampil_anggota_detail($tampil['id_verifikator'], $tampil['id_jabatan_verifikator'], $tampil['id_departemen_verifikator'], $tampil['id_unit_verifikator']) as $tampil2)
+                                                echo '<tr>
+                                                            <td style="padding:5px">'.$tampil2['nama'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_golongan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_jabatan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_departemen'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                        </tr>';
+                                            $c = $c+1;
+                                        }
+                                        foreach($db->tampil_penilai_kompetensi($id_anggota, $idA) as $tampil)
+                                        {
+                                            foreach($db->tampil_anggota_detail($tampil['id_verifikator'], $tampil['id_jabatan_verifikator'], $tampil['id_departemen_verifikator'], $tampil['id_unit_verifikator']) as $tampil2)
+                                                echo '<tr>
+                                                            <td style="padding:5px">'.$tampil2['nama'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_golongan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_jabatan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_departemen'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                        </tr>';
+                                            $c = $c+1;
+                                        }
+                                        foreach($db->tampil_penilai_kompetensi($id_anggota, $idA) as $tampil)
+                                        {
+                                            foreach($db->tampil_anggota_detail($tampil['id_verifikator'], $tampil['id_jabatan_verifikator'], $tampil['id_departemen_verifikator'], $tampil['id_unit_verifikator']) as $tampil2)
+                                                echo '<tr>
+                                                            <td style="padding:5px">'.$tampil2['nama'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_golongan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_jabatan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_departemen'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                        </tr>';
+                                            $c = $c+1;
+                                        }
+                                        foreach($db->tampil_penilai_kompetensi($id_anggota, $idA) as $tampil)
+                                        {
+                                            foreach($db->tampil_anggota_detail($tampil['id_verifikator'], $tampil['id_jabatan_verifikator'], $tampil['id_departemen_verifikator'], $tampil['id_unit_verifikator']) as $tampil2)
+                                                echo '<tr>
+                                                            <td style="padding:5px">'.$tampil2['nama'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_golongan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_jabatan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_departemen'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                        </tr>';
+                                            $c = $c+1;
+                                        }
+                                        foreach($db->tampil_penilai_kompetensi($id_anggota, $idA) as $tampil)
+                                        {
+                                            foreach($db->tampil_anggota_detail($tampil['id_verifikator'], $tampil['id_jabatan_verifikator'], $tampil['id_departemen_verifikator'], $tampil['id_unit_verifikator']) as $tampil2)
+                                                echo '<tr>
+                                                            <td style="padding:5px">'.$tampil2['nama'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_golongan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_jabatan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_departemen'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                        </tr>';
+                                            $c = $c+1;
+                                        }
+                                        foreach($db->tampil_penilai_kompetensi($id_anggota, $idA) as $tampil)
+                                        {
+                                            foreach($db->tampil_anggota_detail($tampil['id_verifikator'], $tampil['id_jabatan_verifikator'], $tampil['id_departemen_verifikator'], $tampil['id_unit_verifikator']) as $tampil2)
+                                                echo '<tr>
+                                                            <td style="padding:5px">'.$tampil2['nama'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_golongan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_jabatan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_departemen'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                        </tr>';
+                                            $c = $c+1;
+                                        }
+                                        foreach($db->tampil_penilai_kompetensi($id_anggota, $idA) as $tampil)
+                                        {
+                                            foreach($db->tampil_anggota_detail($tampil['id_verifikator'], $tampil['id_jabatan_verifikator'], $tampil['id_departemen_verifikator'], $tampil['id_unit_verifikator']) as $tampil2)
+                                                echo '<tr>
+                                                            <td style="padding:5px">'.$tampil2['nama'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_golongan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_jabatan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_departemen'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                        </tr>';
+                                            $c = $c+1;
+                                        }
+                                        foreach($db->tampil_penilai_kompetensi($id_anggota, $idA) as $tampil)
+                                        {
+                                            foreach($db->tampil_anggota_detail($tampil['id_verifikator'], $tampil['id_jabatan_verifikator'], $tampil['id_departemen_verifikator'], $tampil['id_unit_verifikator']) as $tampil2)
+                                                echo '<tr>
+                                                            <td style="padding:5px">'.$tampil2['nama'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_golongan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_jabatan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_departemen'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                        </tr>';
+                                            $c = $c+1;
+                                        }
+                                        foreach($db->tampil_penilai_kompetensi($id_anggota, $idA) as $tampil)
+                                        {
+                                            foreach($db->tampil_anggota_detail($tampil['id_verifikator'], $tampil['id_jabatan_verifikator'], $tampil['id_departemen_verifikator'], $tampil['id_unit_verifikator']) as $tampil2)
+                                                echo '<tr>
+                                                            <td style="padding:5px">'.$tampil2['nama'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_golongan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_jabatan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_departemen'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                        </tr>';
+                                            $c = $c+1;
+                                        }
+                                        foreach($db->tampil_penilai_kompetensi($id_anggota, $idA) as $tampil)
+                                        {
+                                            foreach($db->tampil_anggota_detail($tampil['id_verifikator'], $tampil['id_jabatan_verifikator'], $tampil['id_departemen_verifikator'], $tampil['id_unit_verifikator']) as $tampil2)
+                                                echo '<tr>
+                                                            <td style="padding:5px">'.$tampil2['nama'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_golongan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_jabatan'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_departemen'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                            <td style="padding:5px">'.$tampil2['nama_unit'].'</td>
+                                                        </tr>';
+                                            $c = $c+1;
+                                        }
+
+                                        if($c == 0)
+                                        {
+                                            echo '
+                                                <tr>
+                                                    <td colspan="5" align="center" style="padding:5px">Data Kosong</td>
+                                                </tr>
+                                            ';
+                                        }
+
+                                        echo '
+                                            <td style="padding:5px" colspan="2"><b><center>TOTAL NILAI KPI</center></b></td>
+                                            <td style="padding:5px"><b><center>0</center></b></td>
+                                            <td style="padding:5px" colspan="5"><b><center></center></b></td>
+                                            <td style="padding:5px"><b><center>0</center></b></td>
+                                        ';
+                                    ?>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <div id="printArea">
                     <div class="row">
                         <div class="col-md-12" align="center">
                             <h1><b>Laporan Hasil Akhir Penilaian</b></h1>
@@ -301,7 +1398,7 @@
                                                     $c = 0;
                                                     foreach($db->tampil_penilai_kpi($id_anggota, $idA) as $tampil)
                                                     {
-                                                        foreach($db->tampil_anggota($tampil['id_verifikator']) as $tampil2)
+                                                        foreach($db->tampil_anggota_detail($tampil['id_verifikator'], $tampil['id_jabatan_verifikator'], $tampil['id_departemen_verifikator'], $tampil['id_unit_verifikator']) as $tampil2)
                                                             echo '<tr>
                                                                         <td>'.$tampil2['nama'].'</td>
                                                                         <td>'.$tampil2['nama_golongan'].'</td>
@@ -622,7 +1719,7 @@
 							</div>
                         </div>
                     </div>
-                    </div>
+                    </div> -->
 				</div>			
 			</div>
         </div>
@@ -642,8 +1739,7 @@
 				var windowContent = '<!DOCTYPE html>';
                 windowContent += '<html>'
                 windowContent += '<head>'+
-                                '<title>Print canvas</title>'+
-                                '<link href="assets/css/style.css" rel="stylesheet">'+
+                                '<title>Print Laporan</title>'+
                                 '</head>';
                 windowContent += '<body style="background-color: white;">'
                 // windowContent += '<center><h3>Print Jadwal Meeting</h3></center>'

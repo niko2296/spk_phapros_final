@@ -12,11 +12,22 @@
 			return $hasil;
 		}
 		
-		function tampil_anggota($id_anggota = null){
+		function tampil_anggota($id_anggota = null)
+		{
+			$hasil = [];
 			if($id_anggota == null)
 				$query = $this->connection->query("SELECT ang.*, gol.nama_golongan, jab.nama_jabatan, uni.nama_unit, d.nama_departemen FROM mst_anggota as ang LEFT JOIN mst_golongan as gol ON ang.id_golongan = gol.id_golongan LEFT JOIN mst_jabatan as jab ON ang.id_jabatan = jab.id_jabatan LEFT JOIN mst_unit as uni ON ang.id_unit = uni.id_unit LEFT JOIN mst_departemen d ON ang.id_departemen = d.id_departemen");
 			else
-				$query = $this->connection->query("SELECT ang.*, gol.nama_golongan, jab.nama_jabatan, uni.nama_unit, d.nama_departemen FROM mst_anggota as ang LEFT JOIN mst_golongan as gol ON ang.id_golongan = gol.id_golongan LEFT JOIN mst_jabatan as jab ON ang.id_jabatan = jab.id_jabatan LEFT JOIN mst_unit as uni ON ang.id_unit = uni.id_unit LEFT JOIN mst_departemen d ON ang.id_departemen = d.id_departemen WHERE id_anggota = '$id_anggota'");
+				$query = $this->connection->query("SELECT ang.*, gol.nama_golongan, jab.nama_jabatan, uni.nama_unit, d.nama_departemen FROM mst_anggota as ang LEFT JOIN mst_golongan as gol ON ang.id_golongan = gol.id_golongan LEFT JOIN mst_jabatan as jab ON ang.id_jabatan = jab.id_jabatan LEFT JOIN mst_unit as uni ON ang.id_unit = uni.id_unit LEFT JOIN mst_departemen d ON ang.id_departemen = d.id_departemen WHERE ang.id_anggota = '$id_anggota'");
+			while($tampil = $query->fetch_array())
+				$hasil[] = $tampil;
+			return $hasil;
+		}
+
+		function tampil_anggota_detail($id_anggota = null, $id_jabatan = null, $id_departemen = null, $id_unit = null)
+		{
+			$hasil = [];
+			$query = $this->connection->query("SELECT ang.*, gol.nama_golongan, jab.nama_jabatan, uni.nama_unit, d.nama_departemen FROM mst_anggota as ang LEFT JOIN mst_golongan as gol ON ang.id_golongan = gol.id_golongan LEFT JOIN mst_jabatan as jab ON ang.id_jabatan = jab.id_jabatan LEFT JOIN mst_unit as uni ON ang.id_unit = uni.id_unit LEFT JOIN mst_departemen d ON ang.id_departemen = d.id_departemen WHERE ang.id_anggota = '$id_anggota' AND ang.id_jabatan = '$id_jabatan' AND ang.id_departemen = '$id_departemen' AND ang.id_unit = '$id_unit'");
 			while($tampil = $query->fetch_array())
 				$hasil[] = $tampil;
 			return $hasil;
@@ -563,31 +574,17 @@
 
 		function tampil_penilai_kpi($id_anggota = null, $id_periode = null)
 		{
-			$query = $this->connection->query("SELECT * FROM data_realisasi_kpi WHERE id_anggota = '$id_anggota' AND id_periode = '$id_periode'");
-			$c = [];
+			$query = $this->connection->query("SELECT * FROM data_realisasi_kpi WHERE id_anggota = '$id_anggota' AND id_periode = '$id_periode' AND status = '1' GROUP BY id_verifikator, id_jabatan_verifikator, id_departemen_verifikator, id_unit_verifikator");
 			while($tampil = $query->fetch_array())
-			{
-				if(!in_array($tampil['id_verifikator'], $c))
-				{
-					$c[] = $tampil['id_verifikator'];
-					$hasil[] = $tampil;
-				}
-			}
+				$hasil[] = $tampil;
 			return $hasil;
 		}
 
 		function tampil_penilai_kompetensi($id_anggota = null, $id_periode = null)
 		{
-			$query = $this->connection->query("SELECT * FROM data_kompetensi_individu WHERE id_anggota = '$id_anggota' AND id_periode = '$id_periode' AND status = '1'");
-			$c = [];
+			$query = $this->connection->query("SELECT * FROM data_kompetensi_individu WHERE id_anggota = '$id_anggota' AND id_periode = '$id_periode' AND status = '1' GROUP BY id_verifikator, id_jabatan_verifikator, id_departemen_verifikator, id_unit_verifikator");
 			while($tampil = $query->fetch_array())
-			{
-				if(!in_array($tampil['id_verifikator'], $c))
-				{
-					$c[] = $tampil['id_verifikator'];
-					$hasil[] = $tampil;
-				}
-			}
+				$hasil[] = $tampil;
 			return $hasil;
 		}
 
