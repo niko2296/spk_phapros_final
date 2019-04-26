@@ -243,14 +243,13 @@
 							<a href="input_aturan_matriks.php" class="btn btn-primary rounded pull-right"><i class="fa fa-plus"></i> Tambah Perhitungan Matriks</a>
 						</div>
 					</div>
-					<div class="row">
+					<div class="row" style="border:1px solid black;color:black; background-color:white; padding:1%;">
 						<div class="col-md-12">
 							<div class="table-responsive">
 								<table class="table table-striped custom-table m-b-0 display" id="tabel">
 									<thead>
 										<tr>
-											<th>Jabatan Matriks</th>
-                                            <th>Unit Matriks</th>
+											<th>Departemen Matriks</th>
 											<th class="text-right">Actions</th>
 										</tr>
 									</thead>
@@ -259,22 +258,9 @@
                                         error_reporting(0);
                                         foreach($db->tampil_aturan_matriks() as $data)
                                         {
-                                            $arrJabatan = $data['id_jabatan'];
-                                            $jabatan = [];
-                                            foreach(unserialize($arrJabatan) as $key => $value)
-                                            {
-                                                foreach($db->tampil_jabatan($value) as $tJ)
-                                                    $jabatan[] = $tJ['nama_jabatan'];
-                                            }
                                     ?>
                                             <tr>
-                                                <td><?php echo implode(', ', $jabatan); ?></td>
-                                                <td>
-                                                <?php
-                                                    foreach($db->tampil_unit($data['id_unit_penilai']) as $tampil)
-                                                            echo $tampil['nama_unit'];
-                                                ?>
-                                                </td>
+                                                <td><?php echo $data['nama_departemen']; ?></td>
                                                 <td class="text-right">
                                                     <div class="dropdown">
                                                         <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>

@@ -551,9 +551,9 @@
 		function tampil_aturan_matriks($id_matriks = null)
 		{
 			if($id_matriks == null)
-				$query1 = $this->connection->query("SELECT * FROM aturan_matriks");
+				$query1 = $this->connection->query("SELECT am.*, d.nama_departemen FROM aturan_matriks am LEFT JOIN mst_departemen d ON am.id_departemen = d.id_departemen");
 			else 
-				$query1 = $this->connection->query("SELECT * FROM aturan_matriks WHERE id_matriks = '$id_matriks'");
+				$query1 = $this->connection->query("SELECT am.*, d.nama_departemen FROM aturan_matriks am LEFT JOIN mst_departemen d ON am.id_departemen = d.id_departemen WHERE am.id_matriks = '$id_matriks'");
 			
 			while($tampil1 = $query1->fetch_array())
 				$hasil[] = $tampil1;
@@ -1151,10 +1151,9 @@
 			}
 		}
 
-		function input_aturan_matriks($id_jabatan = [], $id_unit = null){
-			$arrJabatan = serialize($id_jabatan);
+		function input_aturan_matriks($id_departemen = null){
 			$tanggal = date('Y-m-d');
-			$query = "INSERT INTO aturan_matriks VALUES ('', '$arrJabatan', '$id_unit', '$tanggal')";
+			$query = "INSERT INTO aturan_matriks VALUES ('', '$id_departemen', '$tanggal')";
 			$input = $this->connection->prepare($query);
 			if($input->execute())
 				return 1;

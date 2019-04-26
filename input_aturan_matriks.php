@@ -213,10 +213,9 @@
             <?php
                 if(isset($_POST['tombolSimpan']))
                 {
-                    $id_jabatan = $_POST['id_jabatan'];
-                    $id_unit = $_POST['id_unit'];
+                    $id_departemen = $_POST['id_departemen'];
 
-                    $eksekusi = $db->input_aturan_matriks($id_jabatan, $id_unit);
+                    $eksekusi = $db->input_aturan_matriks($id_departemen);
                     if($eksekusi == 1)
                     {
                         echo '
@@ -254,30 +253,14 @@
                                 <div class="row">
                                     <div class="col-sm-6">
                                         <div class="form-group">
-                                            <label>Jabatan Matriks</label>
-                                            <select name="id_jabatan[]" id="id_jabatan" class="form-control cek" multiple="multiple">
-                                                <option value="">Silahkan Pilih Jabatan</option>
+                                            <label>Departemen Matriks</label>
+                                            <select name="id_departemen" id="id_departemen" class="form-control cek">
+                                                <option value="">Silahkan Pilih Departemen</option>
                                                 <?php
-                                                    foreach($db->tampil_jabatan() as $tampil)
+                                                    foreach($db->tampil_departemen() as $tampil)
                                                     {
                                                 ?>
-                                                        <option value="<?php echo $tampil['id_jabatan']?>"><?php echo $tampil['nama_jabatan']; ?></option>
-                                                <?php
-                                                    }
-                                                ?>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <div class="form-group">
-                                            <label>Unit Matriks</label>
-                                            <select name="id_unit" id="id_unit" class="form-control cek">
-                                                <option value="">Silahkan Pilih Unit</option>
-                                                <?php
-                                                    foreach($db->tampil_unit() as $tampil)
-                                                    {
-                                                ?>
-                                                        <option value="<?php echo $tampil['id_unit']?>"><?php echo $tampil['nama_unit']; ?></option>
+                                                        <option value="<?php echo $tampil['id_departemen']?>"><?php echo $tampil['nama_departemen']; ?></option>
                                                 <?php
                                                     }
                                                 ?>
@@ -308,10 +291,7 @@
 
 		<script>
             $(document).ready(function () {
-                $('#id_jabatan').select2({
-                    placeholder: "Please Select"
-                });
-                $('#id_unit').select2({
+                $('#id_departemen').select2({
                     placeholder: "Please Select"
                 });
 
