@@ -203,7 +203,10 @@
 								<ul style="display: none;">
 									<?php
 										if($eksekusi1 == 1 || $_SESSION['aksus'] == TRUE)
+                                        {
 											echo '<li><a href="kompetensi_individu.php">Data Kompetensi Individu</a></li>';
+											echo '<li><a href="kompetensi_individu_mutasi.php">Data Kompetensi Individu (Mutasi)</a></li>';
+                                        }
                                         if($eksekusi2 == 1 || $_SESSION['aksus'] == TRUE)
                                         {
                                             if($db->cek_matriks($departemenL) <= 0 || $_SESSION['aksus'] == TRUE)
@@ -230,7 +233,7 @@
                 <div class="content container-fluid">
 					<div class="row">
 						<div class="col-xs-8">
-							<h4 class="page-title">Detail Anggota Berdasarkan Jabatan dan Unit</h4>
+							<h4 class="page-title">Detail Anggota Berdasarkan Jabatan, Departemen, dan Unit</h4>
 						</div>
                         <div class="col-xs-4 text-right m-b-10">
                             <a class="btn btn-warning" href="data_kpi_verifikasi.php">Kembali Pada Data KPI Sub Ordinat</a>

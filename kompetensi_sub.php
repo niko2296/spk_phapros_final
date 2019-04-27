@@ -204,7 +204,10 @@
 								<ul style="display: none;">
 									<?php
 										if($eksekusi1 == 1 || $_SESSION['aksus'] == TRUE)
+                                        {
 											echo '<li><a href="kompetensi_individu.php">Data Kompetensi Individu</a></li>';
+											echo '<li><a href="kompetensi_individu_mutasi.php">Data Kompetensi Individu (Mutasi)</a></li>';
+                                        }
                                         if($eksekusi2 == 1 || $_SESSION['aksus'] == TRUE)
                                         {
                                             if($db->cek_matriks($departemenL) <= 0 || $_SESSION['aksus'] == TRUE)
@@ -236,7 +239,7 @@
 					</div>
 
                     <ul class="nav nav-tabs">
-                        <li class="active"><a data-toggle="tab" href="#dk">Data Per-Jabatan dan Per-Unit</a></li>
+                        <li class="active"><a data-toggle="tab" href="#dk">Data Per-Jabatan, Per-Departemen, dan Per-Unit</a></li>
                         <li><a data-toggle="tab" href="#dp">Data Per-Anggota</a></li>
                     </ul>
                     <div class="tab-content">
@@ -297,6 +300,7 @@
                                                     <th>Nomor Hp</th>
                                                     <th>Email</th>
                                                     <th>Jabatan</th>
+                                                    <th>Departemen</th>
                                                     <th>Unit</th>
                                                     <th class="text-right">Actions</th>
                                                 </tr>
@@ -315,6 +319,7 @@
                                                         <td><?php echo $data['nomor_hp']; ?></td>
                                                         <td><?php echo $data['email']; ?></td>
                                                         <td><?php echo $data['nama_jabatan']; ?></td>
+                                                        <td><?php echo $data['nama_departemen']; ?></td>
                                                         <td><?php echo $data['nama_unit']; ?></td>
                                                         <td class="text-center">
                                                             <a href="detail_ks.php?id_anggota=<?php echo $data['id_anggota']."&&id_jabatan=".$data['id_jabatan']."&&id_departemen=".$data['id_departemen']."&&id_unit=".$data['id_unit']; ?>">Detail</a>

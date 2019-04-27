@@ -84,5 +84,19 @@
             echo 3;
         }
     }
+    else if($_GET['jenis'] == 'verif_matriks')
+    {
+        $eksekusi = $db->verif_kompetensi_matriks($_GET['id'], $_GET['value'], $_GET['verifikator'], $_GET['jabatan_verifikator'], $_GET['departemen_verifikator'], $_GET['unit_verifikator'], $_GET['id_anggota'], $_GET['jk']);
+        if($eksekusi == 1)
+        {
+            if($_GET['value'] == 1)
+                echo 1;
+            else if($_GET['value'] == 0)
+                echo 2;
+        }
+        else{
+            echo 3;
+        }
+    }
 
 ?>

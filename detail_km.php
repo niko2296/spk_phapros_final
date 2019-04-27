@@ -11,7 +11,7 @@
     $jabatan = $_SESSION['id_jabatan'];
     $departemenL = $_SESSION['id_departemen'];
     $unitL = $_SESSION['id_unit'];
-    $id_unitD = $_SESSION['id_unit'];
+    $id_anggotaV = $_SESSION['id_anggota'];
     $idA = 'kosong';
 
     foreach($db->tampil_periode() as $tPer)
@@ -21,6 +21,14 @@
             $idA = $tPer['id_periode'];
         }
     }
+
+    $id_anggotaD = $_GET['id_anggota'];
+    $id_jabatanD = $_GET['id_jabatan'];
+    $id_departemenD = $_GET['id_departemen'];
+    $id_unitD = $_GET['id_unit'];
+
+    foreach($db->tampil_anggota($id_anggotaD) as $tc)
+        $nama_anggota = $tc['nama'];
 ?>
 <!DOCTYPE html>
 <html>
@@ -68,11 +76,11 @@
 						<ul class="dropdown-menu">
 							<!-- <li><a href="profile.html">My Profile</a></li>
 							<li><a href="edit-profile.html">Edit Profile</a></li> -->
-                            <?php
+                            <?php 
                                 if($jabatan != 0)
-							        echo '<li><a href="settings.php">Settings</a></li>';
-                            ?>
-                            <li><a href="logout.php">Logout</a></li>
+                                    echo '<li><a href="settings.php">Settings</a></li>';
+                             ?>
+							<li><a href="logout.php">Logout</a></li>
 						</ul>
 					</li>
 				</ul>
@@ -171,7 +179,7 @@
                             <?php
                                 }
                             ?>
-                            <li class="active submenu">
+                            <li class="submenu">
 								<a href="#"><i class="la la-clipboard"></i> <span> KPI</span> <span class="menu-arrow"></span></a>
 								<ul style="display: none;">
                                     <?php
@@ -199,7 +207,7 @@
                                     ?>
                                 </ul>
 							</li>
-							<li class="submenu">
+							<li class="active submenu">
 								<a href="#"><i class="la la-tasks"></i> <span> Kompetensi</span> <span class="menu-arrow"></span></a>
 								<ul style="display: none;">
 									<?php
@@ -233,70 +241,141 @@
             <div class="page-wrapper">
                 <div class="content container-fluid">
 					<div class="row">
-						<div class="col-xs-12">
-							<h4 class="page-title">Data KPI Sub Ordinat</h4>
+						<div class="col-xs-7">
+							<h4 class="page-title">Detail Kompetensi - <b>
                             <?php
-                                $b1 = 0;
-                                $k1 = '';
-                                error_reporting(0);
-                                foreach($db->tampil_waktu_verifikasi(1) as $tampil)
+                                $nj = $db->tampil_jabatan_detail($id_jabatanD, 1);
+                                $nd = $db->tampil_jabatan_detail($id_departemenD, 2);
+                                $nu = $db->tampil_jabatan_detail($id_unitD, 3);
+                                
+                                echo $nama_anggota." ( ".$nj." - ".$nd." - ".$nu." )"; 
+                            ?>
+                            </b></h4>
+						</div>
+                        <div class="col-xs-5" align="right">
+                            <a class="btn btn-warning" href="detail_jabatan_matriks.php?id_jabatan=<?php echo $id_jabatanD."&&id_departemen=".$id_departemenD."&&id_unit=".$id_unitD; ?>">Kembali Halaman Sebelumnya</a>
+                        </div>
+					</div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <?php
+                                $b2 = 0;
+                                foreach($db->tampil_waktu_verifikasi(2) as $tampil)
                                 {
                                     $sekarang = date('Y-m-d');
                                     if($sekarang >= $tampil['tanggal_awal_verifikasi'] AND $sekarang <= $tampil['tanggal_akhir_verifikasi'])
-                                        $b1 = 1;
+                                        $b2 = 1;
                                 }
 
-                                if($b1 == 0)
+                                if(isset($_POST['tombolSimpanK']))
                                 {
-                                    $k1 = 'disabled="disabled"';
-                                    echo '<center><div style="background-color:orange; width:30%; color:white; padding:5px;">Waktu Verifikasi Sudah Ditutup</div></center><br>';
-                                }
-                            ?>
-                            <center><div style="background-color:#7CFC00; width:20%; color:white; padding:5px; display:none;" id="notifikasi1">Data Diverifikasi</div></center>
-                            <center><div style="background-color:red; width:20%; color:white; padding:5px; display:none;" id="notifikasi2">Data Batal Diverifikasi</div></center>
-						</div>
-					</div>
+                                    $id_ki = $_POST['id_ki'];
+                                    $jumlah = count($_POST['id_ki']);
+                                    $peringkat = [];
+                                    if($jumlah > 0)
+                                    {
+                                        for($i=0; $i<$jumlah; $i++)
+                                        {
+                                            $p1 = 'peringkat'.$id_ki[$i];
+                                            $peringkat[] = $_POST[$p1]; 
+                                        }
 
-                    <ul class="nav nav-tabs">
-                        <li class="active"><a data-toggle="tab" href="#dk">Data Per-Jabatan, Per-Departemen, dan Per-Unit</a></li>
-                        <li><a data-toggle="tab" href="#dp">Data Per-Anggota</a></li>
-                    </ul>
-                    <div class="tab-content">
-                        <div id="dk" class="tab-pane fade in active">
-                            <!-- Tab Pertama -->
+                                        $eksekusi = $db->revisi_kompetensi_matriks($id_ki, $peringkat, $idA, $id_anggotaD, $id_jabatanD, $id_departemenD, $id_unitD, $id_anggotaV, $jabatan, $departemenL, $unitL);
+                                        if($eksekusi == 1)
+                                        {
+                                            echo    '
+                                                        <script>
+                                                            alert("Berhasil Disimpan");
+                                                            window.location = "detail_km.php?id_anggota='.$id_anggotaD.'&&id_jabatan='.$id_jabatanD.'&&id_departemen='.$id_departemenD.'&&id_unit='.$id_unitD.'";
+                                                        </script>
+                                                    ';
+                                        }
+                                        else if($eksekusi == 2)
+                                        {
+                                            echo    '
+                                                        <script>
+                                                            alert("Gagal Disimpan");
+                                                            window.location = "detail_km.php?id_anggota='.$id_anggotaD.'&&id_jabatan='.$id_jabatanD.'&&id_departemen='.$id_departemenD.'&&id_unit='.$id_unitD.'";
+                                                        </script>
+                                                    ';
+                                        }
+                                    }
+                                }
+
+                                echo '<center><div style="background-color:#7CFC00; width:20%; color:white; padding:5px; display:none; margin-bottom:2%;" id="notifikasi1">Data Diverifikasi</div></center>';
+                                echo '<center><div style="background-color:red; width:20%; color:white; padding:5px; display:none; margin-bottom:2%;" id="notifikasi2">Data Batal Diverifikasi</div></center>';
+                            ?>
+                        </div>
+                    </div>
+					<div class="row" style="border:1px solid black;color:black; background-color:white; padding:1%;">
+                        <form action="#" method="POST">
+                        <div class="col-md-12">
                             <div class="row">
-                                <div class="col-md-12" style="border:1px solid black;color:black; background-color:white; padding:1%;">
+                                <div class="col-md-12">
                                     <div class="table-responsive">
                                         <table class="table table-striped custom-table m-b-0 display" id="tabel">
                                             <thead>
                                                 <tr>
-                                                    <th>Jabatan</th>
-                                                    <th>Departemen</th>
-                                                    <th>Unit</th>
-                                                    <th>Jumlah Anggota</th>
-                                                    <th>Actions</th>
+                                                    <th style="width:10%;">Nama Kompetensi</th>
+                                                    <th style="width:30%;">Indikator Terendah</th>
+                                                    <th style="width:30%;">Indikator Tertinggi</th>
+                                                    <th style="width:25%;">Peringkat</th>
+                                                    <th style="width:5%;">Verifikasi</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                             <?php
-                                                $no = 0;
                                                 error_reporting(0);
-                                                foreach($db->tampil_jabatan_grup($jabatan, $departemenL, $id_unitD) as $data)
+                                                $p = 0;
+                                                $cv = 0;
+                                                foreach($db->tampil_kompetensi_individu($id_anggotaD, $id_jabatanD, $id_departemenD, $id_unitD, $idA) as $data)
                                                 {
-                                                    $no = $no+1;
+                                                    foreach($db->tampil_kompetensi_individu($id_anggotaD, $id_jabatanD, $id_departemenD, $id_unitD, $idA, $data['jenis'], $data['id_kompetensi_individu']) as $data2)
+                                                    {
+                                                        $d = '';
+                                                        $p = $p+1;
+                                                        $v1 = 'peringkat'.$data2['id_kompetensi_individu'];
+                                                        $v2 = 'id_ki'.$p;
+                                                        
+                                                        if($db->cek_verif_kompetensi($data2['id_kompetensi_individu']) == 1)
+                                                        {
+                                                            $cv = $cv+1;
+                                                            $d = 'disabled="disabled"';
+                                                        }
+                                                        
+                                                        $id_peringkat = $data['id_peringkat'];
+                                                        if($db->hitung_perubahan_kompetensi_matriks($id_anggotaD, $id_jabatanD, $id_departemenD, $id_unitD, $idA, $data2['id_kompetensi_individu'], $id_anggotaV, $jabatan, $departemenL, $unitL) > 0)
+                                                            $id_peringkat = $db->cek_perubahan4($data2['id_kompetensi_individu'], $id_anggotaV, $jabatan, $departemenL, $unitL);
                                             ?>
-                                                    <tr>
-                                                        <td><?php echo $data['nama_jabatan']; ?></td>
-                                                        <td><?php echo $data['nama_departemen']; ?></td>
-                                                        <td><?php echo $data['nama_unit']; ?></td>
-                                                        <td><?php echo $db->hitung_jabatan_grup($data['id_jabatan_dinilai'], $data['id_departemen_dinilai'], $data['id_unit_dinilai']); ?> Anggota</td>
-                                                        <td class="text-center  ">
-                                                            <div class="dropdown">
-                                                                <a href="detail_jabatan.php?id_jabatan=<?php echo $data['id_jabatan_dinilai']."&&id_departemen=".$data['id_departemen_dinilai']."&&id_unit=".$data['id_unit_dinilai']; ?>">Detail</a>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <?php 
+                                                                        echo $data2['nama_kompetensi'];
+                                                                        echo '<input type="hidden" name="id_ki[]" id="'.$v2.'" value="'.$data2['id_kompetensi_individu'].'" '.$d.'>';
+                                                                ?>
+                                                            </td>
+                                                            <td><?php echo $data2['indikator_terendah']; ?></td>
+                                                            <td><?php echo $data2['indikator_tertinggi']; ?></td>
+                                                            <td>
+                                                            <?php
+                                                                foreach($db->tampil_peringkat($idA) as $tampilP)
+                                                                {
+                                                                    $s = '';
+                                                                    if($tampilP['id_peringkat'] == $id_peringkat)
+                                                                        $s = 'checked';
+                                                                    
+                                                                    echo '
+                                                                        <label class="btn btn-inline">
+                                                                            <input class="form-control peringkat'.$data2['id_kompetensi_individu'].'" type="radio" name="'.$v1.'" value="'.$tampilP['id_peringkat'].'" '.$s.' '.$d.'> '.$tampilP['peringkat'].'
+                                                                        </label>
+                                                                    ';
+                                                                }
+                                                            ?>
+                                                            </td>
+                                                            <td align="center"><input type="checkbox" name="verifikasi" id="verifikasi" class="form-control" data-id_anggota="<?php echo $id_anggotaD; ?>" data-verifikator="<?php echo $id_anggotaV; ?>" data-jabatan_verifikator="<?php echo $jabatan; ?>" data-departemen_verifikator="<?php echo $departemenL; ?>" data-unit_verifikator="<?php echo $unitL; ?>" data-id="<?php echo $data2['id_kompetensi_individu']; ?>" data-jenis="<?php echo $data2['jenis']; ?>" <?php echo ($db->cek_verif_kompetensi($data2['id_kompetensi_individu']) == 1)?('checked'):(''); ?>></td>
+                                                        </tr>
                                             <?php
+                                                    }
                                                 }
                                             ?>
                                             </tbody>
@@ -304,63 +383,44 @@
                                     </div>
                                 </div>
                             </div>
-                            <!-- Akhiran Tab Pertama -->
-                        </div>
-                        <div id="dp" class="tab-pane fade">
-                            <!-- Tab Kedua -->
-                            <div class="row" style="border:1px solid black;color:black; background-color:white; padding:1%;">
-                                <div class="col-md-12">
-                                    <div class="table-responsive">
-                                        <table class="table table-striped custom-table m-b-0 display" id="tabel2">
-                                            <thead>
-                                                <tr>
-                                                    <th>NIK</th>
-                                                    <th>Nama Pegawai</th>
-                                                    <th>Nomor Hp</th>
-                                                    <th>Email</th>
-                                                    <th>Jabatan</th>
-                                                    <th>Departemen</th>
-                                                    <th>Unit</th>
-                                                    <th>Jumlah KPI</th>
-                                                    <th class="text-right">Actions</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                            <?php
-                                                $no = 0;
-                                                error_reporting(0);
-                                                foreach($db->tampil_anggota_grup() as $data)
-                                                {
-                                                    $no = $no+1;
-                                            ?>
-                                                    <tr>
-                                                        <td><?php echo $data['nik']; ?></td>
-                                                        <td><?php echo $data['nama']; ?></td>
-                                                        <td><?php echo $data['nomor_hp']; ?></td>
-                                                        <td><?php echo $data['email']; ?></td>
-                                                        <td><?php echo $data['nama_jabatan']; ?></td>
-                                                        <td><?php echo $data['nama_departemen']; ?></td>
-                                                        <td><?php echo $data['nama_unit']; ?></td>
-                                                        <td><?php echo $db->hitung_data_kpi($data['id_anggota'], $data['id_jabatan'], $data['id_departemen'], $data['id_unit'], $idA); ?> KPI</td>
-                                                        <td class="text-center">
-                                                            <a href="detail_kpi.php?id_anggota=<?php echo $data['id_anggota']."&&id_jabatan=".$data['id_jabatan']."&&id_departemen=".$data['id_departemen']."&&id_unit=".$data['id_unit']; ?>">Detail KPI</a>&nbsp;
-                                                            <a href="detail_realisasi.php?id_anggota=<?php echo $data['id_anggota']."&&id_jabatan=".$data['id_jabatan']."&&id_departemen=".$data['id_departemen']."&&id_unit=".$data['id_unit']; ?>">Detail Realisasi KPI</a>
-                                                        </td>
-                                                    </tr>
-                                            <?php
-                                                }
-                                            ?>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
+                            <div class="row">
+                                <?php
+                                    if($b2 == 1)
+                                    {
+                                        if($p == 0)
+                                        {
+                                            echo '
+                                                <div class="col-md-12" align="right">
+                                                    <button name="" class="btn btn-danger" disabled="disabled">Data Kompetensi Belum Diisikan</button>
+                                                </div>
+                                                ';
+                                        }
+                                        else
+                                        {
+                                            echo '
+                                                <div class="col-md-12" align="right">
+                                                    <button class="btn btn-primary" type="submit" name="tombolSimpanK">Simpan Data</button>
+                                                </div>
+                                                ';
+                                        }
+                                    }
+                                    else 
+                                    {
+                                        echo '
+                                            <div class="col-md-12" align="right">
+                                                <button class="btn btn-danger" disabled="disabled">Waktu Input/Verifikasi Data Kompetensi Sub Ordinat Belum Dibuka</button>
+                                            </div>
+                                            '; 
+                                    }
+                                ?>
                             </div>
-                            <!-- Akhiran Tab Kedua -->
                         </div>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
+
 		<div class="sidebar-overlay" data-reff="#sidebar"></div>
         <script type="text/javascript" src="assets/js/jquery-3.2.1.min.js"></script>
         <script type="text/javascript" src="assets/js/bootstrap.min.js"></script>
@@ -374,37 +434,62 @@
 		<script type="text/javascript" src="assets/js/bootstrap-datetimepicker.min.js"></script>
 		<script type="text/javascript" src="assets/js/app.js"></script>
 
-        <script>
-            $(document).ready(function () {
+        <script type="text/javascript">
+            $(document).ready(function(){
                 $('#tabel').DataTable({
-                    searching : true,
-                    ordering : false
+                    searching : false,
+                    ordering : false,
+                    paging : false,
+                    info : false
                 });
-                $('#tabel2').DataTable({
-                    searching : true,
-                    ordering : false
-                });
-                $("#notifikasi1").css("display","none");
-                $("#notifikasi2").css("display","none");
-                $('#tabel').on('change','#verifikasi1',function(e){
+
+                $('.table').on('change','#verifikasi',function(e){
                     var v = ($(this).is(':checked'))?'1':'0';
+                    var paramId = $(this).data('id');
+                    var verifikator = $(this).data('verifikator');
+                    var jk = $(this).data('jenis');
+                    var jabatan_verifikator = $(this).data('jabatan_verifikator');
+                    var departemen_verifikator = $(this).data('departemen_verifikator');
+                    var unit_verifikator = $(this).data('unit_verifikator');
+                    var id_anggota = $(this).data('id_anggota');
+                    var id1 = 'realisasi';
+                    var id2 = 'keterangan';
                     $.ajax({
-                        url : 'verifikasi.php',
+                        url : 'verifikasi_final.php',
                         type : 'get',
                         data:{
-                            'id' : $(this).data('id'),
-                            'value' : v
+                            'id' : paramId,
+                            'value' : v,
+                            'jenis' : 'verif_matriks',
+                            'verifikator' : verifikator,
+                            'jk' : jk,
+                            'id_anggota' : id_anggota,
+                            'jabatan_verifikator' : jabatan_verifikator,
+                            'departemen_verifikator' : departemen_verifikator,
+                            'unit_verifikator' : unit_verifikator
+
                         },
                         success:function(html){
                             if(html == 1)
                             {
+                                $('.peringkat'+paramId).attr('disabled', 'disabled');
+                                $('#id_ki'+paramId).attr('disabled', 'disabled');
                                 $(document).ready(function(){setTimeout(function(){$("#notifikasi1").fadeIn('slow');}, 300);});
                                 setTimeout(function(){$("#notifikasi1").fadeOut('#notifikasi1');}, 1500);
+                                document.getElementById(id1+paramId).readOnly = true;
+                                document.getElementById(id2+paramId).readOnly = true;
                             }
                             else if(html == 2)
                             {
+                                $('.peringkat'+paramId).removeAttr('disabled');
+                                $('#id_ki'+paramId).removeAttr('disabled');
                                 $(document).ready(function(){setTimeout(function(){$("#notifikasi2").fadeIn('slow');}, 300);});
                                 setTimeout(function(){$("#notifikasi2").fadeOut('#notifikasi2');}, 1500);
+                                document.getElementById(id1+paramId).readOnly = false;
+                                document.getElementById(id2+paramId).readOnly = false;
+                            }
+                            else{
+                                alert("Terdapat Kegagal Pengiriman Data");
                             }
                         }
                     });

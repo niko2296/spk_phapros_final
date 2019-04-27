@@ -4,6 +4,8 @@
     $db = new database();
     $nama = '';
     $jabatan = '';
+    $id_anggotaD = '';
+    $id_unitD = '';
 	session_start();
 	if($_SESSION['login'] == FALSE)
         header("location:login.php");
@@ -11,20 +13,18 @@
     $jabatan = $_SESSION['id_jabatan'];
     $departemenL = $_SESSION['id_departemen'];
     $unitL = $_SESSION['id_unit'];
-    $id_anggotaV = $_SESSION['id_anggota'];
+    $id_anggotaD = $_SESSION['id_anggota'];
+    $id_unitD = $_SESSION['id_unit'];
     $idA = 'kosong';
-    foreach($db->tampil_periode() as $tPer)
+
+    foreach($db->tampil_periode() as $tampilP)
     {
-        if($tPer['status'] == 1)
+        if($tampilP['status'] == 1)
         {
-            $idA = $tPer['id_periode'];
+            $tA = $tampilP['tahun'];
+            $idA = $tampilP['id_periode'];
         }
     }
-
-    $id_anggotaD = $_GET['id_anggota'];
-    $id_jabatanD = $_GET['id_jabatan_lama'];
-    $id_departemenD = $_GET['id_departemen_lama'];
-    $id_unitD = $_GET['id_unit_lama'];
 ?>
 <!DOCTYPE html>
 <html>
@@ -72,11 +72,11 @@
 						<ul class="dropdown-menu">
 							<!-- <li><a href="profile.html">My Profile</a></li>
 							<li><a href="edit-profile.html">Edit Profile</a></li> -->
-                            <?php 
+                            <?php
                                 if($jabatan != 0)
-                                    echo '<li><a href="settings.php">Settings</a></li>';
-                             ?>
-							<li><a href="logout.php">Logout</a></li>
+							        echo '<li><a href="settings.php">Settings</a></li>';
+                            ?>
+                            <li><a href="logout.php">Logout</a></li>
 						</ul>
 					</li>
 				</ul>
@@ -96,7 +96,7 @@
                                 $m5 = 0;
                                 $m6 = 0;
                                 $m7 = 0;
-                                // error_reporting(0);
+                                error_reporting(0);
                                 foreach($db->tampil_akses() as $tampil)
                                 {
                                     if($tampil['id_jabatan'] == $jabatan)
@@ -175,7 +175,7 @@
                             <?php
                                 }
                             ?>
-                            <li class="active submenu">
+                            <li class="submenu">
 								<a href="#"><i class="la la-clipboard"></i> <span> KPI</span> <span class="menu-arrow"></span></a>
 								<ul style="display: none;">
                                     <?php
@@ -203,7 +203,7 @@
                                     ?>
                                 </ul>
 							</li>
-							<li class="submenu">
+							<li class="active submenu">
 								<a href="#"><i class="la la-tasks"></i> <span> Kompetensi</span> <span class="menu-arrow"></span></a>
 								<ul style="display: none;">
 									<?php
@@ -238,149 +238,47 @@
                 <div class="content container-fluid">
 					<div class="row">
 						<div class="col-xs-12">
-							<h4 class="page-title">
-                                <?php
-                                    $nj = $db->tampil_jabatan_detail($id_jabatanD, 1);
-                                    $nd = $db->tampil_jabatan_detail($id_departemenD, 2);
-                                    $nu = $db->tampil_jabatan_detail($id_unitD, 3);
-                                        
-                                    echo 'Detail Realisasi KPI Mutasi <b>('.$nj.' - '.$nd.' - '.$nu.')</b>';
-                                ?>
-                            </h4>
+							<h4 class="page-title">Data Kompetensi Individu (Mutasi)</h4>
 						</div>
-                        <div class="col-xs-4 text-right m-b-10">
-                            &nbsp;
-                        </div>
 					</div>
-					<div class="row" style="border:1px solid black;color:black; background-color:white; padding:1%;">
-                        <div class="col-md-12">
-                            <?php
-                                if($db->hitung_perubahan_realisasi($id_anggotaD, $id_jabatanD, $id_departemenD, $id_unitD, $idA) > 0)
-                                {
-                                    echo '<div class="alert alert-warning">
-                                            <div class="row" style="vertical-align:bottom;">
-                                                <div class="col-md-10">
-                                                    <b>'.$db->pemberi_perubahan_realisasi($id_anggotaD, $id_jabatanD, $id_departemenD, $id_unitD, $idA).'</b> Telah Melakukan Perubahan Pada Data Realisasi ataupun Keterangan Pada Realisasi KPI.
-                                                </div>
-                                            </div>
-                                        </div>';
-                                }
-                            ?>
-                        </div>
-                        <form action="#" method="POST">
+                    <div class="row" style="border:1px solid black;color:black; background-color:white; padding:1%;">
                         <div class="col-md-12">
                             <div class="table-responsive">
-                                <table class="table table-striped custom-table m-b-0 display" id="tabel">
+                                <table class="table table-striped custom-table m-b-0 display" id="tabel2">
                                     <thead>
                                         <tr>
-                                            <th>KPI</th>
-                                            <th>Deskripsi</th>
-                                            <th>Bobot (%)</th>
-                                            <th>Sasaran/Target</th>
-                                            <th>Satuan</th>
-                                            <th>Polarisasi</th>
-                                            <th>Periode</th>
-                                            <th style="width:100px;">Realisasi</th>
-                                            <th>Keterangan</th>
-                                            <th>Verifikasi</th>
+                                            <th>Jabatan Lama</th>
+                                            <th>Departemen Lama</th>
+                                            <th>Unit Lama</th>
+                                            <th>Jabatan Baru</th>
+                                            <th>Departemen Baru</th>
+                                            <th>Unit Baru</th>
+                                            <th>Tanggal</th>
+                                            <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                     <?php
                                         error_reporting(0);
-                                        $cv = 0;
-                                        foreach($db->tampil_kpi_detail($id_anggotaD, $id_jabatanD, $id_departemenD, $id_unitD, $idA) as $data)
+                                        foreach($db->tampil_mutasi_pribadi($idA, $id_anggotaD) as $data)
                                         {
-                                            if($data['status'] == 1)
-                                            {
-                                                $id_kpi = $data['id_kpi'];
-                                                $bobot = $data['bobot'];
-                                                $sasaran = $data['sasaran'];
-                                                $realisasi = 0;
-                                                $keterangan = '';
-
-                                                if($db->hitung_perubahan_usulan($id_anggotaD, $id_jabatanD, $id_departemenD, $id_unitD, $idA) > 0)
-                                                {
-                                                    foreach($db->cek_perubahan($id_kpi) as $tc)
-                                                    {
-                                                        if($tc['bobot'] != '' && $tc['sasaran'] != '')
-                                                        {
-                                                            $bobot = $tc['bobot'];
-                                                            $sasaran = $tc['sasaran'];
-                                                        }
-                                                    }
-                                                }
-
-                                                if($db->hitung_realisasi($data['id_kpi']) > 0)
-                                                {
-                                                    if($db->hitung_perubahan_realisasi($id_anggotaD, $id_jabatanD, $id_departemenD, $id_unitD, $idA, $id_kpi) > 0)
-                                                    {
-                                                        foreach($db->cek_perubahan2($id_kpi) as $tc)
-                                                        {
-                                                            if($tc['realisasi'] != '' && $tc['keterangan'] != '')
-                                                            {
-                                                                $realisasi = $tc['realisasi'];
-                                                                $keterangan = $tc['keterangan'];
-                                                            }
-                                                        }
-                                                    }
-                                                    else{
-                                                        $realisasi =  $db->tampil_realisasi(1, $data['id_kpi']);
-                                                        $keterangan = $db->tampil_realisasi(2, $data['id_kpi']);
-                                                    }
-                                                }
-
-                                                $r = '';
-                                                $d = '';
-                                                if($db->cek_verif_realisasi($data['id_kpi']) == 1)
-                                                {
-                                                    $r = 'readonly="readonly"';
-                                                    $cv = $cv+1;
-                                                }
                                     ?>
                                             <tr>
-                                                <td><?php echo $data['kpi']; ?></td>
-                                                <td><?php echo $data['deskripsi']; ?></td>
-                                                <td><?php echo $bobot; ?></td>
-                                                <td><?php echo $sasaran; ?></td>
-                                                <td><?php echo $data['nama_satuan']; ?></td>
-                                                <td><?php echo $data['nama_polarisasi']; ?></td>
-                                                <td><?php echo $data['tahun']; ?></td>
-                                                <td>
-                                                    <input type="hidden" name="id_kpi[]" class="form-control" value="<?php echo $data['id_kpi']; ?>">
-                                                    <input type="text" id="realisasi<?php echo $data['id_kpi']; ?>" name="realisasi[]" class="form-control" value="<?php echo $realisasi; ?>" <?php echo $r; ?>>
-                                                </td>
-                                                <td><textarea id="keterangan<?php echo $data['id_kpi']; ?>" name="keterangan[]" cols="10" rows="1" class="form-control" placeholder="Isikan Keterangan" <?php echo $r; ?>><?php echo $keterangan; ?></textarea></td>
-                                                <td><?php echo ($db->cek_verif_realisasi($data['id_kpi']) == 1)?('Sudah Diverifikasi'):('Belum Diverifikasi'); ?></td>
+                                                <td><?php echo $data['nama_jabatan']; ?></td>
+                                                <td><?php echo $data['nama_departemen']; ?></td>
+                                                <td><?php echo $data['nama_unit']; ?></td>
+                                                <td><?php echo $db->tampil_jabatan_detail($data['id_jabatan_baru'], 1); ?></td>
+                                                <td><?php echo $db->tampil_jabatan_detail($data['id_departemen_baru'], 2); ?></td>
+                                                <td><?php echo $db->tampil_jabatan_detail($data['id_unit_baru'], 3); ?></td>
+                                                <td><?php echo date('d F Y', strtotime($data['tanggal_mutasi'])); ?></td>
+                                                <td><a href="detail_kompetensi_individu.php?id_anggota=<?php echo $data['id_anggota']."&&id_jabatan_lama=".$data['id_jabatan_lama']."&&id_departemen_lama=".$data['id_departemen_lama']."&&id_unit_lama=".$data['id_unit_lama']; ?>">Detail</a></td>
                                             </tr>
                                     <?php
-                                            }
                                         }
                                     ?>
                                     </tbody>
                                 </table>
                             </div>
-                        </div>
-                        </form>
-                        <?php
-                            if($cv >= $db->hitung_data_kpi($id_anggotaD, $id_jabatanD, $id_departemenD, $id_unitD, $idA))
-                                echo '
-                                    <div class="col-md-12" align="right">
-                                        <button class="btn btn-primary" type="submit" name="tombolSimpanRealisasi">Simpan Data</button>
-                                    </div>
-                                    ';
-                            else
-                                echo '
-                                    <div class="col-md-12" align="right">
-                                        <button name="" class="btn btn-danger" disabled="disabled">Terdapat Data yang Masih Belum Diverifikasi</button>
-                                    </div>
-                                ';
-                        ?>
-                    </div>
-                    <br>
-                    <div class="row">
-                        <div class="col-md-12" align="right">
-                            <a class="btn btn-warning" href="data_kpi_mutasi.php">Kembali</a>
                         </div>
                     </div>
                 </div>
@@ -400,13 +298,10 @@
 		<script type="text/javascript" src="assets/js/app.js"></script>
 
         <script type="text/javascript">
-            $(document).ready(function()
-            {    
-                $('#tabel').DataTable({
-                    searching : false,
-                    ordering : false,
-                    paging : false,
-                    info : false
+            $(document).ready(function(){
+                $('table').DataTable({
+                    searching : true,
+                    ordering : false
                 });
             });
         </script>

@@ -214,7 +214,10 @@
 								<ul style="display: none;">
 									<?php
 										if($eksekusi1 == 1 || $_SESSION['aksus'] == TRUE)
+                                        {
 											echo '<li><a href="kompetensi_individu.php">Data Kompetensi Individu</a></li>';
+											echo '<li><a href="kompetensi_individu_mutasi.php">Data Kompetensi Individu (Mutasi)</a></li>';
+                                        }
                                         if($eksekusi2 == 1 || $_SESSION['aksus'] == TRUE)
                                         {
                                             if($db->cek_matriks($departemenL) <= 0 || $_SESSION['aksus'] == TRUE)
@@ -241,7 +244,17 @@
                 <div class="content container-fluid">
 					<div class="row">
 						<div class="col-xs-7">
-							<h4 class="page-title">Detail Kompetensi - <b><?php echo $nama_anggota; ?></b></h4>
+							<h4 class="page-title">
+                                Data Kompetensi Sub Ordinat Mutasi - 
+                                <b>
+                                    <?php
+                                        $nj = $db->tampil_jabatan_detail($id_jabatanD, 1);
+                                        $nd = $db->tampil_jabatan_detail($id_departemenD, 2);
+                                        $nu = $db->tampil_jabatan_detail($id_unitD, 3);
+                                        echo $nama_anggota.' ( '.$nj.' - '.$nd.' - '.$nu.')';
+                                    ?>
+                                </b>
+                            </h4>
 						</div>
                         <div class="col-xs-5" align="right">
                             <a class="btn btn-warning" href="detail_jabatan_kompetensi_mutasi.php?id_jabatan_lama=<?php echo $id_jabatanD."&&id_departemen_lama=".$id_departemenD."&&id_unit_lama=".$id_unitD; ?>">Kembali Halaman Sebelumnya</a>
@@ -388,7 +401,7 @@
                                                             $d = '';
                                                         
                                                         $id_peringkat = $data['id_peringkat'];
-                                                        if($db->hitung_perubahan_kompetensi($id_anggotaD, $id_jabatanD, $id_departemenD, $id_unitD, $idA, $data2['id_kompetensi_individu']))
+                                                        if($db->hitung_perubahan_kompetensi($id_anggotaD, $id_jabatanD, $id_departemenD, $id_unitD, $idA, $data2['id_kompetensi_individu']) > 0)
                                                             $id_peringkat = $db->cek_perubahan3($data2['id_kompetensi_individu']);
                                             ?>
                                                         <tr>

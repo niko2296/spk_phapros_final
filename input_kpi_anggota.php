@@ -208,7 +208,10 @@
 								<ul style="display: none;">
 									<?php
 										if($eksekusi1 == 1 || $_SESSION['aksus'] == TRUE)
+                                        {
 											echo '<li><a href="kompetensi_individu.php">Data Kompetensi Individu</a></li>';
+											echo '<li><a href="kompetensi_individu_mutasi.php">Data Kompetensi Individu (Mutasi)</a></li>';
+                                        }
 										if($eksekusi2 == 1 || $_SESSION['aksus'] == TRUE)
 										{
 											if($db->cek_matriks($departemenL) <= 0 || $_SESSION['aksus'] == TRUE)

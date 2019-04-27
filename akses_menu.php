@@ -196,8 +196,11 @@
 								<a href="#"><i class="la la-tasks"></i> <span> Kompetensi</span> <span class="menu-arrow"></span></a>
 								<ul style="display: none;">
 									<?php
-										if($eksekusi1 == 1 || $_SESSION['aksus'] == TRUE)
+                                        if($eksekusi1 == 1 || $_SESSION['aksus'] == TRUE)
+                                        {
 											echo '<li><a href="kompetensi_individu.php">Data Kompetensi Individu</a></li>';
+											echo '<li><a href="kompetensi_individu_mutasi.php">Data Kompetensi Individu (Mutasi)</a></li>';
+                                        }
                                         if($eksekusi2 == 1 || $_SESSION['aksus'] == TRUE)
                                         {
                                             if($db->cek_matriks($departemen) <= 0 || $_SESSION['aksus'] == TRUE)
