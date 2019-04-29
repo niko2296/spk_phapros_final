@@ -215,6 +215,7 @@
                                         if($_SESSION['aksus'] == TRUE || $db->cek_matriks($departemenL) > 0)
                                         {
                                             echo '<li><a href="kompetensi_matriks.php">Data Kompetensi Matriks</a></li>';
+                                            echo '<li><a href="kompetensi_matriks_mutasi.php">Data Kompetensi Matriks (Mutasi)</a></li>';
                                         }
 									?>
                                 </ul>

@@ -227,6 +227,7 @@
                                         if($_SESSION['aksus'] == TRUE || $db->cek_matriks($departemenL) > 0)
                                         {
                                             echo '<li><a href="kompetensi_matriks.php">Data Kompetensi Matriks</a></li>';
+                                            echo '<li><a href="kompetensi_matriks_mutasi.php">Data Kompetensi Matriks (Mutasi)</a></li>';
                                         }
 									?>
                                 </ul>
@@ -259,14 +260,6 @@
                     <div class="row">
                         <div class="col-md-12">
                             <?php
-                                $b2 = 0;
-                                foreach($db->tampil_waktu_verifikasi(2) as $tampil)
-                                {
-                                    $sekarang = date('Y-m-d');
-                                    if($sekarang >= $tampil['tanggal_awal_verifikasi'] AND $sekarang <= $tampil['tanggal_akhir_verifikasi'])
-                                        $b2 = 1;
-                                }
-
                                 if(isset($_POST['tombolSimpanK']))
                                 {
                                     $id_ki = $_POST['id_ki'];
@@ -385,32 +378,21 @@
                             </div>
                             <div class="row">
                                 <?php
-                                    if($b2 == 1)
-                                    {
-                                        if($p == 0)
-                                        {
-                                            echo '
-                                                <div class="col-md-12" align="right">
-                                                    <button name="" class="btn btn-danger" disabled="disabled">Data Kompetensi Belum Diisikan</button>
-                                                </div>
-                                                ';
-                                        }
-                                        else
-                                        {
-                                            echo '
-                                                <div class="col-md-12" align="right">
-                                                    <button class="btn btn-primary" type="submit" name="tombolSimpanK">Simpan Data</button>
-                                                </div>
-                                                ';
-                                        }
-                                    }
-                                    else 
+                                    if($p == 0)
                                     {
                                         echo '
                                             <div class="col-md-12" align="right">
-                                                <button class="btn btn-danger" disabled="disabled">Waktu Input/Verifikasi Data Kompetensi Sub Ordinat Belum Dibuka</button>
+                                                <button name="" class="btn btn-danger" disabled="disabled">Data Kompetensi Belum Diisikan</button>
                                             </div>
-                                            '; 
+                                            ';
+                                    }
+                                    else
+                                    {
+                                        echo '
+                                            <div class="col-md-12" align="right">
+                                                <button class="btn btn-primary" type="submit" name="tombolSimpanK">Simpan Data</button>
+                                            </div>
+                                            ';
                                     }
                                 ?>
                             </div>
