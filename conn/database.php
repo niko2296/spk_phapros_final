@@ -397,23 +397,32 @@
 				$jml = $jml+1;
 
 			$hasil = [];
-			if($jml == 0)
-			{
-				$qc = $this->connection->query("SELECT * FROM aturan_matriks");
-				while($tc = $qc->fetch_array())
-				{
-					$idD = $tc['id_departemen'];
-					$query = $this->connection->query("SELECT a.*, j.nama_jabatan, d.nama_departemen, u.nama_unit FROM mst_anggota a LEFT JOIN mst_jabatan j ON a.id_jabatan = j.id_jabatan LEFT JOIN mst_departemen d ON a.id_departemen = d.id_departemen LEFT JOIN mst_unit u ON a.id_unit = u.id_unit WHERE a.id_departemen = '$idD' GROUP BY a.id_jabatan, a.id_departemen, a.id_unit");
-					while($tampil = $query->fetch_array())
-						$hasil[] = $tampil;
-				}
-			}
-			else if($jml > 0)
+			// if($jml == 0)
+			// {
+			// 	$qc = $this->connection->query("SELECT * FROM aturan_matriks");
+			// 	while($tc = $qc->fetch_array())
+			// 	{
+			// 		$idD = $tc['id_departemen'];
+			// 		$query = $this->connection->query("SELECT a.*, j.nama_jabatan, d.nama_departemen, u.nama_unit FROM mst_anggota a LEFT JOIN mst_jabatan j ON a.id_jabatan = j.id_jabatan LEFT JOIN mst_departemen d ON a.id_departemen = d.id_departemen LEFT JOIN mst_unit u ON a.id_unit = u.id_unit WHERE a.id_departemen = '$idD' GROUP BY a.id_jabatan, a.id_departemen, a.id_unit");
+			// 		while($tampil = $query->fetch_array())
+			// 			$hasil[] = $tampil;
+			// 	}
+			// }
+			if($jml > 0)
 			{
 				$query = $this->connection->query("SELECT a.*, j.nama_jabatan, d.nama_departemen, u.nama_unit FROM mst_anggota a LEFT JOIN mst_jabatan j ON a.id_jabatan = j.id_jabatan LEFT JOIN mst_departemen d ON a.id_departemen = d.id_departemen LEFT JOIN mst_unit u ON a.id_unit = u.id_unit WHERE a.id_departemen = '$id_departemen' GROUP BY a.id_jabatan, a.id_departemen, a.id_unit");
 				while($tampil = $query->fetch_array())
 					$hasil[] = $tampil;
 			}
+			return $hasil;
+		}
+
+		function tampil_jabatan_matriks2($id_departemen = null)
+		{
+			$hasil = [];
+			$query = $this->connection->query("SELECT mp.*, j.nama_jabatan, d.nama_departemen, u.nama_unit FROM mutasi_pegawai mp LEFT JOIN mst_jabatan j ON mp.id_jabatan_lama = j.id_jabatan LEFT JOIN mst_departemen d ON mp.id_departemen_lama = d.id_departemen LEFT JOIN mst_unit u ON mp.id_unit_lama = u.id_unit WHERE mp.id_departemen_lama = '$id_departemen' GROUP BY mp.id_jabatan_lama, mp.id_departemen_lama, mp.id_unit_lama");
+			while($tampil = $query->fetch_array())
+				$hasil[] = $tampil;
 			return $hasil;
 		}
 
@@ -767,7 +776,7 @@
 		function tampil_usulan_mutasi($id_periode = null, $id_jabatan = null, $id_departemen = null, $id_unit = null)
 		{
 			$hasil = [];
-			$query = $this->connection->query("SELECT mp.*, a.nik, a.nama, a.nomor_hp, a.email FROM mutasi_pegawai mp LEFT JOIN mst_anggota a ON mp.id_anggota = a.id_anggota WHERE mp.id_periode = '$id_periode'");
+			$query = $this->connection->query("SELECT mp.*, a.nik, a.nama, a.nomor_hp, a.email FROM mutasi_pegawai mp LEFT JOIN mst_anggota a ON mp.id_anggota = a.id_anggota WHERE mp.id_periode = '$id_periode' AND mp.id_jabatan_lama = '$id_jabatan' AND mp.id_departemen_lama = '$id_departemen' AND mp.id_unit_lama = '$id_unit'");
 			while($tampil = $query->fetch_array())
 				$hasil[] = $tampil;
 			return $hasil;
