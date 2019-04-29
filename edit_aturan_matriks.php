@@ -213,6 +213,13 @@
 									?>
                                 </ul>
 							</li>
+                            <li class="submenu">
+                                <a href="#"><i class="la la-sticky-note-o"></i> <span> Laporan</span> <span class="menu-arrow"></span></a>
+                                <ul style="display: none;">
+                                    <li><a href="laporan_individu.php">Penilaian Individu</a></li>
+                                    <li><a href="laporan_sub_ordinat.php">Penilaian Sub Ordinat</a></li>
+                                </ul>
+							</li>
                             <li class=""> 
 								<a href="hasil_akhir.php"><i class="la la-edit"></i> <span>Hasil Akhir</span></a>
 							</li>
