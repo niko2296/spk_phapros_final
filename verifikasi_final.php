@@ -95,7 +95,7 @@
                 echo 2;
         }
         else{
-            echo 3;
+            echo 2;
         }
     }
 

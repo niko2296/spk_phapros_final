@@ -2330,6 +2330,14 @@
 			$tampil = $query->fetch_array();
 			return $tampil['status'];
 		}
+		function cek_verif_kompetensi_matriks($id_kompetensi = null, $id_verifikator = null, $id_jabatan = null, $id_departemen = null, $id_unit = null)
+		{
+			$query = $this->connection->query("SELECT * FROM data_kompetensi_verifikasi WHERE id_kompetensi_individu = '$id_kompetensi' AND id_verifikator = '$id_verifikator' AND id_jabatan_verifikator = '$id_jabatan' AND id_departemen_verifikator = '$id_departemen' AND id_unit_verifikator = '$id_unit'");
+			$jml = 0;
+			while($tampil = $query->fetch_array())
+				$jml = $jml+1;
+			return $jml;
+		}
 
 		function cek_kompetensi($id_anggota = null, $id_jabatan = null, $id_departemen = null, $id_unit = null, $id_kompetensi = null, $jenis = null)
 		{
@@ -2855,30 +2863,48 @@
 			if($status == null || $status == 0 || $status == '0')
 			{
 				$query = "DELETE FROM data_kompetensi_verifikasi WHERE id_kompetensi_individu = '$id_kompetensi' AND id_verifikator = '$id_verifikator' AND id_jabatan_verifikator = '$id_jabatan_verifikator' AND id_departemen_verifikator = '$id_departemen_verifikator' AND id_unit_verifikator = '$id_unit_verifikator'";
-				$id_verifikator = 0;
-				$id_jabatan_verifikator = 0;
-				$id_departemen_verifikator = 0;
-				$id_unit_verifikator = 0;
-				$id_verifikator = 0;
-				$tanggal = '0000-00-00';
-			}
-			else {
-				$tanggal = date('Y-m-d');
-			}
-			$query = "UPDATE data_kompetensi_individu SET status = '$status', id_verifikator = '$id_verifikator', id_jabatan_verifikator = '$id_jabatan_verifikator', id_departemen_verifikator = '$id_departemen_verifikator', id_unit_verifikator = '$id_unit_verifikator', tanggal_verifikasi = '$tanggal' WHERE id_kompetensi_individu = '$id_kompetensi'";
-			$edit = $this->connection->prepare($query);
-			if($edit->execute())
-			{
-				if($status == null || $status == 0 || $status == '0')
+				$hapus = $this->connection->prepare($query);
+				if($hapus->execute())
 				{
-					$queryH = "DELETE FROM data_kompetensi_verifikasi WHERE id_kompetensi_individu = '$id_kompetensi'";
-					$hapus = $this->connection->prepare($queryH);
-					if($hapus->execute())
-						return 1;
-					else 
-						return 2;
+					$qc = $this->connection->query("SELECT * FROM data_kompetensi_verifikasi WHERE id_kompetensi_individu = '$id_kompetensi'");
+					$jml = 0;
+					while($tc = $qc->fetch_array())
+						$jml = $jml+1;
+
+					if($jml == 0)
+					{
+						$tanggal = '0000-00-00';
+						$query = "UPDATE data_kompetensi_individu SET status = '$status', tanggal_verifikasi = '$tanggal' WHERE id_kompetensi_individu = '$id_kompetensi'";
+						$edit = $this->connection->prepare($query);
+						if($edit->execute())
+							return 1;
+						else 
+							return 2;
+					}
 				}
 				else{
+					return 2;
+				}
+			}
+			else
+			{
+				$qc = $this->connection->query("SELECT * FROM data_kompetensi_individu WHERE id_kompetensi_individu = '$id_kompetensi'");
+				$tc = $qc->fetch_array();
+				$cs = $tc['status'];
+				$k = 1;
+				if($cs == 0 || $cs == '0')
+				{
+					$tanggal = date('Y-m-d');
+					$query = "UPDATE data_kompetensi_individu SET status = '$status', tanggal_verifikasi = '$tanggal' WHERE id_kompetensi_individu = '$id_kompetensi'";
+					$edit = $this->connection->prepare($query);
+					if($edit->execute())
+						$k = 1;
+					else 
+						$k = 0;
+				}
+
+				if($k == 1)
+				{
 					//Kumpulan Query
 					$queryT1 = $this->connection->query("SELECT a.*, j.nama_jabatan, d.nama_departemen, u.nama_unit FROM mst_anggota a LEFT JOIN mst_jabatan j ON a.id_jabatan = j.id_jabatan LEFT JOIN mst_departemen d ON a.id_departemen = d.id_departemen LEFT JOIN mst_unit u ON a.id_unit = u.id_unit WHERE a.id_anggota = '$id_anggota'");
 					$t1 = $queryT1->fetch_array();
@@ -2905,12 +2931,18 @@
 
 					// Ambil Data
 					$nama1 = $t1['nama'];
+					$id_jabatan1 = $t1['id_jabatan'];
 					$jabatan1 = $t1['nama_jabatan'];
+					$id_departemen1 = $t1['id_departemen'];
 					$departemen1 = $t1['nama_departemen'];
+					$id_unit1 = $t1['id_unit'];
 					$unit1 = $t1['nama_unit'];
 					$nama2 = $t2['nama'];
+					$id_jabatan2 = $t2['id_jabatan'];
 					$jabatan2 = $t2['nama_jabatan'];
+					$id_departemen2 = $t2['id_departemen'];
 					$departemen2 = $t2['nama_departemen'];
+					$id_unit2 = $t2['id_unit'];
 					$unit2 = $t2['nama_unit'];
 					$nama_kompetensi = $t3['nama_kompetensi'];
 					$indikator_terendah = $t3['indikator_terendah'];
@@ -2923,17 +2955,16 @@
 					$tanggal2 = $t3['tanggal_verifikasi'];
 					// Akhiran Ambil Data
 
-					$queryI = "INSERT INTO data_kompetensi_verifikasi VALUES ('', '$id_kompetensi', '$nama_kompetensi', '$indikator_terendah', '$indikator_tertinggi', '$bobot', '$peringkat', '$nilai', '$periode', '$kelompok_jabatan', '$nama1', '$jabatan1', '$departemen1', '$unit1', '$nama2', '$jabatan2', '$departemen2', '$unit2', '$tanggal1', '$tanggal2')";
+					$queryI = "INSERT INTO data_kompetensi_verifikasi VALUES ('', '$id_kompetensi', '$nama_kompetensi', '$indikator_terendah', '$indikator_tertinggi', '$bobot', '$peringkat', '$nilai', '$periode', '$kelompok_jabatan', '$id_anggota', '$nama1', '$id_jabatan1', '$jabatan1', '$id_departemen1', '$departemen1', '$id_unit1', '$unit1', '$id_verifikator', '$nama2', '$id_jabatan2', '$jabatan2', '$id_departemen2', '$departemen2', '$id_unit2', '$unit2', '$tanggal1', '$tanggal2')";
 					$input = $this->connection->prepare($queryI);
 					if($input->execute())
 						return 1;
 					else 
 						return 2;
 				}
-			}
-			else 
-			{	
-				return 2;
+				else{
+					return 2;
+				}
 			}
 		}
 		// Akhiran Fungsi Verifikasi
