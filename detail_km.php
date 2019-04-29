@@ -373,7 +373,17 @@
                                                                 }
                                                             ?>
                                                             </td>
-                                                            <td align="center"><input type="checkbox" name="verifikasi" id="verifikasi" class="form-control" data-id_anggota="<?php echo $id_anggotaD; ?>" data-verifikator="<?php echo $id_anggotaV; ?>" data-jabatan_verifikator="<?php echo $jabatan; ?>" data-departemen_verifikator="<?php echo $departemenL; ?>" data-unit_verifikator="<?php echo $unitL; ?>" data-id="<?php echo $data2['id_kompetensi_individu']; ?>" data-jenis="<?php echo $data2['jenis']; ?>" <?php echo ($db->cek_verif_kompetensi_matriks($data2['id_kompetensi_individu'], $id_anggotaV, $jabatan, $departemenL, $unitL) > 0)?('checked'):(''); ?>></td>
+                                                            <?php
+                                                                if($b2 == 1)
+                                                                {
+                                                            ?>
+                                                                    <td align="center"><input type="checkbox" name="verifikasi" id="verifikasi" class="form-control" data-id_anggota="<?php echo $id_anggotaD; ?>" data-verifikator="<?php echo $id_anggotaV; ?>" data-jabatan_verifikator="<?php echo $jabatan; ?>" data-departemen_verifikator="<?php echo $departemenL; ?>" data-unit_verifikator="<?php echo $unitL; ?>" data-id="<?php echo $data2['id_kompetensi_individu']; ?>" data-jenis="<?php echo $data2['jenis']; ?>" <?php echo ($db->cek_verif_kompetensi_matriks($data2['id_kompetensi_individu'], $id_anggotaV, $jabatan, $departemenL, $unitL) > 0)?('checked'):(''); ?>></td>
+                                                            <?php
+                                                                }
+                                                                else {
+                                                                    echo '<td align="center">Belum Terdapat Aksi</td>';
+                                                                }
+                                                            ?>
                                                         </tr>
                                             <?php
                                                     }
