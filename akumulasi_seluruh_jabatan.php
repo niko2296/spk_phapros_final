@@ -310,6 +310,7 @@
                             $aD = [];
                             $aU = [];
                             $aN = [];
+                            $tM = [];
                             foreach($db->tampil_jabatan_anggota($id_anggota, $idA) as $penting)
                             {
                                 $pNil = $pNil+1;
@@ -320,6 +321,7 @@
                                 $aJ[] = $id_jabatanD;
                                 $aD[] = $id_departemenD;
                                 $aU[] = $id_unitD;
+                                $tM[] = $penting['tanggal_mutasi'];
 
                                 if($pNil == 1)
                                     $kNil = 'PERTAMA';
@@ -1445,6 +1447,8 @@
                                                 ';
 
                                                 $aN[] = $gTot;
+                                                $h = date('t', mktime(0, 0, 0, 12, 1, $tA));
+                                                $tM[] = $tA.'-12-'.$h;
                                             ?>
                                         </table>
                                     </div>
@@ -1491,16 +1495,105 @@
                                         <td style="padding:5px; font-family: Arial; font-size:12px;" width="15%"><b><center>TOTAL NILAI KINERJA</center></b></td>
                                     </tr>
                                     <?php
-                                        for($i=0; $i<count($aJ); $i++)
+                                        if(count($aJ) == 0)
                                         {
                                             echo '
                                                 <tr>
-                                                    <td style="padding:5px; font-family: Arial; font-size:12px;">'.$db->tampil_jabatan_detail($aJ[$i], 1).'</td>
-                                                    <td style="padding:5px; font-family: Arial; font-size:12px;">'.$db->tampil_jabatan_detail($aD[$i], 2).'</td>
-                                                    <td style="padding:5px; font-family: Arial; font-size:12px;">'.$db->tampil_jabatan_detail($aU[$i], 3).'</td>
-                                                    <td style="padding:5px; font-family: Arial; font-size:12px;">'.$i.'</td>
-                                                    <td style="padding:5px; font-family: Arial; font-size:12px;">'.$aN[$i].'</td>
-                                                    <td style="padding:5px; font-family: Arial; font-size:12px;">'.$i.'</td>
+                                                    <td colspan="6"><center>Data Kosong</center></td>
+                                                </tr>
+                                            ';
+                                        }
+                                        else {
+                                            $gKinerja = 0;
+                                            $kn2 = null;
+                                            if(count($aJ) == 1)
+                                            {
+                                                $jml_hari = 0;
+                                                for($a=1; $a<=12; $a++)
+                                                    $jml_hari = $jml_hari+ date('t', mktime(0, 0, 0, $a, 1, $tA));
+                                                for($i=0; $i<count($aJ); $i++)
+                                                {
+                                                    echo '
+                                                        <tr>
+                                                            <td style="padding:5px; font-family: Arial; font-size:12px;">'.$db->tampil_jabatan_detail($aJ[$i], 1).'</td>
+                                                            <td style="padding:5px; font-family: Arial; font-size:12px;">'.$db->tampil_jabatan_detail($aD[$i], 2).'</td>
+                                                            <td style="padding:5px; font-family: Arial; font-size:12px;">'.$db->tampil_jabatan_detail($aU[$i], 3).'</td>
+                                                            <td style="padding:5px; font-family: Arial; font-size:12px; text-align:center;">'.$jml_hari.'</td>
+                                                            <td style="padding:5px; font-family: Arial; font-size:12px; text-align:center;">'.$aN[$i].'</td>
+                                                            <td style="padding:5px; font-family: Arial; font-size:12px; text-align:center;">'.$aN[$i].'</td>
+                                                        </tr>
+                                                    ';
+                                                }
+
+                                                $gKinerja = array_sum($aN[$i]);
+                                            }
+                                            else {
+                                                $jml_hari = 0;
+                                                for($a=1; $a<=12; $a++)
+                                                    $jml_hari = $jml_hari+ date('t', mktime(0, 0, 0, $a, 1, $tA));
+                                                for($i=0; $i<count($aJ); $i++)
+                                                {
+                                                    $jml_hari2 = 0;
+                                                    if($i == 0)
+                                                    {
+                                                        $bT = explode('-', $tM[$i]);
+                                                        for($a=1; $a<intval($bT[1]); $a++)
+                                                            $jml_hari2 = $jml_hari2 + date('t', mktime(0, 0, 0, $a, 1, $tA));
+                                                        $jml_hari2 = $jml_hari2+$bT[2];
+                                                    }
+                                                    else
+                                                    {
+                                                        $bA = explode('-', $tM[$i-1]);
+                                                        $bT = explode('-', $tM[$i]);
+                                                        for($a=(intval($bA[1])+1); $a<intval($bT[1]); $a++)
+                                                            $jml_hari2 = $jml_hari2 + date('t', mktime(0, 0, 0, $a, 1, $tA));
+                                                        $penampung = date('t', mktime(0, 0, 0, $bA[1], 1, $tA)) - $bA[2];
+                                                        $jml_hari2 = $jml_hari2+$penampung;
+                                                        $jml_hari2 = $jml_hari2+$bT[2];
+                                                    }
+
+                                                    $tK = $jml_hari2/$jml_hari;
+                                                    $tK = $tK*$aN[$i];
+                                                    echo '
+                                                        <tr>
+                                                            <td style="padding:5px; font-family: Arial; font-size:12px;">'.$db->tampil_jabatan_detail($aJ[$i], 1).'</td>
+                                                            <td style="padding:5px; font-family: Arial; font-size:12px;">'.$db->tampil_jabatan_detail($aD[$i], 2).'</td>
+                                                            <td style="padding:5px; font-family: Arial; font-size:12px;">'.$db->tampil_jabatan_detail($aU[$i], 3).'</td>
+                                                            <td style="padding:5px; font-family: Arial; font-size:12px; text-align:center;">'.$jml_hari2.'</td>
+                                                            <td style="padding:5px; font-family: Arial; font-size:12px; text-align:center;">'.$aN[$i].'</td>
+                                                            <td style="padding:5px; font-family: Arial; font-size:12px; text-align:center;">'.number_format($tK, 2).'</td>
+                                                        </tr>
+                                                    ';
+
+                                                    $gKinerja = $gKinerja + number_format($tK, 2);
+                                                }
+                                            }
+
+                                            foreach($db->tampil_kriteria($idA) as $tampil)
+                                            {
+                                                if($tampil['batas_minimum'] != 0 AND $tampil['batas_maksimum'] == 0)
+                                                {
+                                                    if($gKinerja >= $tampil['batas_minimum'])
+                                                        $kn2 = $tampil['kriteria_nilai'];
+                                                }
+                                                else if($tampil['batas_minimum'] == 0 AND $tampil['batas_maksimum'] != 0)
+                                                {
+                                                    if($gKinerja <= $tampil['batas_maksimum'])
+                                                        $kn2 = $tampil['kriteria_nilai'];
+                                                }
+                                                else {
+                                                    if($gKinerja >= $tampil['batas_minimum'] AND $gKinerja <= $tampil['batas_maksimum'])
+                                                        $kn2 = $tampil['kriteria_nilai'];
+                                                }
+                                            }
+                                            echo '
+                                                <tr>
+                                                    <td colspan="5" style="padding:5px; font-family: Arial; font-size:12px; text-align:center;"><b>Total Perhitungan Akumulasi</b></td>
+                                                    <td style="padding:5px; font-family: Arial; font-size:12px; text-align:center;"><b>'.$gKinerja.'</b></td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="5" style="padding:5px; font-family: Arial; font-size:12px; text-align:center;"><b>Kriteria Nilai Berdasarkan Total Perhitungan Akumulasi</b></td>
+                                                    <td style="padding:5px; font-family: Arial; font-size:12px; text-align:center;"><b>'.$kn2.'</b></td>
                                                 </tr>
                                             ';
                                         }
