@@ -455,6 +455,9 @@
                             'verifikator' : verifikator,
                             'jk' : jk,
                             'id_anggota' : id_anggota,
+                            'id_jabatan' : id_jabatan,
+                            'id_departemen' : id_departemen,
+                            'id_unit' : id_unit,
                             'jabatan_verifikator' : jabatan_verifikator,
                             'departemen_verifikator' : departemen_verifikator,
                             'unit_verifikator' : unit_verifikator

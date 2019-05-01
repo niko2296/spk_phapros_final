@@ -409,7 +409,7 @@
                                                     if($cc == 1)
                                                     { 
                                                 ?>
-                                                        <td class="text-center"><input type="checkbox" name="verifikasi1" id="verifikasi1" data-id="<?php echo $data['id_kpi']; ?>" class="form-control" <?php echo ($db->cek_verif_realisasi($data['id_kpi']) == 1)?('checked'):(''); ?> <?php echo $d; ?>></td>
+                                                        <td class="text-center"><input type="checkbox" name="verifikasi1" id="verifikasi1" data-id="<?php echo $data['id_kpi']; ?>" data-id_anggota="<?php echo $id_anggotaD; ?>" data-id_jabatan="<?php echo $id_jabatanD; ?>" data-id_departemen="<?php echo $id_departemenD; ?>" data-id_unit="<?php echo $id_unitD; ?>" class="form-control" <?php echo ($db->cek_verif_realisasi($data['id_kpi']) == 1)?('checked'):(''); ?> <?php echo $d; ?>></td>
                                                 <?php
                                                     }
                                                 ?>
@@ -488,15 +488,24 @@
                     var v = ($(this).is(':checked'))?'1':'0';
                     var paramId = $(this).data('id');
                     var id_verifikator = $(this).data('id_verifikator');
+                    var id_anggota = $(this).data('id_anggota');
+                    var id_jabatan = $(this).data('id_jabatan');
+                    var id_departemen = $(this).data('id_departemen');
+                    var id_unit = $(this).data('id_unit');
                     var id1 = 'realisasi';
                     var id2 = 'keterangan';
+                    var lokasi = "detail_realisasi.php?id_anggota="+ id_anggota +"&&id_jabatan="+ id_jabatan +"&&id_departemen="+ id_departemen +"&&id_unit="+ id_unit;
                     $.ajax({
                         url : 'verifikasi_final.php',
                         type : 'get',
                         data:{
                             'id' : paramId,
                             'value' : v,
-                            'jenis' : 'verif_realisasi',
+                            'id_anggota' : id_anggota,
+                            'id_jabatan' : id_jabatan,
+                            'id_departemen' : id_departemen,
+                            'id_unit' : id_unit,
+                            'jenis' : 'verif_realisasi'
                         },
                         success:function(html){
                             if(html == 1)
@@ -516,6 +525,7 @@
                             else{
                                 alert("Terdapat Gagal Dalam Proses Penyimpanan");
                             }
+                            setTimeout(function(){window.location = lokasi}, 1000);
                         }
                     });
                 });

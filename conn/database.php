@@ -88,7 +88,7 @@
 				$hasil[] = $tampil;
 			return $hasil;
 		}
-		function tampil_kpi($id_periode = null, $id_anggota = null, $id_jabatan = null, $id_departemen = null, $id_unit = null){
+		function tampil_kpi($id_periode = null, $id_anggota = null, $id_jabatan = null, $id_departemen = null, $id_unit = null, $status = null){
 			if($id_anggota == null || $id_jabatan == null)
 			{
 				session_start();
@@ -99,9 +99,19 @@
 			}
 			$hasil = [];
 			if($id_periode != null)
-				$query = $this->connection->query("SELECT k.*, j.nama_jabatan, u.nama_unit, p.tahun, s.nama_satuan, pol.nama_polarisasi, pol.rumus FROM data_kpi k LEFT JOIN mst_jabatan j ON j.id_jabatan = k.id_jabatan LEFT JOIN mst_unit u ON u.id_unit = k.id_unit LEFT JOIN mst_periode p ON p.id_periode = k.id_periode LEFT JOIN mst_satuan s ON s.id_satuan = k.satuan LEFT JOIN mst_polarisasi pol ON pol.id_polarisasi = k.sifat_kpi WHERE k.id_anggota = '$id_anggota' AND k.id_jabatan = '$id_jabatan' AND k.id_departemen = '$id_departemen' AND k.id_unit = '$id_unit' AND p.id_periode = '$id_periode'");
+			{
+				if($status == null)
+					$query = $this->connection->query("SELECT k.*, j.nama_jabatan, u.nama_unit, p.tahun, s.nama_satuan, pol.nama_polarisasi, pol.rumus FROM data_kpi k LEFT JOIN mst_jabatan j ON j.id_jabatan = k.id_jabatan LEFT JOIN mst_unit u ON u.id_unit = k.id_unit LEFT JOIN mst_periode p ON p.id_periode = k.id_periode LEFT JOIN mst_satuan s ON s.id_satuan = k.satuan LEFT JOIN mst_polarisasi pol ON pol.id_polarisasi = k.sifat_kpi WHERE k.id_anggota = '$id_anggota' AND k.id_jabatan = '$id_jabatan' AND k.id_departemen = '$id_departemen' AND k.id_unit = '$id_unit' AND p.id_periode = '$id_periode'");
+				else
+					$query = $this->connection->query("SELECT k.*, j.nama_jabatan, u.nama_unit, p.tahun, s.nama_satuan, pol.nama_polarisasi, pol.rumus FROM data_kpi k LEFT JOIN mst_jabatan j ON j.id_jabatan = k.id_jabatan LEFT JOIN mst_unit u ON u.id_unit = k.id_unit LEFT JOIN mst_periode p ON p.id_periode = k.id_periode LEFT JOIN mst_satuan s ON s.id_satuan = k.satuan LEFT JOIN mst_polarisasi pol ON pol.id_polarisasi = k.sifat_kpi WHERE k.id_anggota = '$id_anggota' AND k.id_jabatan = '$id_jabatan' AND k.id_departemen = '$id_departemen' AND k.id_unit = '$id_unit' AND p.id_periode = '$id_periode' AND k.status = '$status'");
+			}
 			else
-				$query = $this->connection->query("SELECT k.*, j.nama_jabatan, u.nama_unit, p.tahun, s.nama_satuan, pol.nama_polarisasi, pol.rumus FROM data_kpi k LEFT JOIN mst_jabatan j ON j.id_jabatan = k.id_jabatan LEFT JOIN mst_unit u ON u.id_unit = k.id_unit LEFT JOIN mst_periode p ON p.id_periode = k.id_periode LEFT JOIN mst_satuan s ON s.id_satuan = k.satuan LEFT JOIN mst_polarisasi pol ON pol.id_polarisasi = k.sifat_kpi WHERE k.id_anggota = '$id_anggota' AND k.id_jabatan = '$id_jabatan' AND k.id_unit = '$id_unit'");
+			{
+				if($status == null)
+					$query = $this->connection->query("SELECT k.*, j.nama_jabatan, u.nama_unit, p.tahun, s.nama_satuan, pol.nama_polarisasi, pol.rumus FROM data_kpi k LEFT JOIN mst_jabatan j ON j.id_jabatan = k.id_jabatan LEFT JOIN mst_unit u ON u.id_unit = k.id_unit LEFT JOIN mst_periode p ON p.id_periode = k.id_periode LEFT JOIN mst_satuan s ON s.id_satuan = k.satuan LEFT JOIN mst_polarisasi pol ON pol.id_polarisasi = k.sifat_kpi WHERE k.id_anggota = '$id_anggota' AND k.id_jabatan = '$id_jabatan' AND k.id_unit = '$id_unit'");
+				else
+					$query = $this->connection->query("SELECT k.*, j.nama_jabatan, u.nama_unit, p.tahun, s.nama_satuan, pol.nama_polarisasi, pol.rumus FROM data_kpi k LEFT JOIN mst_jabatan j ON j.id_jabatan = k.id_jabatan LEFT JOIN mst_unit u ON u.id_unit = k.id_unit LEFT JOIN mst_periode p ON p.id_periode = k.id_periode LEFT JOIN mst_satuan s ON s.id_satuan = k.satuan LEFT JOIN mst_polarisasi pol ON pol.id_polarisasi = k.sifat_kpi WHERE k.id_anggota = '$id_anggota' AND k.id_jabatan = '$id_jabatan' AND k.id_unit = '$id_unit' AND k.status = '$status'");
+			}
 			while($tampil = $query->fetch_array())
 				$hasil[] = $tampil;
 			return $hasil;
@@ -646,6 +656,14 @@
 			return $hasil;
 		}
 
+		function tampil_penilai_kpi_satuan($id_anggota = null, $id_jabatan = null, $id_departemen = null, $id_unit = null, $id_periode = null)
+		{
+			$query = $this->connection->query("SELECT * FROM data_realisasi_kpi WHERE id_anggota = '$id_anggota' AND id_jabatan = '$id_jabatan' AND id_departemen = '$id_departemen' AND id_unit = '$id_unit' AND id_periode = '$id_periode' AND status = '1' GROUP BY id_verifikator, id_jabatan_verifikator, id_departemen_verifikator, id_unit_verifikator");
+			while($tampil = $query->fetch_array())
+				$hasil[] = $tampil;
+			return $hasil;
+		}
+
 		function tampil_penilai_kompetensi($id_anggota = null, $id_periode = null)
 		{
 			$query = $this->connection->query("SELECT * FROM data_kompetensi_individu WHERE id_anggota = '$id_anggota' AND id_periode = '$id_periode' AND status = '1' GROUP BY id_verifikator, id_jabatan_verifikator, id_departemen_verifikator, id_unit_verifikator");
@@ -792,6 +810,66 @@
 			while($tampil = $query->fetch_array())
 				$hasil[] = $tampil;
 			return $hasil;
+		}
+
+		function tampil_jabatan_anggota($id_anggota = null, $id_periode = null)
+		{
+			$hasil = [];
+			$query = $this->connection->query("SELECT mp.*, j.nama_jabatan, d.nama_departemen, u.nama_unit FROM mutasi_pegawai mp LEFT JOIN mst_jabatan j ON mp.id_jabatan_lama = j.id_jabatan LEFT JOIN mst_departemen d ON mp.id_departemen_lama = d.id_departemen LEFT JOIN mst_unit u ON mp.id_unit_lama = u.id_unit WHERE mp.id_anggota = '$id_anggota' AND mp.id_periode = '$id_periode'");
+			while($tampil = $query->fetch_array())
+				$hasil[] = $tampil;
+			return $hasil;
+		}
+
+		function perhitungan_kompetensi_matriks1($id_anggota = null, $id_jabatan = null, $id_departemen = null, $id_unit = null, $id_periode = null)
+		{
+			$tahun = 0;
+			$qt = $this->connection->query("SELECT * FROM mst_periode WHERE id_periode = '$id_periode'");
+			$t = $qt->fetch_array();
+			$tahun = $t['tahun'];
+
+			$hasil = [];
+			$query = $this->connection->query("SELECT * FROM data_kompetensi_verifikasi WHERE id_anggota = '$id_anggota' AND id_jabatan = '$id_jabatan' AND id_departemen = '$id_departemen' AND id_unit = '$id_unit' AND periode = '$tahun' GROUP BY id_verifikator, id_jabatan_verifikator, id_departemen_verifikator, id_unit_verifikator ORDER BY id_kompetensi_verifikasi DESC");
+			while($tampil = $query->fetch_array())
+				$hasil[] = $tampil;
+			return $hasil;
+		}
+
+		function perhitungan_kompetensi_matriks2($id_anggota = null, $id_jabatan = null, $id_departemen = null, $id_unit = null, $id_periode = null, $id_verifikator = null, $id_jabatan_verifikator = null, $id_departemen_verifikator = null, $id_unit_verifikator = null)
+		{
+			$tahun = 0;
+			$qt = $this->connection->query("SELECT * FROM mst_periode WHERE id_periode = '$id_periode'");
+			$t = $qt->fetch_array();
+			$tahun = $t['tahun'];
+
+			$hasil = [];
+			$query = $this->connection->query("SELECT * FROM data_kompetensi_verifikasi WHERE id_anggota = '$id_anggota' AND id_jabatan = '$id_jabatan' AND id_departemen = '$id_departemen' AND id_unit = '$id_unit' AND periode = '$tahun' AND id_verifikator = '$id_verifikator' AND id_jabatan_verifikator = '$id_jabatan_verifikator' AND id_departemen_verifikator = '$id_departemen_verifikator' AND id_unit_verifikator = '$id_unit_verifikator'");
+			while($tampil = $query->fetch_array())
+				$hasil[] = $tampil;
+			return $hasil;
+		}
+
+		function perubahan_kompetensi($id_kompetensi = null, $id_anggota1 = null, $id_jabatan1 = null, $id_departemen1 = null, $id_unit1 = null, $id_anggota2 = null, $id_jabatan2 = null, $id_departemen2 = null, $id_unit2 = null, $id_periode = null)
+		{
+			$nilai = 0;
+			$query = $this->connection->query("SELECT k.*, p.peringkat, p.nilai FROM perubahan_kompetensi k LEFT JOIN mst_peringkat p ON k.id_peringkat = p.id_peringkat WHERE k.id_kompetensi_asli = '$id_kompetensi' AND k.id_periode = '$id_periode' AND k.id_anggota = '$id_anggota1' AND k.id_jabatan = '$id_jabatan1' AND k.id_departemen = '$id_departemen1' AND k.id_unit = '$id_unit1' AND k.id_anggota_perubahan = '$id_anggota2' AND k.id_jabatan_perubahan = '$id_jabatan2' AND k.id_departemen_perubahan = '$id_departemen2' AND k.id_unit_perubahan = '$id_unit2'");
+			$t = $query->fetch_array();
+			$nilai = $t['nilai'];
+			return $nilai;
+		}
+
+		function jumlah_penilai($id_anggota = null, $id_jabatan = null, $id_departemen = null, $id_unit = null, $id_periode = null)
+		{
+			$tahun = 0;
+			$qt = $this->connection->query("SELECT * FROM mst_periode WHERE id_periode = '$id_periode'");
+			$t = $qt->fetch_array();
+			$tahun = $t['tahun'];
+
+			$jml = 0;
+			$query = $this->connection->query("SELECT * FROM data_kompetensi_verifikasi WHERE id_anggota = '$id_anggota' AND id_jabatan = '$id_jabatan' AND id_departemen = '$id_departemen' AND id_unit = '$id_unit' AND periode = '$tahun' GROUP BY id_verifikator, id_jabatan_verifikator, id_departemen_verifikator, id_unit_verifikator ORDER BY id_kompetensi_verifikasi DESC");
+			while($tampil = $query->fetch_array())
+				$jml = $jml+1;
+			return $jml;
 		}
 		//Akhiran Fungsi Tampil
 
@@ -2453,7 +2531,7 @@
 		function cek_perubahan3($id_kompetensi = null)
 		{
 			$hasil = 0;
-			$query = $this->connection->query("SELECT * FROM perubahan_kompetensi WHERE id_kompetensi_asli = '$id_kompetensi' ORDER BY id_perubahan_kompetensi DESC");
+			$query = $this->connection->query("SELECT * FROM perubahan_kompetensi WHERE id_kompetensi_asli = '$id_kompetensi' ORDER BY pangkat DESC");
 			$tampil = $query->fetch_array();
 			$hasil = $tampil['id_peringkat'];
 			return $hasil;
@@ -2476,10 +2554,28 @@
 				$hasil = $hasil+1;
 			return $hasil;
 		}
+
+		function cek_laporan_matriks($id_anggota = null, $id_jabatan = null, $id_departemen = null, $id_unit = null, $id_periode = null)
+		{
+			$hasil = 0;
+			$query = $this->connection->query("SELECT * FROM data_kompetensi_individu WHERE id_anggota = '$id_anggota' AND id_jabatan = '$id_jabatan' AND id_departemen = '$id_departemen' AND id_unit = '$id_unit' AND id_periode = '$id_periode'");
+			$tampil = $query->fetch_array();
+			$hasil = $tampil['matriks'];
+			return $hasil;
+		}
+
+		function cek_laporan_kompetensi($id_kompetensi = null, $periode = null, $id_anggota = null, $id_jabatan = null, $id_departemen = null, $id_unit = null, $id_verifikator = null, $id_jabatan_perubahan = null, $id_departemen_perubahan = null, $id_unit_perubahan = null)
+		{
+			$query = $this->connection->query("SELECT * FROM data_kompetensi_verifikasi WHERE id_kompetensi_individu = '$id_kompetensi' AND periode = '$periode' AND id_anggota = '$id_anggota' AND id_jabatan = '$id_jabatan' AND id_departemen = '$id_departemen' AND id_unit = '$id_unit' AND id_verifikator = '$id_verifikator' AND id_jabatan_verifikator = '$id_jabatan_perubahan' AND id_departemen_verifikator = '$id_departemen_perubahan' AND id_unit_verifikator = '$id_unit_perubahan'");
+			$jml = $id_kompetensi.' - '.$periode.' - '.$id_anggota.' - '.$id_jabatan.' - '.$id_departemen.' - '.$id_unit.' - '.$id_verifikator.' - '.$id_jabatan_perubahan.' - '.$id_departemen_perubahan.' - '.$id_unit_perubahan;
+			// while($tampil = $query->fetch_array())
+			// 	$jml = $jml+1;
+			return $jml;
+		}
 		//Akhiran Fungsi Cek
 
 		// Fungsi Verifikasi
-		function verifikasi($id = 0, $status = 0)
+		function verifikasi($id = 0, $status = 0, $id_anggota1 = null, $id_jabatan1 = null, $id_departemen1 = null, $id_unit1 = null)
 		{
 			session_start();
 			$id_anggota = $_SESSION['id_anggota'];
@@ -2493,13 +2589,19 @@
 				$verif = $this->connection->prepare($query);
 				if($verif->execute())
 				{
-					$queryT = $this->connection->query("SELECT k.*, j.nama_jabatan, d.nama_departemen, u.nama_unit, p.tahun, a.nama FROM data_kpi k LEFT JOIN mst_jabatan j ON k.id_jabatan = j.id_jabatan LEFT JOIN mst_departemen d ON d.id_departemen = k.id_departemen LEFT JOIN mst_unit u ON k.id_unit = u.id_unit LEFT JOIN mst_periode p ON k.id_periode = p.id_periode LEFT JOIN mst_anggota a ON a.id_anggota = k.id_anggota WHERE k.id_kpi = '$id'");
+					$queryT = $this->connection->query("SELECT k.*, p.tahun, a.nama FROM data_kpi k LEFT JOIN mst_periode p ON k.id_periode = p.id_periode LEFT JOIN mst_anggota a ON a.id_anggota = k.id_anggota WHERE k.id_kpi = '$id'");
 					$tampilT = $queryT->fetch_array();
+					$qJ = $this->connection->query("SELECT * FROM mst_jabatan WHERE id_jabatan = '$id_jabatan1'");
+					$tJ = $qJ->fetch_array();
+					$qD = $this->connection->query("SELECT * FROM mst_departemen WHERE id_departemen = '$id_departemen1'");
+					$tD = $qD->fetch_array();
+					$qU = $this->connection->query("SELECT * FROM mst_unit WHERE id_unit = '$id_unit1'");
+					$tU = $qU->fetch_array();
 					$id_kpi_asli = $tampilT['id_kpi'];
 					$nama_anggota = $tampilT['nama'];
-					$jabatan = $tampilT['nama_jabatan'];
-					$departemen = $tampilT['nama_departemen'];
-					$unit = $tampilT['nama_unit'];
+					$jabatan = $tJ['nama_jabatan'];
+					$departemen = $tD['nama_departemen'];
+					$unit = $tU['nama_unit'];
 					$tahun = $tampilT['tahun'];
 					$kpi = $tampilT['kpi'];
 					$deskripsi = $tampilT['deskripsi'];
@@ -2694,7 +2796,7 @@
 			}
 		}
 
-		function verif_realisasi($id_kpi = null, $status = null)
+		function verif_realisasi($id_kpi = null, $status = null, $id_anggota1 = null, $id_jabatan1 = null, $id_departemen1 = null, $id_unit1 = null)
 		{
 			session_start();
 			$id_anggota = $_SESSION['id_anggota'];
@@ -2709,13 +2811,19 @@
 				$verif = $this->connection->prepare($query);
 				if($verif->execute())
 				{
-					$queryT = $this->connection->query("SELECT r.*, j.nama_jabatan, d.nama_departemen, u.nama_unit, p.tahun, a.nama FROM data_realisasi_kpi r LEFT JOIN mst_jabatan j ON r.id_jabatan = j.id_jabatan LEFT JOIN mst_departemen d ON d.id_departemen = r.id_departemen LEFT JOIN mst_unit u ON r.id_unit = u.id_unit LEFT JOIN mst_periode p ON r.id_periode = p.id_periode LEFT JOIN mst_anggota a ON a.id_anggota = r.id_anggota WHERE r.id_kpi = '$id_kpi'");
+					$queryT = $this->connection->query("SELECT r.*, p.tahun, a.nama FROM data_realisasi_kpi r LEFT JOIN mst_periode p ON r.id_periode = p.id_periode LEFT JOIN mst_anggota a ON a.id_anggota = r.id_anggota WHERE r.id_kpi = '$id_kpi'");
 					$tampilT = $queryT->fetch_array();
+					$qJ = $this->connection->query("SELECT * FROM mst_jabatan WHERE id_jabatan = '$id_jabatan1'");
+					$tJ = $qJ->fetch_array();
+					$qD = $this->connection->query("SELECT * FROM mst_departemen WHERE id_departemen = '$id_departemen1'");
+					$tD = $qD->fetch_array();
+					$qU = $this->connection->query("SELECT * FROM mst_unit WHERE id_unit = '$id_unit1'");
+					$tU = $qU->fetch_array();
 					$id_realisasi_asli = $tampilT['id_realisasi'];
 					$nama_anggota = $tampilT['nama'];
-					$jabatan = $tampilT['nama_jabatan'];
-					$departemen = $tampilT['nama_departemen'];
-					$unit = $tampilT['nama_unit'];
+					$jabatan = $tJ['nama_jabatan'];
+					$departemen = $tD['nama_departemen'];
+					$unit = $tU['nama_unit'];
 					$tahun = $tampilT['tahun'];
 					$realisasi = $tampilT['realisasi'];
 					$keterangan = $tampilT['keterangan'];
@@ -2775,7 +2883,7 @@
 			}
 		}
 
-		function verif_kompetensi($id_kompetensi = null, $status = null, $id_verifikator = null, $id_jabatan_verifikator = null, $id_departemen_verifikator = null, $id_unit_verifikator = null, $id_anggota = null, $jenis = null)
+		function verif_kompetensi($id_kompetensi = null, $status = null, $id_verifikator = null, $id_jabatan_verifikator = null, $id_departemen_verifikator = null, $id_unit_verifikator = null, $id_anggota = null, $id_jabatan = null, $id_departemen = null, $id_unit = null, $jenis = null)
 		{
 			if($status == null || $status == 0 || $status == '0')
 			{
@@ -2804,8 +2912,14 @@
 				}
 				else{
 					//Kumpulan Query
-					$queryT1 = $this->connection->query("SELECT a.*, j.nama_jabatan, d.nama_departemen, u.nama_unit FROM mst_anggota a LEFT JOIN mst_jabatan j ON a.id_jabatan = j.id_jabatan LEFT JOIN mst_departemen d ON a.id_departemen = d.id_departemen LEFT JOIN mst_unit u ON a.id_unit = u.id_unit WHERE a.id_anggota = '$id_anggota'");
+					$queryT1 = $this->connection->query("SELECT * FROM mst_anggota WHERE id_anggota = '$id_anggota'");
 					$t1 = $queryT1->fetch_array();
+					$qJ = $this->connection->query("SELECT * FROM mst_jabatan WHERE id_jabatan = '$id_jabatan'");
+					$tJ = $qJ->fetch_array();
+					$qD = $this->connection->query("SELECT * FROM mst_departemen WHERE id_departemen = '$id_departemen'");
+					$tD = $qD->fetch_array();
+					$qU = $this->connection->query("SELECT * FROM mst_unit WHERE id_unit = '$id_unit'");
+					$tU = $qU->fetch_array();
 					$queryT2 = $this->connection->query("SELECT a.*, j.nama_jabatan, d.nama_departemen, u.nama_unit FROM mst_anggota a LEFT JOIN mst_jabatan j ON a.id_jabatan = j.id_jabatan LEFT JOIN mst_departemen d ON a.id_departemen = d.id_departemen LEFT JOIN mst_unit u ON a.id_unit = u.id_unit WHERE a.id_anggota = '$id_verifikator'");
 					$t2 = $queryT2->fetch_array();
 					if($jenis == 1 || $jenis == '1')
@@ -2829,12 +2943,9 @@
 
 					// Ambil Data
 					$nama1 = $t1['nama'];
-					$id_jabatan1 = $t1['id_jabatan'];
-					$jabatan1 = $t1['nama_jabatan'];
-					$id_departemen1 = $t1['id_departemen'];
-					$departemen1 = $t1['nama_departemen'];
-					$id_unit1 = $t1['id_unit'];
-					$unit1 = $t1['nama_unit'];
+					$jabatan1 = $tJ['nama_jabatan'];
+					$departemen1 = $tD['nama_departemen'];
+					$unit1 = $tU['nama_unit'];
 					$nama2 = $t2['nama'];
 					$id_jabatan2 = $t2['id_jabatan'];
 					$jabatan2 = $t2['nama_jabatan'];
@@ -2853,7 +2964,7 @@
 					$tanggal2 = $t3['tanggal_verifikasi'];
 					// Akhiran Ambil Data
 
-					$queryI = "INSERT INTO data_kompetensi_verifikasi VALUES ('', '$id_kompetensi', '$nama_kompetensi', '$indikator_terendah', '$indikator_tertinggi', '$bobot', '$peringkat', '$nilai', '$periode', '$kelompok_jabatan', '$id_anggota', '$nama1', '$id_jabatan1', '$jabatan1', '$id_departemen1', '$departemen1', '$id_unit1', '$unit1', '$id_verifikator', '$nama2', '$id_jabatan2', '$jabatan2', '$id_departemen2', '$departemen2', '$id_unit2', '$unit2', '$tanggal1', '$tanggal2')";
+					$queryI = "INSERT INTO data_kompetensi_verifikasi VALUES ('', '$id_kompetensi', '$nama_kompetensi', '$indikator_terendah', '$indikator_tertinggi', '$bobot', '$peringkat', '$nilai', '$periode', '$kelompok_jabatan', '$id_anggota', '$nama1', '$id_jabatan', '$jabatan1', '$id_departemen', '$departemen1', '$id_unit', '$unit1', '$id_verifikator', '$nama2', '$id_jabatan2', '$jabatan2', '$id_departemen2', '$departemen2', '$id_unit2', '$unit2', '$tanggal1', '$tanggal2')";
 					$input = $this->connection->prepare($queryI);
 					if($input->execute())
 						return 1;
@@ -2867,7 +2978,7 @@
 			}
 		}
 
-		function verif_kompetensi_matriks($id_kompetensi = null, $status = null, $id_verifikator = null, $id_jabatan_verifikator = null, $id_departemen_verifikator = null, $id_unit_verifikator = null, $id_anggota = null, $jenis = null)
+		function verif_kompetensi_matriks($id_kompetensi = null, $status = null, $id_verifikator = null, $id_jabatan_verifikator = null, $id_departemen_verifikator = null, $id_unit_verifikator = null, $id_anggota = null, $id_jabatan = null, $id_departemen = null, $id_unit = null, $jenis = null)
 		{
 			if($status == null || $status == 0 || $status == '0')
 			{
@@ -2915,8 +3026,14 @@
 				if($k == 1)
 				{
 					//Kumpulan Query
-					$queryT1 = $this->connection->query("SELECT a.*, j.nama_jabatan, d.nama_departemen, u.nama_unit FROM mst_anggota a LEFT JOIN mst_jabatan j ON a.id_jabatan = j.id_jabatan LEFT JOIN mst_departemen d ON a.id_departemen = d.id_departemen LEFT JOIN mst_unit u ON a.id_unit = u.id_unit WHERE a.id_anggota = '$id_anggota'");
+					$queryT1 = $this->connection->query("SELECT * FROM mst_anggota WHERE id_anggota = '$id_anggota'");
 					$t1 = $queryT1->fetch_array();
+					$qJ = $this->connection->query("SELECT * FROM mst_jabatan WHERE id_jabatan = '$id_jabatan'");
+					$tJ = $qJ->fetch_array();
+					$qD = $this->connection->query("SELECT * FROM mst_departemen WHERE id_departemen = '$id_departemen'");
+					$tD = $qD->fetch_array();
+					$qU = $this->connection->query("SELECT * FROM mst_unit WHERE id_unit = '$id_unit'");
+					$tU = $qU->fetch_array();
 					$queryT2 = $this->connection->query("SELECT a.*, j.nama_jabatan, d.nama_departemen, u.nama_unit FROM mst_anggota a LEFT JOIN mst_jabatan j ON a.id_jabatan = j.id_jabatan LEFT JOIN mst_departemen d ON a.id_departemen = d.id_departemen LEFT JOIN mst_unit u ON a.id_unit = u.id_unit WHERE a.id_anggota = '$id_verifikator'");
 					$t2 = $queryT2->fetch_array();
 					if($jenis == 1 || $jenis == '1')
@@ -2940,12 +3057,9 @@
 
 					// Ambil Data
 					$nama1 = $t1['nama'];
-					$id_jabatan1 = $t1['id_jabatan'];
-					$jabatan1 = $t1['nama_jabatan'];
-					$id_departemen1 = $t1['id_departemen'];
-					$departemen1 = $t1['nama_departemen'];
-					$id_unit1 = $t1['id_unit'];
-					$unit1 = $t1['nama_unit'];
+					$jabatan1 = $tJ['nama_jabatan'];
+					$departemen1 = $tD['nama_departemen'];
+					$unit1 = $tU['nama_unit'];
 					$nama2 = $t2['nama'];
 					$id_jabatan2 = $t2['id_jabatan'];
 					$jabatan2 = $t2['nama_jabatan'];
@@ -2964,7 +3078,7 @@
 					$tanggal2 = $t3['tanggal_verifikasi'];
 					// Akhiran Ambil Data
 
-					$queryI = "INSERT INTO data_kompetensi_verifikasi VALUES ('', '$id_kompetensi', '$nama_kompetensi', '$indikator_terendah', '$indikator_tertinggi', '$bobot', '$peringkat', '$nilai', '$periode', '$kelompok_jabatan', '$id_anggota', '$nama1', '$id_jabatan1', '$jabatan1', '$id_departemen1', '$departemen1', '$id_unit1', '$unit1', '$id_verifikator', '$nama2', '$id_jabatan2', '$jabatan2', '$id_departemen2', '$departemen2', '$id_unit2', '$unit2', '$tanggal1', '$tanggal2')";
+					$queryI = "INSERT INTO data_kompetensi_verifikasi VALUES ('', '$id_kompetensi', '$nama_kompetensi', '$indikator_terendah', '$indikator_tertinggi', '$bobot', '$peringkat', '$nilai', '$periode', '$kelompok_jabatan', '$id_anggota', '$nama1', '$id_jabatan', '$jabatan1', '$id_departemen', '$departemen1', '$id_unit', '$unit1', '$id_verifikator', '$nama2', '$id_jabatan2', '$jabatan2', '$id_departemen2', '$departemen2', '$id_unit2', '$unit2', '$tanggal1', '$tanggal2')";
 					$input = $this->connection->prepare($queryI);
 					if($input->execute())
 						return 1;

@@ -384,7 +384,7 @@
                                                                 if($b2 == 1)
                                                                 {
                                                             ?>
-                                                                    <td align="center"><input type="checkbox" name="verifikasi" id="verifikasi" class="form-control" data-id_anggota="<?php echo $id_anggotaD; ?>" data-verifikator="<?php echo $id_anggotaV; ?>" data-jabatan_verifikator="<?php echo $jabatan; ?>" data-departemen_verifikator="<?php echo $departemenL; ?>" data-unit_verifikator="<?php echo $unitL; ?>" data-id="<?php echo $data2['id_kompetensi_individu']; ?>" data-jenis="<?php echo $data2['jenis']; ?>" <?php echo ($db->cek_verif_kompetensi_matriks($data2['id_kompetensi_individu'], $id_anggotaV, $jabatan, $departemenL, $unitL) > 0)?('checked'):(''); ?>></td>
+                                                                    <td align="center"><input type="checkbox" name="verifikasi" id="verifikasi" class="form-control" data-id_anggota="<?php echo $id_anggotaD; ?>" data-id_jabatan="<?php echo $id_jabatanD; ?>" data-id_departemen="<?php echo $id_departemenD; ?>" data-id_unit="<?php echo $id_unitD; ?>" data-verifikator="<?php echo $id_anggotaV; ?>" data-jabatan_verifikator="<?php echo $jabatan; ?>" data-departemen_verifikator="<?php echo $departemenL; ?>" data-unit_verifikator="<?php echo $unitL; ?>" data-id="<?php echo $data2['id_kompetensi_individu']; ?>" data-jenis="<?php echo $data2['jenis']; ?>" <?php echo ($db->cek_verif_kompetensi_matriks($data2['id_kompetensi_individu'], $id_anggotaV, $jabatan, $departemenL, $unitL) > 0)?('checked'):(''); ?>></td>
                                                             <?php
                                                                 }
                                                                 else {
@@ -470,6 +470,9 @@
                     var departemen_verifikator = $(this).data('departemen_verifikator');
                     var unit_verifikator = $(this).data('unit_verifikator');
                     var id_anggota = $(this).data('id_anggota');
+                    var id_jabatan = $(this).data('id_jabatan');
+                    var id_departemen = $(this).data('id_departemen');
+                    var id_unit = $(this).data('id_unit');
                     var id1 = 'realisasi';
                     var id2 = 'keterangan';
                     $.ajax({
@@ -482,6 +485,9 @@
                             'verifikator' : verifikator,
                             'jk' : jk,
                             'id_anggota' : id_anggota,
+                            'id_jabatan' : id_jabatan,
+                            'id_departemen' : id_departemen,
+                            'id_unit' : id_unit,
                             'jabatan_verifikator' : jabatan_verifikator,
                             'departemen_verifikator' : departemen_verifikator,
                             'unit_verifikator' : unit_verifikator

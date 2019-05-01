@@ -617,6 +617,10 @@
                         type : 'get',
                         data:{
                             'id' : paramId,
+                            'id_anggota' : id_anggota,
+                            'id_jabatan' : id_jabatan,
+                            'id_departemen' : id_departemen,
+                            'id_unit' : id_unit,
                             'value' : v
                         },
                         success:function(html){

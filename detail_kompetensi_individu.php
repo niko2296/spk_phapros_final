@@ -433,7 +433,10 @@
                                                             {
                                                                 foreach($db->tampil_perubahan($id_anggotaD2, $id_jabatanD2, $id_departemenD2, $id_unitD2, $idA) as $tabel)
                                                                 {
-                                                                    echo '<td>'.$tabel['peringkat'].'</td>';
+                                                                    if($data2['id_kompetensi_individu'] == $tabel['id_kompetensi_asli'])
+                                                                        echo '<td>'.$tabel['peringkat'].'</td>';
+                                                                    else 
+                                                                        echo '<td>-</td>';
                                                                 }
                                                             }
                                                         }
