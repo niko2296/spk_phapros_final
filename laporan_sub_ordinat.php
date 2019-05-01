@@ -11,15 +11,14 @@
     $jabatan = $_SESSION['id_jabatan'];
     $departemenL = $_SESSION['id_departemen'];
     $unitL = $_SESSION['id_unit'];
-    $id_anggotaD = $_SESSION['id_anggota'];
+    $id_unitD = $_SESSION['id_unit'];
     $idA = 'kosong';
 
-    foreach($db->tampil_periode() as $tampilP)
+    foreach($db->tampil_periode() as $tPer)
     {
-        if($tampilP['status'] == 1)
+        if($tPer['status'] == 1)
         {
-            $tA = $tampilP['tahun'];
-            $idA = $tampilP['id_periode'];
+            $idA = $tPer['id_periode'];
         }
     }
 ?>
@@ -69,11 +68,11 @@
 						<ul class="dropdown-menu">
 							<!-- <li><a href="profile.html">My Profile</a></li>
 							<li><a href="edit-profile.html">Edit Profile</a></li> -->
-                            <?php 
+                            <?php
                                 if($jabatan != 0)
-                                    echo '<li><a href="settings.php">Settings</a></li>';
-                             ?>
-							<li><a href="logout.php">Logout</a></li>
+							        echo '<li><a href="settings.php">Settings</a></li>';
+                            ?>
+                            <li><a href="logout.php">Logout</a></li>
 						</ul>
 					</li>
 				</ul>
@@ -243,59 +242,50 @@
                 <div class="content container-fluid">
 					<div class="row">
 						<div class="col-xs-12">
-							<h4 class="page-title">Penilaian Individu Tahun <b><?php echo $tA; ?></b></h4>
+							<h4 class="page-title">Laporan Penilaian Sub Ordinat</h4>
 						</div>
 					</div>
-					<div class="row">
-						<div class="col-md-12" style="border:1px solid black;color:black; background-color:white; padding:1%;">
-							<div class="table-responsive">
-								<table class="table table-striped custom-table m-b-0 display" id="tabel">
-									<thead>
-										<tr>
-											<th>Jabatan</th>
-											<th>Departemen</th>
-											<th>Unit</th>
-											<th>Actions</th>
-										</tr>
-									</thead>
-									<tbody>
+
+                    <!-- Tab Pertama -->
+                    <div class="row">
+                        <div class="col-md-12" style="border:1px solid black;color:black; background-color:white; padding:1%;">
+                            <div class="table-responsive">
+                                <table class="table table-striped custom-table m-b-0 display" id="tabel">
+                                    <thead>
+                                        <tr>
+                                            <th>Jabatan</th>
+                                            <th>Departemen</th>
+                                            <th>Unit</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
                                     <?php
                                         $no = 0;
                                         error_reporting(0);
-                                        foreach($db->tampil_jabatan_anggota($id_anggotaD, $idA) as $data)
+                                        foreach($db->tampil_jabatan_grup($jabatan, $departemenL, $id_unitD) as $data)
                                         {
                                             $no = $no+1;
-
-                                            echo '
-                                                <tr>
-                                                    <td>'.$data['nama_jabatan'].'</td>
-                                                    <td>'.$data['nama_departemen'].'</td>
-                                                    <td>'.$data['nama_unit'].'</td>
-                                                    <td><a href="hasil_akhir_individu.php?id_jabatan='.$data['id_jabatan_lama'].'&&id_departemen='.$data['id_departemen_lama'].'&&id_unit='.$data['id_unit_lama'].'">Detail</a></td>
-                                                </tr>
-                                            ';
-                                        }
-
-                                        echo '
-                                                <tr>
-                                                    <td>'.$db->tampil_jabatan_detail($jabatan, 1).'</td>
-                                                    <td>'.$db->tampil_jabatan_detail($departemenL, 2).'</td>
-                                                    <td>'.$db->tampil_jabatan_detail($unitL, 3).'</td>
-                                                    <td><a href="hasil_akhir_individu.php?id_jabatan='.$jabatan.'&&id_departemen='.$departemenL.'&&id_unit='.$unitL.'">Detail</a></td>
-                                                </tr>
-                                            ';
                                     ?>
-									</tbody>
-								</table>
-							</div>
-						</div>
-					</div>
-                    <br>
-                    <div class="row">
-                        <div class="col-md-12" align="right">
-                            <a href="akumulasi_seluruh_jabatan.php" class="btn btn-success">Hasil Akumulasi Nilai Dari Seluruh Jabatan</a>
+                                            <tr>
+                                                <td><?php echo $data['nama_jabatan']; ?></td>
+                                                <td><?php echo $data['nama_departemen']; ?></td>
+                                                <td><?php echo $data['nama_unit']; ?></td>
+                                                <td class="text-center  ">
+                                                    <div class="dropdown">
+                                                        <a href="detail_laporan_sub.php?id_jabatan=<?php echo $data['id_jabatan_dinilai']."&&id_departemen=".$data['id_departemen_dinilai']."&&id_unit=".$data['id_unit_dinilai']; ?>">Detail</a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                    <?php
+                                        }
+                                    ?>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
+                    <!-- Akhiran Tab Pertama -->
                 </div>
             </div>
         </div>
@@ -312,40 +302,40 @@
 		<script type="text/javascript" src="assets/js/bootstrap-datetimepicker.min.js"></script>
 		<script type="text/javascript" src="assets/js/app.js"></script>
 
-        <script type="text/javascript">
-            $(document).ready(function(){
+        <script>
+            $(document).ready(function () {
                 $('#tabel').DataTable({
                     searching : true,
                     ordering : false
                 });
-
-                $("#golongan_input").on("submit", function(e){
-                    var inputan = $("#golongan_input").find(".cek");
-                    var v = '';
-                    var k = [];
-                    var p = 0;
-                    $.each(inputan, function(i){
-                        v = $(this).val();
-                        if(v == '')
-                        {
-                            k[p] = 1;
+                $('#tabel2').DataTable({
+                    searching : true,
+                    ordering : false
+                });
+                $("#notifikasi1").css("display","none");
+                $("#notifikasi2").css("display","none");
+                $('#tabel').on('change','#verifikasi1',function(e){
+                    var v = ($(this).is(':checked'))?'1':'0';
+                    $.ajax({
+                        url : 'verifikasi.php',
+                        type : 'get',
+                        data:{
+                            'id' : $(this).data('id'),
+                            'value' : v
+                        },
+                        success:function(html){
+                            if(html == 1)
+                            {
+                                $(document).ready(function(){setTimeout(function(){$("#notifikasi1").fadeIn('slow');}, 300);});
+                                setTimeout(function(){$("#notifikasi1").fadeOut('#notifikasi1');}, 1500);
+                            }
+                            else if(html == 2)
+                            {
+                                $(document).ready(function(){setTimeout(function(){$("#notifikasi2").fadeIn('slow');}, 300);});
+                                setTimeout(function(){$("#notifikasi2").fadeOut('#notifikasi2');}, 1500);
+                            }
                         }
-                        else{
-                            k[p] = 0;
-                        }
-                        v = '';
-                        p = p+1;
                     });
-                    
-                    for(var c=0; c < p; c++)
-                    {
-                        if(k[c] == 1)
-                        {
-                            e.preventDefault();
-                            alert('Masih Terdapat yg Kosong');
-                            break;
-                        }
-                    }
                 });
             });
         </script>

@@ -11,17 +11,19 @@
     $jabatan = $_SESSION['id_jabatan'];
     $departemenL = $_SESSION['id_departemen'];
     $unitL = $_SESSION['id_unit'];
-    $id_anggotaD = $_SESSION['id_anggota'];
     $idA = 'kosong';
 
-    foreach($db->tampil_periode() as $tampilP)
+    foreach($db->tampil_periode() as $tPer)
     {
-        if($tampilP['status'] == 1)
+        if($tPer['status'] == 1)
         {
-            $tA = $tampilP['tahun'];
-            $idA = $tampilP['id_periode'];
+            $idA = $tPer['id_periode'];
         }
     }
+
+    $id_jabatanD = $_GET['id_jabatan'];
+    $id_departemenD = $_GET['id_departemen'];
+    $id_unitD = $_GET['id_unit'];
 ?>
 <!DOCTYPE html>
 <html>
@@ -242,60 +244,73 @@
             <div class="page-wrapper">
                 <div class="content container-fluid">
 					<div class="row">
-						<div class="col-xs-12">
-							<h4 class="page-title">Penilaian Individu Tahun <b><?php echo $tA; ?></b></h4>
+						<div class="col-xs-8">
+							<h4 class="page-title">
+                            <?php
+                                $nj = $db->tampil_jabatan_detail($id_jabatanD, 1);
+                                $nd = $db->tampil_jabatan_detail($id_departemenD, 2);
+                                $nu = $db->tampil_jabatan_detail($id_unitD, 3);
+                                
+                                echo 'Laporan Anggota Berdasarkan Jabatan, Departemen, dan Unit <b>('.$nj.' - '.$nd.' - '.$nu.')</b>';
+                            ?>
+                            </h4>
 						</div>
+                        <div class="col-xs-4 text-right m-b-10">
+                            <a class="btn btn-warning" href="laporan_sub_ordinat.php">Kembali Pada Laporan Penilaian Sub Ordinat</a>
+                        </div>
 					</div>
-					<div class="row">
-						<div class="col-md-12" style="border:1px solid black;color:black; background-color:white; padding:1%;">
+					<div class="row" style="border:1px solid black;color:black; background-color:white; padding:1%;">
+						<div class="col-md-12">
 							<div class="table-responsive">
 								<table class="table table-striped custom-table m-b-0 display" id="tabel">
 									<thead>
 										<tr>
-											<th>Jabatan</th>
-											<th>Departemen</th>
-											<th>Unit</th>
-											<th>Actions</th>
+                                            <th>NIK</th>
+                                            <th>Nama Pegawai</th>
+                                            <th>Nomor Hp</th>
+                                            <th>Email</th>
+                                            <th>Actions</th>
 										</tr>
 									</thead>
 									<tbody>
                                     <?php
                                         $no = 0;
                                         error_reporting(0);
-                                        foreach($db->tampil_jabatan_anggota($id_anggotaD, $idA) as $data)
+                                        foreach($db->tampil_anggota_grup2($id_jabatanD, $id_departemenD, $id_unitD) as $data)
                                         {
                                             $no = $no+1;
-
-                                            echo '
-                                                <tr>
-                                                    <td>'.$data['nama_jabatan'].'</td>
-                                                    <td>'.$data['nama_departemen'].'</td>
-                                                    <td>'.$data['nama_unit'].'</td>
-                                                    <td><a href="hasil_akhir_individu.php?id_jabatan='.$data['id_jabatan_lama'].'&&id_departemen='.$data['id_departemen_lama'].'&&id_unit='.$data['id_unit_lama'].'">Detail</a></td>
-                                                </tr>
-                                            ';
+                                    ?>
+                                            <tr>
+                                                <td><?php echo $data['nik']; ?></td>
+                                                <td><?php echo $data['nama']; ?></td>
+                                                <td><?php echo $data['nomor_hp']; ?></td>
+                                                <td><?php echo $data['email']; ?></td>
+                                                <td class="text-center">
+                                                    <a href="detail_laporan.php?id_anggota=<?php echo $data['id_anggota']."&&id_jabatan=".$data['id_jabatan']."&&id_departemen=".$data['id_departemen']."&&id_unit=".$data['id_unit']; ?>">Detail Laporan</a>
+                                                </td>
+                                            </tr>
+                                    <?php
                                         }
-
-                                        echo '
-                                                <tr>
-                                                    <td>'.$db->tampil_jabatan_detail($jabatan, 1).'</td>
-                                                    <td>'.$db->tampil_jabatan_detail($departemenL, 2).'</td>
-                                                    <td>'.$db->tampil_jabatan_detail($unitL, 3).'</td>
-                                                    <td><a href="hasil_akhir_individu.php?id_jabatan='.$jabatan.'&&id_departemen='.$departemenL.'&&id_unit='.$unitL.'">Detail</a></td>
-                                                </tr>
-                                            ';
+                                        foreach($db->tampil_usulan_mutasi($idA, $id_jabatanD, $id_departemenD, $id_unitD) as $data)
+                                        {
+                                    ?>
+                                            <tr>
+                                                <td><?php echo $data['nik']; ?></td>
+                                                <td><?php echo $data['nama']; ?></td>
+                                                <td><?php echo $data['nomor_hp']; ?></td>
+                                                <td><?php echo $data['email']; ?></td>
+                                                <td class="text-center">
+                                                    <a href="detail_laporan.php?id_anggota=<?php echo $data['id_anggota']."&&id_jabatan=".$data['id_jabatan_lama']."&&id_departemen=".$data['id_departemen_lama']."&&id_unit=".$data['id_unit_lama']; ?>">Detail Laporan</a>
+                                                </td>
+                                            </tr>
+                                    <?php
+                                        }
                                     ?>
 									</tbody>
 								</table>
 							</div>
 						</div>
 					</div>
-                    <br>
-                    <div class="row">
-                        <div class="col-md-12" align="right">
-                            <a href="akumulasi_seluruh_jabatan.php" class="btn btn-success">Hasil Akumulasi Nilai Dari Seluruh Jabatan</a>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -317,35 +332,6 @@
                 $('#tabel').DataTable({
                     searching : true,
                     ordering : false
-                });
-
-                $("#golongan_input").on("submit", function(e){
-                    var inputan = $("#golongan_input").find(".cek");
-                    var v = '';
-                    var k = [];
-                    var p = 0;
-                    $.each(inputan, function(i){
-                        v = $(this).val();
-                        if(v == '')
-                        {
-                            k[p] = 1;
-                        }
-                        else{
-                            k[p] = 0;
-                        }
-                        v = '';
-                        p = p+1;
-                    });
-                    
-                    for(var c=0; c < p; c++)
-                    {
-                        if(k[c] == 1)
-                        {
-                            e.preventDefault();
-                            alert('Masih Terdapat yg Kosong');
-                            break;
-                        }
-                    }
                 });
             });
         </script>
