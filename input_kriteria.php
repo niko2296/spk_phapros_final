@@ -237,9 +237,6 @@
                                     ?>
                                 </ul>
 							</li>
-							<li class=""> 
-								<a href="hasil_akhir.php"><i class="la la-edit"></i> <span>Hasil Akhir</span></a>
-							</li>
 						</ul>
 					</div>
                 </div>
