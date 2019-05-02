@@ -286,6 +286,17 @@
 				$hasil[] = $tampil;
 			return $hasil;
 		}
+
+		function tampil_waktu_inputD($tahun = 0){
+			$hasil = [];
+			if($tahun == 0)
+				$query = $this->connection->query("SELECT * FROM waktu_input");
+			else
+				$query = $this->connection->query("SELECT * FROM waktu_input WHERE YEAR(tanggal_awal_input) = '$tahun'");
+			while($tampil = $query->fetch_array())
+				$hasil[] = $tampil;
+			return $hasil;
+		}
 		
 		function tampil_waktu_verifikasi($jenis_verifikasi = 0){
 			$hasil = [];
@@ -293,6 +304,16 @@
 				$query = $this->connection->query("SELECT * FROM waktu_verifikasi");
 			else
 				$query = $this->connection->query("SELECT * FROM waktu_verifikasi WHERE jenis_verifikasi = '$jenis_verifikasi'");
+			while($tampil = $query->fetch_array())
+				$hasil[] = $tampil;
+			return $hasil;
+		}
+		function tampil_waktu_verifikasiD($tahun = 0){
+			$hasil = [];
+			if($jenis_verifikasi == 0)
+				$query = $this->connection->query("SELECT * FROM waktu_verifikasi");
+			else
+				$query = $this->connection->query("SELECT * FROM waktu_verifikasi WHERE YEAR(tanggal_awal_verifikasi) = '$tahun'");
 			while($tampil = $query->fetch_array())
 				$hasil[] = $tampil;
 			return $hasil;

@@ -10,7 +10,18 @@
     $nama = $_SESSION['nama'];
     $jabatan = $_SESSION['id_jabatan'];
     $departemenL = $_SESSION['id_departemen'];
-    $unitL = $_SESSION['id_unit'];
+	$unitL = $_SESSION['id_unit'];
+	
+	$idA = 'kosong';
+
+    foreach($db->tampil_periode() as $tampilP)
+    {
+        if($tampilP['status'] == 1)
+        {
+            $tA = $tampilP['tahun'];
+            $idA = $tampilP['id_periode'];
+        }
+    }
 ?>
 
 <!DOCTYPE html>
@@ -234,483 +245,249 @@
             <div class="page-wrapper">
                 <div class="content container-fluid">
 					<div class="row">
-						<div class="col-md-6 col-sm-6 col-lg-3">
-							<div class="dash-widget clearfix card-box">
-								<span class="dash-widget-icon"><i class="fa fa-cubes" aria-hidden="true"></i></span>
-								<div class="dash-widget-info">
-									<h3>112</h3>
-									<span>Projects</span>
-								</div>
-							</div>
-						</div>
-						<div class="col-md-6 col-sm-6 col-lg-3">
-							<div class="dash-widget clearfix card-box">
-								<span class="dash-widget-icon"><i class="fa fa-usd" aria-hidden="true"></i></span>
-								<div class="dash-widget-info">
-									<h3>44</h3>
-									<span>Clients</span>
-								</div>
-							</div>
-						</div>
-						<div class="col-md-6 col-sm-6 col-lg-3">
-							<div class="dash-widget clearfix card-box">
-								<span class="dash-widget-icon"><i class="fa fa-diamond"></i></span>
-								<div class="dash-widget-info">
-									<h3>37</h3>
-									<span>Tasks</span>
-								</div>
-							</div>
-						</div>
-						<div class="col-md-6 col-sm-6 col-lg-3">
-							<div class="dash-widget clearfix card-box">
-								<span class="dash-widget-icon"><i class="fa fa-user" aria-hidden="true"></i></span>
-								<div class="dash-widget-info">
-									<h3>218</h3>
-									<span>Employees</span>
+						<div class="col-md-12">
+							<div class="alert alert-warning">
+								<div class="row">
+									<div class="col-md-12">
+										<b>Untuk Dapat Lebih Memahami Penggunaan Dari Sistem Penilaian Kinerja Ini, Dapat Men-Download Panduan Penggunaan Dari Sistem Penilaian Kinerja. <a href="">Download</a></b>
+									</div>
 								</div>
 							</div>
 						</div>
 					</div>
 					<div class="row">
 						<div class="col-md-12">
+							<div class="panel panel-table">
+								<div class="panel-heading">
+									<h3 class="panel-title">KRITERIA NILAI</h3>
+								</div>
+								<div class="panel-body">
+									<div class="table-responsive">
+										<table class="table table-striped custom-table m-b-0">
+											<thead>
+												<tr>
+													<th>Batas Minimum</th>
+													<th>Batas Maksimum</th>
+													<th>Kriteria Nilai</th>
+													<th>Keterangan</th>
+												</tr>
+											</thead>
+											<tbody>
+												<?php
+													foreach($db->tampil_kriteria($idA) as $data)
+													{
+														echo '
+															<tr>
+																<td>'.$data['batas_minimum'].'</td>
+																<td>'.$data['batas_maksimum'].'</td>
+																<td>'.$data['kriteria_nilai'].'</td>
+																<td>'.$data['keterangan'].'</td>
+															</tr>
+														';
+													}
+												?>
+											</tbody>
+										</table>
+									</div>
+								</div>
+								<div class="panel-footer">
+									&nbsp;
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-6">
+							<div class="panel panel-table">
+								<div class="panel-heading">
+									<h3 class="panel-title">POLARISASI</h3>
+								</div>
+								<div class="panel-body">
+									<div class="table-responsive">
+										<table class="table table-striped custom-table m-b-0">
+											<thead>
+												<tr>
+													<th>Nama Polarisasi</th>
+													<th>Jumlah Aturan</th>
+													<th>Action</th>
+												</tr>
+											</thead>
+											<tbody>
+												<?php
+													foreach($db->tampil_polarisasi($idA) as $data)
+													{
+														echo '
+															<tr>
+																<td>'.$data['nama_polarisasi'].'</td>
+															';
+															$jmlP = 0;
+														foreach($db->tampil_aturan_polarisasi() as $data1)
+														{
+															if($data['id_polarisasi'] == $data1['id_polarisasi'])
+																$jmlP = $jmlP+1;   
+														}
+														echo '
+																<td>'.$jmlP.' Aturan Polarisasi</td>
+																<td><a href="#" title="Detail Polarisasi" class="tampil_detail" data-id_polarisasi="'.$data['id_polarisasi'].'"> Detail</a></td>
+															</tr>
+														';
+
+														echo '
+															<div id="detail_polarisasi" class="modal custom-modal fade" role="dialog">
+																<div class="modal-dialog">
+																	<div class="modal-content modal-md">
+																		<div class="modal-header">
+																			<h4 class="modal-title">Data Aturan Polarisasi</h4>
+																		</div>
+																		<form method="POST" action="#" id="inputan">
+																			<div class="modal-body card-box">
+																				<div class="modal-data"></div>
+																				<div class="m-t-20"> 
+																					<a href="#" class="btn btn-default" data-dismiss="modal">Close</a>
+																				</div>
+																			</div>
+																		</form>
+																	</div>
+																</div>
+															</div>
+														';
+													}
+												?>
+											</tbody>
+										</table>
+									</div>
+								</div>
+								<div class="panel-footer">
+									&nbsp;
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6">
 							<div class="row">
-								<div class="col-md-6 text-center">
-									<div class="card-box">
-										<h3 class="card-title">Total Revenue</h3>
-										<div id="bar-charts"></div>
-									</div>
-								</div>
-								<div class="col-md-6 text-center">
-									<div class="card-box">
-										<h3 class="card-title">Sales Overview</h3>
-										<div id="line-charts"></div>
-									</div>
-								</div>
-								<div class="col-md-6 text-center">
-									<div class="card-box">
-										<h3 class="card-title">Invoice Status</h3>
-										<div id="area-charts"></div>
-									</div>
-								</div>
-								<div class="col-md-6 text-center">
-									<div class="card-box">
-										<h3 class="card-title">Overall Status</h3>
-										<div id="pie-charts"></div>
+								<div class="col-md-12">
+									<div class="panel panel-table">
+										<div class="panel-heading">
+											<h3 class="panel-title">PERSENTASE NILAI</h3>
+										</div>
+										<div class="panel-body">
+											<div class="table-responsive">
+												<table class="table table-striped custom-table m-b-0">
+													<thead>
+														<tr>
+															<th>Persentase KPI</th>
+															<th>Persentase Kompetensi</th>
+														</tr>
+													</thead>
+													<tbody>
+														<?php
+															foreach($db->tampil_persentase($idA) as $data)
+															{
+																echo '
+																	<tr>
+																		<td>'.$data['persentase_kpi'].'</td>
+																		<td>'.$data['persentase_kompetensi'].'</td>
+																	</tr>
+																';
+															}
+														?>
+													</tbody>
+												</table>
+											</div>
+										</div>
+										<div class="panel-footer">
+											&nbsp;
+										</div>
 									</div>
 								</div>
 							</div>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-md-6">
-							<div class="panel panel-table">
-								<div class="panel-heading">
-									<h3 class="panel-title">Invoices</h3>
-								</div>
-								<div class="panel-body">
-									<div class="table-responsive">
-										<table class="table table-striped custom-table m-b-0">
-											<thead>
-												<tr>
-													<th>Invoice ID</th>
-													<th>Client</th>
-													<th>Due Date</th>
-													<th>Total</th>
-													<th>Status</th>
-												</tr>
-											</thead>
-											<tbody>
-												<tr>
-													<td><a href="invoice-view.html">#INV-0001</a></td>
-													<td>
-														<h2><a href="#">Hazel Nutt</a></h2>
-													</td>
-													<td>8 Aug 2017</td>
-													<td>$380</td>
-													<td>
-														<span class="label label-warning-border">Partially Paid</span>
-													</td>
-												</tr>
-												<tr>
-													<td><a href="invoice-view.html">#INV-0002</a></td>
-													<td>
-														<h2><a href="#">Paige Turner</a></h2>
-													</td>
-													<td>17 Sep 2017</td>
-													<td>$500</td>
-													<td>
-														<span class="label label-success-border">Paid</span>
-													</td>
-												</tr>
-												<tr>
-													<td><a href="invoice-view.html">#INV-0003</a></td>
-													<td>
-														<h2><a href="#">Ben Dover</a></h2>
-													</td>
-													<td>30 Nov 2017</td>
-													<td>$60</td>
-													<td>
-														<span class="label label-danger-border">Unpaid</span>
-													</td>
-												</tr>
-											</tbody>
-										</table>
+							<div class="row">
+								<div class="col-md-12">
+									<div class="panel panel-table">
+										<div class="panel-heading">
+											<h3 class="panel-title">WAKTU INPUT</h3>
+										</div>
+										<div class="panel-body">
+											<div class="table-responsive">
+												<table class="table table-striped custom-table m-b-0">
+													<thead>
+														<tr>
+															<th>Tanggal Mulai</th>
+															<th>Tanggal Selesai</th>
+															<th>Jenis Input</th>
+														</tr>
+													</thead>
+													<tbody>
+														<?php
+															foreach($db->tampil_waktu_inputD($tA) as $data)
+															{
+																if($data['jenis_input'] == 0)
+																	$k = '-';
+																else if($data['jenis_input'] == 1)
+																	$k = 'Input Pengajuan KPI';
+																else if($data['jenis_input'] == 2)
+																	$k = 'Input Realisasi KPI';
+																echo '
+																	<tr>
+																		<td>'.date('d F Y', strtotime($data['tanggal_awal_input'])).'</td>
+																		<td>'.date('d F Y', strtotime($data['tanggal_akhir_input'])).'</td>
+																		<td>'.$k.'</td>
+																	</tr>
+																';
+															}
+														?>
+													</tbody>
+												</table>
+											</div>
+										</div>
+										<div class="panel-footer">
+											&nbsp;
+										</div>
 									</div>
-								</div>
-								<div class="panel-footer">
-									<a href="invoices.html" class="text-primary">View all invoices</a>
 								</div>
 							</div>
-						</div>
-						<div class="col-md-6">
-							<div class="panel panel-table">
-								<div class="panel-heading">
-									<h3 class="panel-title">Payments</h3>
-								</div>
-								<div class="panel-body">
-									<div class="table-responsive">	
-										<table class="table table-striped custom-table m-b-0">
-											<thead>
-												<tr>
-													<th>Invoice ID</th>
-													<th>Client</th>
-													<th>Payment Type</th>
-													<th>Paid Date</th>
-													<th>Paid Amount</th>
-												</tr>
-											</thead>
-											<tbody>
-												<tr>
-													<td><a href="invoice-view.html">#INV-0004</a></td>
-													<td>
-														<h2><a href="#">Barry Cuda</a></h2>
-													</td>
-													<td>Paypal</td>
-													<td>11 Jun 2017</td>
-													<td>$380</td>
-												</tr>
-												<tr>
-													<td><a href="invoice-view.html">#INV-0005</a></td>
-													<td>
-														<h2><a href="#">Tressa Wexler</a></h2>
-													</td>
-													<td>Paypal</td>
-													<td>21 Jul 2017</td>
-													<td>$500</td>
-												</tr>
-												<tr>
-													<td><a href="invoice-view.html">#INV-0006</a></td>
-													<td>
-														<h2><a href="#">Ruby Bartlett</a></h2>
-													</td>
-													<td>Paypal</td>
-													<td>28 Aug 2017</td>
-													<td>$60</td>
-												</tr>
-											</tbody>
-										</table>
+							<div class="row">
+								<div class="col-md-12">
+									<div class="panel panel-table">
+										<div class="panel-heading">
+											<h3 class="panel-title">WAKTU VERIFIKASI</h3>
+										</div>
+										<div class="panel-body">
+											<div class="table-responsive">
+												<table class="table table-striped custom-table m-b-0">
+													<thead>
+														<tr>
+															<th>Tanggal Mulai</th>
+															<th>Tanggal Selesai</th>
+															<th>Jenis Verifikasi</th>
+														</tr>
+													</thead>
+													<tbody>
+														<?php
+															foreach($db->tampil_waktu_verifikasiD($tA) as $data)
+															{
+																if($data['jenis_verifikasi'] == 1)
+																	$k = 'Verifikasi Pengajuan KPI';
+																else if($data['jenis_verifikasi'] == 2)
+																	$k = 'Verifikasi Realisasi KPI';
+																else 
+																	$k = '-';
+																echo '
+																	<tr>
+																		<td>'.date('d F Y', strtotime($data['tanggal_awal_verifikasi'])).'</td>
+																		<td>'.date('d F Y', strtotime($data['tanggal_akhir_verifikasi'])).'</td>
+																		<td>'.$k.'</td>
+																	</tr>
+																';
+															}
+														?>
+													</tbody>
+												</table>
+											</div>
+										</div>
+										<div class="panel-footer">
+											&nbsp;
+										</div>
 									</div>
-								</div>
-								<div class="panel-footer">
-									<a href="payments.html" class="text-primary">View all payments</a>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-md-6">
-							<div class="panel panel-table">
-								<div class="panel-heading">
-									<h3 class="panel-title">Clients</h3>
-								</div>
-								<div class="panel-body">
-									<div class="table-responsive">
-										<table class="table table-striped custom-table m-b-0">
-											<thead>
-												<tr>
-													<th style="min-width:200px;">Name</th>
-													<th>Email</th>
-													<th>Status</th>
-													<th class="text-right">Action</th>
-												</tr>
-											</thead>
-											<tbody>
-												<tr>
-													<td style="min-width:200px;">
-														<a href="#" class="avatar">B</a>
-														<h2><a href="client-profile.html">Barry Cuda <span>CEO</span></a></h2>
-													</td>
-													<td>barrycuda@example.com</td>
-													<td>
-														<div class="dropdown action-label">
-															<a class="btn btn-white btn-sm rounded dropdown-toggle" href="#" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-dot-circle-o text-success"></i> Active <i class="caret"></i>
-															</a>
-															<ul class="dropdown-menu pull-right">
-																<li><a href="#"><i class="fa fa-dot-circle-o text-success"></i> Active</a></li>
-																<li><a href="#"><i class="fa fa-dot-circle-o text-danger"></i> Inactive</a></li>
-															</ul>
-														</div>
-													</td>
-													<td class="text-right">
-														<div class="dropdown">
-															<a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
-															<ul class="dropdown-menu pull-right">
-																<li><a href="#" title="Edit"><i class="fa fa-pencil m-r-5"></i> Edit</a></li>
-																<li><a href="#" title="Delete"><i class="fa fa-trash-o m-r-5"></i> Delete</a></li>
-															</ul>
-														</div>
-													</td>
-												</tr>
-												<tr>
-													<td>
-														<a class="avatar">T</a>
-														<h2><a href="client-profile.html">Tressa Wexler <span>Manager</span></a></h2>
-													</td>
-													<td>tressawexler@example.com</td>
-													<td>
-														<div class="dropdown action-label">
-															<a class="btn btn-white btn-sm rounded dropdown-toggle" href="#" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-dot-circle-o text-danger"></i> Inactive <i class="caret"></i>
-															</a>
-															<ul class="dropdown-menu pull-right">
-																<li><a href="#"><i class="fa fa-dot-circle-o text-success"></i> Active</a></li>
-																<li><a href="#"><i class="fa fa-dot-circle-o text-danger"></i> Inactive</a></li>
-															</ul>
-														</div>
-													</td>
-													<td class="text-right">
-														<div class="dropdown">
-															<a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
-															<ul class="dropdown-menu pull-right">
-																<li><a href="#" title="Edit"><i class="fa fa-pencil m-r-5"></i> Edit</a></li>
-																<li><a href="#" title="Delete"><i class="fa fa-trash-o m-r-5"></i> Delete</a></li>
-															</ul>
-														</div>
-													</td>
-												</tr>
-												<tr>
-													<td>
-														<a href="client-profile.html" class="avatar">R</a>
-														<h2><a href="client-profile.html">Ruby Bartlett <span>CEO</span></a></h2>
-													</td>
-													<td>rubybartlett@example.com</td>
-													<td>
-														<div class="dropdown action-label">
-															<a class="btn btn-white btn-sm rounded dropdown-toggle" href="#" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-dot-circle-o text-danger"></i> Inactive <i class="caret"></i>
-															</a>
-															<ul class="dropdown-menu pull-right">
-																<li><a href="#"><i class="fa fa-dot-circle-o text-success"></i> Active</a></li>
-																<li><a href="#"><i class="fa fa-dot-circle-o text-danger"></i> Inactive</a></li>
-															</ul>
-														</div>
-													</td>
-													<td class="text-right">
-														<div class="dropdown">
-															<a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
-															<ul class="dropdown-menu pull-right">
-																<li><a href="#" title="Edit"><i class="fa fa-pencil m-r-5"></i> Edit</a></li>
-																<li><a href="#" title="Delete"><i class="fa fa-trash-o m-r-5"></i> Delete</a></li>
-															</ul>
-														</div>
-													</td>
-												</tr>
-												<tr>
-													<td>
-														<a href="client-profile.html" class="avatar">M</a>
-														<h2><a href="client-profile.html"> Misty Tison <span>CEO</span></a></h2>
-													</td>
-													<td>mistytison@example.com</td>
-													<td>
-														<div class="dropdown action-label">
-															<a class="btn btn-white btn-sm rounded dropdown-toggle" href="#" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-dot-circle-o text-success"></i> Active <i class="caret"></i>
-															</a>
-															<ul class="dropdown-menu pull-right">
-																<li><a href="#"><i class="fa fa-dot-circle-o text-success"></i> Active</a></li>
-																<li><a href="#"><i class="fa fa-dot-circle-o text-danger"></i> Inactive</a></li>
-															</ul>
-														</div>
-													</td>
-													<td class="text-right">
-														<div class="dropdown">
-															<a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
-															<ul class="dropdown-menu pull-right">
-																<li><a href="#" title="Edit"><i class="fa fa-pencil m-r-5"></i> Edit</a></li>
-																<li><a href="#" title="Delete"><i class="fa fa-trash-o m-r-5"></i> Delete</a></li>
-															</ul>
-														</div>
-													</td>
-												</tr>
-												<tr>
-													<td>
-														<a href="client-profile.html" class="avatar">D</a>
-														<h2><a href="client-profile.html"> Daniel Deacon <span>CEO</span></a></h2>
-													</td>
-													<td>danieldeacon@example.com</td>
-													<td>
-														<div class="dropdown action-label">
-															<a class="btn btn-white btn-sm rounded dropdown-toggle" href="#" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-dot-circle-o text-danger"></i> Inactive <i class="caret"></i>
-															</a>
-															<ul class="dropdown-menu pull-right">
-																<li><a href="#"><i class="fa fa-dot-circle-o text-success"></i> Active</a></li>
-																<li><a href="#"><i class="fa fa-dot-circle-o text-danger"></i> Inactive</a></li>
-															</ul>
-														</div>
-													</td>
-													<td class="text-right">
-														<div class="dropdown">
-															<a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
-															<ul class="dropdown-menu pull-right">
-																<li><a href="#" title="Edit"><i class="fa fa-pencil m-r-5"></i> Edit</a></li>
-																<li><a href="#" title="Delete"><i class="fa fa-trash-o m-r-5"></i> Delete</a></li>
-															</ul>
-														</div>
-													</td>
-												</tr>
-											</tbody>
-										</table>
-									</div>
-								</div>
-								<div class="panel-footer">
-									<a href="clients.html" class="text-primary">View all clients</a>
-								</div>
-							</div>
-						</div>
-						<div class="col-md-6">
-							<div class="panel panel-table">
-								<div class="panel-heading">
-									<h3 class="panel-title">Recent Projects</h3>
-								</div>
-								<div class="panel-body">
-									<div class="table-responsive">
-										<table class="table table-striped custom-table m-b-0">
-											<thead>
-												<tr>
-													<th class="col-md-3">Project Name </th>
-													<th class="col-md-3">Progress</th>
-													<th class="text-right col-md-1">Action</th>
-												</tr>
-											</thead>
-											<tbody>
-												<tr>
-													<td>
-														<h2><a href="project-view.html">Food and Drinks</a></h2>
-														<small class="block text-ellipsis">
-															<span class="text-xs">1</span> <span class="text-muted">open tasks, </span>
-															<span class="text-xs">9</span> <span class="text-muted">tasks completed</span>
-														</small>
-													</td>
-													<td>
-														<div class="progress progress-xs progress-striped">
-															<div class="progress-bar bg-success" role="progressbar" data-toggle="tooltip" title="65%" style="width: 65%"></div>
-														</div>
-													</td>
-													<td class="text-right">
-														<div class="dropdown">
-															<a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
-															<ul class="dropdown-menu pull-right">
-																<li><a href="#" title="Edit"><i class="fa fa-pencil m-r-5"></i> Edit</a></li>
-																<li><a href="#" title="Delete"><i class="fa fa-trash-o m-r-5"></i> Delete</a></li>
-															</ul>
-														</div>
-													</td>
-												</tr>
-												<tr>
-													<td>
-														<h2><a href="project-view.html">School Guru</a></h2>
-														<small class="block text-ellipsis">
-															<span class="text-xs">2</span> <span class="text-muted">open tasks, </span>
-															<span class="text-xs">5</span> <span class="text-muted">tasks completed</span>
-														</small>
-													</td>
-													<td>
-														<div class="progress progress-xs progress-striped">
-															<div class="progress-bar bg-success" role="progressbar" data-toggle="tooltip" title="15%" style="width: 15%"></div>
-														</div>
-													</td>
-													<td class="text-right">
-														<div class="dropdown">
-															<a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
-															<ul class="dropdown-menu pull-right">
-																<li><a href="#" title="Edit"><i class="fa fa-pencil m-r-5"></i> Edit</a></li>
-																<li><a href="#" title="Delete"><i class="fa fa-trash-o m-r-5"></i> Delete</a></li>
-															</ul>
-														</div>
-													</td>
-												</tr>
-												<tr>
-													<td>
-														<h2><a href="project-view.html">Penabook</a></h2>
-														<small class="block text-ellipsis">
-															<span class="text-xs">3</span> <span class="text-muted">open tasks, </span>
-															<span class="text-xs">3</span> <span class="text-muted">tasks completed</span>
-														</small>
-													</td>
-													<td>
-														<div class="progress progress-xs progress-striped">
-															<div class="progress-bar bg-success" role="progressbar" data-toggle="tooltip" title="49%" style="width: 49%"></div>
-														</div>
-													</td>
-													<td class="text-right">
-														<div class="dropdown">
-															<a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
-															<ul class="dropdown-menu pull-right">
-																<li><a href="#" title="Edit"><i class="fa fa-pencil m-r-5"></i> Edit</a></li>
-																<li><a href="#" title="Delete"><i class="fa fa-trash-o m-r-5"></i> Delete</a></li>
-															</ul>
-														</div>
-													</td>
-												</tr>
-												<tr>
-													<td>
-														<h2><a href="project-view.html">Harvey Clinic</a></h2>
-														<small class="block text-ellipsis">
-															<span class="text-xs">12</span> <span class="text-muted">open tasks, </span>
-															<span class="text-xs">4</span> <span class="text-muted">tasks completed</span>
-														</small>
-													</td>
-													<td>
-														<div class="progress progress-xs progress-striped">
-															<div class="progress-bar bg-success" role="progressbar" data-toggle="tooltip" title="88%" style="width: 88%"></div>
-														</div>
-													</td>
-													<td class="text-right">
-														<div class="dropdown">
-															<a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
-															<ul class="dropdown-menu pull-right">
-																<li><a href="#" title="Edit"><i class="fa fa-pencil m-r-5"></i> Edit</a></li>
-																<li><a href="#" title="Delete"><i class="fa fa-trash-o m-r-5"></i> Delete</a></li>
-															</ul>
-														</div>
-													</td>
-												</tr>
-												<tr>
-													<td>
-														<h2><a href="project-view.html">The Gigs</a></h2>
-														<small class="block text-ellipsis">
-															<span class="text-xs">7</span> <span class="text-muted">open tasks, </span>
-															<span class="text-xs">14</span> <span class="text-muted">tasks completed</span>
-														</small>
-													</td>
-													<td>
-														<div class="progress progress-xs progress-striped">
-															<div class="progress-bar bg-success" role="progressbar" data-toggle="tooltip" title="100%" style="width: 100%"></div>
-														</div>
-													</td>
-													<td class="text-right">
-														<div class="dropdown">
-															<a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
-															<ul class="dropdown-menu pull-right">
-																<li><a href="#" title="Edit"><i class="fa fa-pencil m-r-5"></i> Edit</a></li>
-																<li><a href="#" title="Delete"><i class="fa fa-trash-o m-r-5"></i> Delete</a></li>
-															</ul>
-														</div>
-													</td>
-												</tr>
-											</tbody>
-										</table>
-									</div>
-								</div>
-								<div class="panel-footer">
-									<a href="projects.html" class="text-primary">View all projects</a>
 								</div>
 							</div>
 						</div>
@@ -936,7 +713,27 @@
 		<script type="text/javascript" src="assets/plugins/raphael/raphael-min.js"></script>
 		<script type="text/javascript" src="assets/js/chart.js"></script>
 		<script type="text/javascript" src="assets/js/app.js"></script>
-		
+		<script>
+			$(function(){
+				$(document).on('click','.tampil_detail',function(e){
+					e.preventDefault();
+					$("#detail_polarisasi").modal('show');
+					var id_polarisasi = $(this).data('id_polarisasi');
+					$.ajax({
+						type : 'get',
+						url : 'verifikasi_final.php',
+						data:{
+                            'id_polarisasi' : id_polarisasi,
+                            'jenis' : 'cek_polarisasi'
+
+                        },
+						success : function(html){
+							$('.modal-data').html(html);
+						}
+					});
+				});
+			});
+		</script>
     </body>
 </html>
 <?php

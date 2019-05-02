@@ -418,7 +418,7 @@
                                                 <td style="padding:5px; font-family: Arial; font-size:12px;" width="10%"><b><center>% BOBOT</center></b></td>
                                                 <td style="padding:5px; font-family: Arial; font-size:12px;" width="10%"><b><center>SASARAN / TARGET</center></b></td>
                                                 <td style="padding:5px; font-family: Arial; font-size:12px;" width="10%"><b><center>SATUAN</center></b></td>
-                                                <td style="padding:5px; font-family: Arial; font-size:12px;" width="10%"><b><center>SIFAT KPI</center></b></td>
+                                                <td style="padding:5px; font-family: Arial; font-size:12px;" width="10%"><b><center>POLARISASI</center></b></td>
                                                 <td style="padding:5px; font-family: Arial; font-size:12px;" width="10%"><b><center>REALISASI</center></b></td>
                                                 <td style="padding:5px; font-family: Arial; font-size:12px;" width="10%"><b><center>SKOR</center></b></td>
                                                 <td style="padding:5px; font-family: Arial; font-size:12px;" width="10%"><b><center>NILAI</center></b></td>

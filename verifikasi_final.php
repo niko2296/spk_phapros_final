@@ -98,5 +98,40 @@
             echo 2;
         }
     }
+    else if($_GET['jenis'] == 'cek_polarisasi')
+    {
+        $html = '
+        <table class="table table-striped custom-table m-b-0">
+            <thead>
+                <tr>
+                    <th>Batas Minimal</th>
+                    <th>Batas Maksimal</th>
+                    <th>Poin</th>
+                </tr>
+            </thead>
+            <tbody>
+        ';
+
+        foreach($db->tampil_aturan_polarisasi() as $data)
+        {
+            if($_GET['id_polarisasi'] == $data['id_polarisasi'])
+            {
+                $html .=
+                        '
+                        <tr>
+                            <td>'.$data['bmi'].'</td>
+                            <td>'.$data['bma'].'</td>
+                            <td>'.$data['poin'].'</td>
+                        </tr>
+                        ';
+            }
+        }
+        $html .= '
+            </tbody>
+        </table>
+        ';
+
+        echo $html;
+    }
 
 ?>
